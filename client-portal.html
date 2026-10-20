@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>My Account | Salon Genie</title>
+  <meta name="theme-color" content="#C4856A"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #FDFAF6; --s1: #FFFFFF; --s2: #F5F0E8; --s3: #EDE6D8;
+  --border: rgba(0,0,0,0.07); --border2: rgba(0,0,0,0.12);
+  --ink: #1C1814; --mid: #6A6058; --muted: #A89A8E;
+  --blush: #C4856A; --blush-dim: rgba(196,133,106,0.10); --blush-med: rgba(196,133,106,0.20);
+  --amber: #C4993A; --amber-dim: rgba(196,153,58,0.10);
+  --teal: #3D7A72; --teal-dim: rgba(61,122,114,0.10);
+  --rose: #C45A4A; --rose-dim: rgba(196,90,74,0.08);
+  --shadow: 0 2px 12px rgba(28,24,20,0.06); --shadow-md: 0 8px 28px rgba(28,24,20,0.10);
+  --radius: 14px; --ring: 0 0 0 3px rgba(196,133,106,0.18);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+button { font-family: 'DM Sans', sans-serif; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+
+/* ── Auth screens ── */
+.auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px 20px; }
+.auth-card {
+  width: 100%; max-width: 400px; background: var(--s1); border: 1px solid var(--border);
+  border-radius: 20px; padding: 36px 32px; box-shadow: var(--shadow-md); position: relative; overflow: hidden;
+}
+.auth-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--blush), var(--amber));
+}
+.auth-gem {
+  width: 48px; height: 48px; background: linear-gradient(135deg, var(--blush), var(--amber));
+  border-radius: 14px; display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: white; margin-bottom: 20px;
+  box-shadow: 0 6px 20px rgba(196,133,106,0.3);
+}
+.auth-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--ink); margin-bottom: 4px; }
+.auth-sub   { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+.auth-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.auth-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--mid); }
+.auth-input {
+  padding: 12px 14px; border-radius: 11px; border: 1.5px solid var(--border2);
+  background: var(--s1); font-family: 'DM Sans', sans-serif; font-size: 15px;
+  color: var(--ink); outline: none; transition: border-color .18s, box-shadow .18s;
+}
+.auth-input:focus { border-color: var(--blush); box-shadow: var(--ring); }
+.auth-input::placeholder { color: var(--muted); }
+.pw-bar { height: 3px; border-radius: 2px; background: var(--s3); margin-top: 5px; overflow: hidden; }
+.pw-fill { height: 100%; width: 0; border-radius: 2px; transition: width .3s, background .3s; }
+.auth-btn {
+  width: 100%; height: 50px; border-radius: 12px; border: none;
+  background: var(--blush); color: white; font-size: 15px; font-weight: 600;
+  box-shadow: 0 4px 14px rgba(196,133,106,0.3); transition: all .18s; margin-top: 4px;
+}
+.auth-btn:hover { background: #B5745A; transform: translateY(-1px); }
+.auth-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.auth-secondary {
+  width: 100%; height: 44px; border-radius: 11px;
+  border: 1.5px solid var(--border2); background: var(--s1); color: var(--mid);
+  font-size: 13px; font-weight: 600; margin-top: 8px; transition: all .15s;
+}
+.auth-secondary:hover { border-color: var(--blush); color: var(--blush); }
+.auth-switch { text-align: center; font-size: 13px; color: var(--muted); margin-top: 18px; }
+.auth-switch button { background: none; border: none; color: var(--blush); font-weight: 600; font-size: 13px; padding: 0; }
+.auth-status { display: none; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-top: 12px; line-height: 1.4; }
+.auth-status.err { background: var(--rose-dim); border: 1px solid rgba(196,90,74,0.2); color: var(--rose); display: block; }
+.auth-status.ok  { background: var(--teal-dim); border: 1px solid rgba(61,122,114,0.2); color: var(--teal); display: block; }
+
+/* ── Portal layout ── */
+#portal { display: none; min-height: 100vh; flex-direction: column; }
+.portal-header {
+  background: var(--s2); border-bottom: 1px solid var(--border);
+  height: 60px; display: flex; align-items: center; padding: 0 24px;
+  justify-content: space-between; position: sticky; top: 0; z-index: 10;
+}
+.portal-brand { display: flex; align-items: center; gap: 10px; }
+.portal-gem { width: 32px; height: 32px; background: linear-gradient(135deg, var(--blush), var(--amber)); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; color: white; }
+.portal-name { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--ink); }
+.portal-user { display: flex; align-items: center; gap: 10px; }
+.portal-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--blush), var(--amber)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+.portal-signout { font-size: 12px; color: var(--muted); border: 1px solid var(--border2); border-radius: 20px; padding: 5px 12px; background: var(--s1); transition: all .15s; }
+.portal-signout:hover { border-color: var(--rose); color: var(--rose); }
+.portal-body { max-width: 780px; margin: 0 auto; padding: 36px 20px 80px; width: 100%; }
+
+/* Tabs */
+.portal-tabs { display: flex; gap: 4px; background: var(--s2); border-radius: 14px; padding: 4px; margin-bottom: 28px; overflow-x: auto; }
+.ptab { flex: 1; padding: 9px 10px; border-radius: 10px; border: none; background: transparent; color: var(--mid); font-size: 13px; font-weight: 600; transition: all .15s; white-space: nowrap; }
+.ptab.active { background: var(--s1); color: var(--blush); box-shadow: var(--shadow); }
+
+/* Tab panels */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fade-up .25s ease both; }
+@keyframes fade-up { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* Loyalty banner */
+.loyalty-banner {
+  background: linear-gradient(135deg, #18120E, #3D2416); border-radius: 18px;
+  padding: 24px 28px; margin-bottom: 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  position: relative; overflow: hidden;
+}
+.loyalty-banner::after { content: '✦'; position: absolute; right: -10px; bottom: -20px; font-size: 120px; color: rgba(196,133,106,0.08); pointer-events: none; }
+.lb-tier { font-family: 'DM Serif Display', serif; font-size: 22px; color: #F7F3EE; }
+.lb-sub  { font-size: 13px; color: rgba(247,243,238,0.5); margin-top: 4px; }
+.lb-right { text-align: right; flex-shrink: 0; }
+.lb-visits { font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--blush); line-height: 1; }
+.lb-visits-label { font-size: 11px; color: rgba(247,243,238,0.4); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.tier-progress { margin-top: 16px; }
+.tier-bar { height: 5px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; margin-top: 6px; }
+.tier-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--blush), var(--amber)); transition: width .6s ease; }
+.tier-label { font-size: 11px; color: rgba(247,243,238,0.45); }
+
+/* Section headings */
+.section-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; margin-top: 24px; }
+.section-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--ink); }
+.section-count { font-size: 12px; color: var(--muted); background: var(--s2); padding: 3px 10px; border-radius: 20px; }
+
+/* Appointment cards */
+.appt-list { display: flex; flex-direction: column; gap: 10px; }
+.appt-card {
+  background: var(--s1); border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 16px 18px; box-shadow: var(--shadow);
+}
+.appt-card.upcoming  { border-left: 3px solid var(--teal); }
+.appt-card.pending   { border-left: 3px solid var(--amber); }
+.appt-card.cancelled { opacity: 0.5; }
+.appt-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+.appt-service { font-size: 15px; font-weight: 600; color: var(--ink); }
+.appt-meta { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.6; }
+.appt-actions { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+.btn-cancel-appt {
+  height: 34px; padding: 0 14px; border-radius: 9px;
+  border: 1.5px solid rgba(196,90,74,0.3); background: var(--rose-dim);
+  color: var(--rose); font-size: 12px; font-weight: 600; transition: all .15s;
+}
+.btn-cancel-appt:hover { background: rgba(196,90,74,0.15); }
+.btn-reschedule {
+  height: 34px; padding: 0 14px; border-radius: 9px;
+  border: 1.5px solid var(--border2); background: var(--s1);
+  color: var(--mid); font-size: 12px; font-weight: 600; transition: all .15s;
+}
+.btn-reschedule:hover { border-color: var(--blush); color: var(--blush); }
+
+/* Status badges */
+.appt-status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.badge-confirmed { background: var(--teal-dim); color: var(--teal); }
+.badge-pending   { background: var(--amber-dim); color: var(--amber); }
+.badge-completed { background: var(--s2); color: var(--mid); }
+.badge-cancelled { background: var(--rose-dim); color: var(--rose); }
+
+/* Reschedule panel */
+.reschedule-panel { margin-top: 14px; padding: 16px; background: var(--s2); border-radius: 12px; display: none; }
+.reschedule-panel.open { display: block; }
+.reschedule-title { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 12px; }
+.rs-date-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.rs-date-btn {
+  padding: 7px 14px; border-radius: 9px; border: 1.5px solid var(--border2);
+  background: var(--s1); font-size: 12px; font-weight: 600; color: var(--mid); cursor: pointer; transition: all .15s;
+}
+.rs-date-btn:hover  { border-color: var(--blush); color: var(--blush); }
+.rs-date-btn.active { border-color: var(--blush); background: var(--blush-dim); color: var(--blush); }
+.rs-time-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+.rs-time-btn {
+  padding: 7px 4px; border-radius: 8px; border: 1.5px solid var(--border2);
+  background: var(--s1); font-size: 11px; font-weight: 600; color: var(--ink);
+  text-align: center; cursor: pointer; transition: all .13s;
+}
+.rs-time-btn:hover  { border-color: var(--blush); }
+.rs-time-btn.active { background: var(--blush); border-color: var(--blush); color: white; }
+.rs-time-btn.taken  { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; }
+.btn-rs-confirm {
+  height: 38px; padding: 0 18px; border-radius: 9px; border: none;
+  background: var(--teal); color: white; font-size: 13px; font-weight: 600;
+  box-shadow: 0 3px 10px rgba(61,122,114,0.25); transition: all .15s;
+}
+.btn-rs-confirm:hover { background: #2E6B63; }
+.btn-rs-confirm:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-rs-close {
+  height: 38px; padding: 0 14px; border-radius: 9px;
+  border: 1.5px solid var(--border2); background: var(--s1); color: var(--mid);
+  font-size: 13px; font-weight: 600; transition: all .15s;
+}
+
+/* Profile / shared card */
+.profile-card { background: var(--s1); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); margin-bottom: 16px; }
+.card-title { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--ink); margin-bottom: 18px; }
+.pf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.pf-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.pf-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--mid); }
+.pf-input {
+  padding: 11px 14px; border-radius: 10px; border: 1.5px solid var(--border2);
+  background: var(--s1); font-family: 'DM Sans', sans-serif; font-size: 14px;
+  color: var(--ink); outline: none; transition: border-color .18s, box-shadow .18s;
+}
+.pf-input:focus { border-color: var(--blush); box-shadow: var(--ring); }
+.pf-input:read-only { background: var(--s2); color: var(--mid); cursor: default; }
+.btn-save {
+  height: 46px; padding: 0 24px; border-radius: 11px; border: none;
+  background: var(--blush); color: white; font-size: 14px; font-weight: 600;
+  box-shadow: 0 4px 14px rgba(196,133,106,0.28); transition: all .15s;
+}
+.btn-save:hover { background: #B5745A; }
+.btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Client History Tab ── */
+.history-visit-card {
+  background: var(--s1); border: 1.5px solid var(--border); border-radius: 14px;
+  padding: 16px 18px; box-shadow: var(--shadow); margin-bottom: 10px;
+  position: relative; overflow: hidden;
+}
+.history-visit-card::before {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px;
+  background: linear-gradient(180deg, var(--blush), var(--amber));
+}
+.hv-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; padding-left: 12px; }
+.hv-service { font-size: 14px; font-weight: 700; color: var(--ink); }
+.hv-date    { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.hv-detail  { display: flex; gap: 16px; flex-wrap: wrap; padding-left: 12px; margin-bottom: 8px; }
+.hv-detail-item { font-size: 12px; color: var(--mid); }
+.hv-detail-item strong { color: var(--ink); }
+.hv-notes { font-size: 12px; color: var(--mid); background: var(--s2); border-radius: 8px; padding: 8px 12px; margin: 8px 12px 0 12px; font-style: italic; }
+
+/* Complaint section */
+.complaint-card {
+  background: var(--s1); border: 1px solid var(--border); border-radius: 16px;
+  padding: 24px; box-shadow: var(--shadow); margin-top: 16px;
+}
+.complaint-item {
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.complaint-item:last-child { border-bottom: none; padding-bottom: 0; }
+.complaint-bar { width: 4px; border-radius: 2px; flex-shrink: 0; align-self: stretch; min-height: 40px; }
+.complaint-bar.open     { background: var(--amber); }
+.complaint-bar.resolved { background: var(--teal); }
+.complaint-bar.closed   { background: var(--rose); }
+.complaint-body { flex: 1; }
+.complaint-status { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
+.complaint-status.open     { color: var(--amber); }
+.complaint-status.resolved { color: var(--teal); }
+.complaint-status.closed   { color: var(--rose); }
+.complaint-desc { font-size: 13px; color: var(--ink); margin-top: 3px; line-height: 1.5; }
+.complaint-meta { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* Stats row */
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-card { background: var(--s1); border: 1px solid var(--border); border-radius: 14px; padding: 16px; text-align: center; box-shadow: var(--shadow); }
+.stat-num   { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--blush); }
+.stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+
+/* Utility */
+.spinner { width: 18px; height: 18px; border: 2px solid var(--s3); border-top-color: var(--blush); border-radius: 50%; animation: spin .7s linear infinite; display: inline-block; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-state { text-align: center; padding: 32px 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.empty-icon  { font-size: 40px; margin-bottom: 10px; }
+.toast-wrap  { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.toast { background: var(--ink); color: white; padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.2); opacity: 0; transform: translateY(12px); transition: all .25s; pointer-events: all; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { background: var(--teal); }
+.toast.error   { background: var(--rose); }
+
+@media (max-width: 540px) {
+  .portal-body { padding: 20px 14px 60px; }
+  .auth-card   { padding: 28px 20px; }
+  .pf-row      { grid-template-columns: 1fr; }
+  .loyalty-banner { flex-direction: column; align-items: flex-start; }
+  .lb-right    { text-align: left; }
+  .rs-time-row { grid-template-columns: repeat(3,1fr); }
+  .stats-row   { grid-template-columns: 1fr 1fr; }
+  .ptab        { font-size: 11px; padding: 8px 7px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── AUTH SCREENS ── -->
+<div class="auth-wrap" id="authWrap" style="display:none;">
+  <div class="auth-card">
+    <div class="auth-gem">✦</div>
+
+    <!-- Login -->
+    <div id="authLogin">
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Sign in to manage your appointments.</div>
+      <div class="auth-field">
+        <label class="auth-label">Email</label>
+        <input class="auth-input" id="loginEmail" type="email" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <input class="auth-input" id="loginPassword" type="password" placeholder="Your password" autocomplete="current-password"/>
+      </div>
+      <button class="auth-btn" id="btnLogin" type="button">Sign In</button>
+      <button class="auth-secondary" id="btnMagicLink" type="button">✉️ Send magic link instead</button>
+      <div class="auth-status" id="loginStatus"></div>
+      <div class="auth-switch">Don't have an account? <button id="switchToSignup">Create one →</button></div>
+    </div>
+
+    <!-- Signup -->
+    <div id="authSignup" style="display:none;">
+      <div class="auth-title">Create account</div>
+      <div class="auth-sub">Manage bookings, track visits, and more.</div>
+      <div class="auth-field">
+        <label class="auth-label">Full name</label>
+        <input class="auth-input" id="signupName" type="text" placeholder="Your name" autocomplete="name"/>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Email</label>
+        <input class="auth-input" id="signupEmail" type="email" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Phone</label>
+        <input class="auth-input" id="signupPhone" type="tel" placeholder="(847) 555-1234" autocomplete="tel"/>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <input class="auth-input" id="signupPassword" type="password" placeholder="Min. 6 characters" autocomplete="new-password"/>
+        <div class="pw-bar"><div class="pw-fill" id="pwFill"></div></div>
+      </div>
+      <button class="auth-btn" id="btnSignup" type="button">Create Account</button>
+      <div class="auth-status" id="signupStatus"></div>
+      <div class="auth-switch">Already have an account? <button id="switchToLogin">Sign in →</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PORTAL ── -->
+<div id="portal">
+  <header class="portal-header">
+    <div class="portal-brand">
+      <div class="portal-gem">✦</div>
+      <div class="portal-name" id="portalSalonName">My Account</div>
+    </div>
+    <div class="portal-user">
+      <div class="portal-avatar" id="portalAvatar">?</div>
+      <button class="portal-signout" id="btnSignOut">Sign out</button>
+    </div>
+  </header>
+
+  <div class="portal-body">
+    <!-- Tabs — 4 tabs now -->
+    <div class="portal-tabs">
+      <button class="ptab active" data-tab="appointments">📅 Appointments</button>
+      <button class="ptab" data-tab="loyalty">⭐ Loyalty</button>
+      <button class="ptab" data-tab="history">📋 Visit History</button>
+      <button class="ptab" data-tab="profile">👤 Profile</button>
+    </div>
+
+    <!-- ── TAB 1: APPOINTMENTS ── -->
+    <div class="tab-panel active" id="tab-appointments">
+      <div class="section-heading">
+        <div class="section-title">Upcoming</div>
+        <div class="section-count" id="portalUpcomingCount">0</div>
+      </div>
+      <div class="appt-list" id="portalUpcomingList">
+        <div style="padding:20px;text-align:center;"><span class="spinner"></span></div>
+      </div>
+      <div class="section-heading" style="margin-top:32px;">
+        <div class="section-title">Past visits</div>
+        <div class="section-count" id="portalPastCount">0</div>
+      </div>
+      <div class="appt-list" id="portalPastList"></div>
+    </div>
+
+    <!-- ── TAB 2: LOYALTY ── -->
+    <div class="tab-panel" id="tab-loyalty">
+      <div class="loyalty-banner">
+        <div>
+          <div class="lb-tier" id="lbTier">Loading…</div>
+          <div class="lb-sub"  id="lbSub"></div>
+          <div class="tier-progress">
+            <div class="tier-label" id="tierProgressLabel"></div>
+            <div class="tier-bar"><div class="tier-bar-fill" id="tierBarFill" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="lb-right">
+          <div class="lb-visits" id="lbVisits">0</div>
+          <div class="lb-visits-label">Total Visits</div>
+        </div>
+      </div>
+
+      <div class="profile-card">
+        <div class="card-title">Loyalty Tiers</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--s2);">
+            <span style="font-size:22px;">⭐</span>
+            <div><div style="font-weight:700;font-size:13px;">New Client</div><div style="font-size:12px;color:var(--muted);">First visit</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--s2);">
+            <span style="font-size:22px;">🌸</span>
+            <div><div style="font-weight:700;font-size:13px;">Bronze — 1 visit</div><div style="font-size:12px;color:var(--muted);">Welcome to the family</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--s2);">
+            <span style="font-size:22px;">🥈</span>
+            <div><div style="font-weight:700;font-size:13px;">Silver — 5 visits</div><div style="font-size:12px;color:var(--muted);">You're a regular</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--s2);">
+            <span style="font-size:22px;">🥇</span>
+            <div><div style="font-weight:700;font-size:13px;">Gold — 10 visits</div><div style="font-size:12px;color:var(--muted);">Valued VIP client</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--s2);">
+            <span style="font-size:22px;">💎</span>
+            <div><div style="font-weight:700;font-size:13px;">Diamond — 20 visits</div><div style="font-size:12px;color:var(--muted);">Our most loyal client</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 3: VISIT HISTORY (merged from client-profile.html) ── -->
+    <div class="tab-panel" id="tab-history">
+      <!-- Stats row -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-num" id="statTotalVisits">—</div>
+          <div class="stat-label">Total Visits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statFavService">—</div>
+          <div class="stat-label">Fav Service</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statTotalSpent">—</div>
+          <div class="stat-label">Est. Spent</div>
+        </div>
+      </div>
+
+      <!-- Visit timeline -->
+      <div class="profile-card">
+        <div class="card-title">Visit Timeline</div>
+        <div id="historyVisitList">
+          <div style="text-align:center;padding:20px;"><span class="spinner"></span></div>
+        </div>
+      </div>
+
+      <!-- Complaint history (from client-profile.html) -->
+      <div class="complaint-card">
+        <div class="card-title" style="margin-bottom:16px;">🚨 Complaint History</div>
+        <div id="complaintHistoryList">
+          <div style="text-align:center;padding:16px;"><span class="spinner"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 4: PROFILE ── -->
+    <div class="tab-panel" id="tab-profile">
+      <div class="profile-card">
+        <div class="card-title">Your profile</div>
+        <div class="pf-row">
+          <div class="pf-field">
+            <label class="pf-label">First name</label>
+            <input class="pf-input" id="pfFirst" type="text" autocomplete="given-name"/>
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">Last name</label>
+            <input class="pf-input" id="pfLast" type="text" autocomplete="family-name"/>
+          </div>
+        </div>
+        <div class="pf-field">
+          <label class="pf-label">Email</label>
+          <input class="pf-input" id="pfEmail" type="email" autocomplete="email"/>
+        </div>
+        <div class="pf-field">
+          <label class="pf-label">Phone</label>
+          <input class="pf-input" id="pfPhone" type="tel" autocomplete="tel"/>
+        </div>
+        <div class="pf-field">
+          <label class="pf-label">Member since</label>
+          <input class="pf-input" id="pfSince" type="text" readonly/>
+        </div>
+        <div style="margin-top:8px;">
+          <button class="btn-save" id="btnSaveProfile" type="button">Save changes</button>
+        </div>
+        <div class="auth-status" id="profileStatus" style="margin-top:12px;"></div>
+      </div>
+
+      <!-- Change password -->
+      <div class="profile-card">
+        <div class="card-title">Change password</div>
+        <div class="pf-field">
+          <label class="pf-label">New password</label>
+          <input class="pf-input" id="pfNewPw" type="password" placeholder="Min. 6 characters"/>
+          <div class="pw-bar"><div class="pw-fill" id="pfPwFill"></div></div>
+        </div>
+        <div class="pf-field">
+          <label class="pf-label">Confirm new password</label>
+          <input class="pf-input" id="pfConfirmPw" type="password" placeholder="Repeat new password"/>
+        </div>
+        <button class="btn-save" id="btnChangePw" type="button">Update password</button>
+        <div class="auth-status" id="pwStatus" style="margin-top:12px;"></div>
+      </div>
+    </div>
+
+  </div><!-- /portal-body -->
+</div><!-- /portal -->
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// CLIENT PORTAL — Full corrected build
+// Fixes: assigned_technician column, business-hours-aware
+//        reschedule panel, auth token, complaint history,
+//        visit history stats, 4-tab layout.
+// ══════════════════════════════════════════════════════════════
+
+// ── Config ────────────────────────────────────────────────────
+const params      = new URLSearchParams(location.search);
+const BUSINESS_ID = params.get('business_id') || window.SG_CONFIG?.businessId || '';
+const SB_URL      = window.SG_BOOKING?.supabaseUrl  || window.SG_CONFIG?.supabaseUrl  || 'https://pbojacnagutipfhcxltj.supabase.co';
+const SB_KEY      = window.SG_BOOKING?.supabaseKey  || window.SG_CONFIG?.supabaseKey  || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBib2phY25hZ3V0aXBmaGN4bHRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMDkwODAsImV4cCI6MjA2MzU4NTA4MH0.ZLCcAzTYljoZycpBGwMtthP5VyAJ4schuIvt4HibGc0';
+
+const $  = id => document.getElementById(id);
+let sb   = null;
+let currentUser = null;
+let userPhone   = null;
+let allAppts    = [];
+let businessProfile = null;
+
+// ── Supabase client loader ─────────────────────────────────────
+async function initSb() {
+  if (sb) return sb;
+  if (!window.supabase?.createClient) {
+    for (const src of [
+      '/shared/js/supabase.js',
+      'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js'
+    ]) {
+      try {
+        await new Promise((res, rej) => {
+          const s = document.createElement('script');
+          s.src = src; s.onload = res; s.onerror = rej;
+          document.head.appendChild(s);
+        });
+        if (window.supabase?.createClient) break;
+      } catch(_) {}
+    }
+  }
+  sb = window.supabase.createClient(SB_URL, SB_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true }
+  });
+  return sb;
+}
+
+// ── REST helpers ──────────────────────────────────────────────
+// Uses anon key for reads; passes session access_token for writes.
+async function getAccessToken() {
+  try {
+    const client = await initSb();
+    const { data } = await client.auth.getSession();
+    return data?.session?.access_token || SB_KEY;
+  } catch(_) { return SB_KEY; }
+}
+
+function makeHeaders(token, schema) {
+  const h = {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + (token || SB_KEY),
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation',
+  };
+  if (schema && schema !== 'public') {
+    h['Accept-Profile']  = schema;
+    h['Content-Profile'] = schema;
+  }
+  return h;
+}
+
+async function dbGet(table, schema, filters, cols) {
+  cols = cols || '*';
+  let url = `${SB_URL}/rest/v1/${table}?select=${encodeURIComponent(cols)}`;
+  if (filters) url += '&' + filters;
+  const r = await fetch(url, { headers: makeHeaders(SB_KEY, schema) });
+  if (!r.ok) return null;
+  return r.json();
+}
+
+async function dbPatch(table, schema, filters, payload) {
+  const token = await getAccessToken();
+  const url = `${SB_URL}/rest/v1/${table}?${filters}`;
+  const r = await fetch(url, {
+    method: 'PATCH',
+    headers: makeHeaders(token, schema),
+    body: JSON.stringify(payload),
+  });
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({}));
+    throw new Error(err.message || 'Update failed');
+  }
+  return r.json();
+}
+
+// ── Toast ──────────────────────────────────────────────────────
+function toast(msg, type) {
+  const el = document.createElement('div');
+  el.className = 'toast ' + (type || '');
+  el.textContent = msg;
+  $('toastWrap').appendChild(el);
+  requestAnimationFrame(() => el.classList.add('show'));
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 3200);
+}
+
+// ── Helpers ────────────────────────────────────────────────────
+function fmt12(hhmm) {
+  if (!hhmm) return '';
+  const [h, m] = hhmm.split(':').map(Number);
+  return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  const now = new Date(); now.setHours(0, 0, 0, 0);
+  const diff = Math.round((d - now) / 86400000);
+  const t = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  if (diff === 0) return `Today at ${t}`;
+  if (diff === 1) return `Tomorrow at ${t}`;
+  if (diff > 1 && diff < 7) return `${d.toLocaleDateString('en-US', { weekday: 'long' })} at ${t}`;
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ` at ${t}`;
+}
+
+function fmtDateShort(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function setStatus(el, msg, type) {
+  el.className = 'auth-status ' + type;
+  el.textContent = msg;
+}
+
+function statusBadge(s) {
+  const map = {
+    confirmed: ['✓ Confirmed', 'badge-confirmed'],
+    pending:   ['⏳ Pending',   'badge-pending'],
+    completed: ['✓ Completed', 'badge-completed'],
+    cancelled: ['✕ Cancelled', 'badge-cancelled'],
+    cancellation_requested: ['⚠ Cancel Req', 'badge-pending'],
+    request:   ['📝 Requested', 'badge-pending'],
+    active:    ['✓ Confirmed', 'badge-confirmed'],
+    scheduled: ['✓ Confirmed', 'badge-confirmed'],
+  };
+  const [l, c] = map[s] || ['• ' + s, 'badge-completed'];
+  return `<span class="appt-status-badge ${c}">${l}</span>`;
+}
+
+function loyaltyInfo(v) {
+  if (v >= 20) return { icon: '💎', tier: 'Diamond',    next: null, pct: 100 };
+  if (v >= 10) return { icon: '🥇', tier: 'Gold',       next: 20,   pct: (v - 10) / 10 * 100 };
+  if (v >= 5)  return { icon: '🥈', tier: 'Silver',     next: 10,   pct: (v - 5)  / 5  * 100 };
+  if (v >= 1)  return { icon: '🌸', tier: 'Bronze',     next: 5,    pct: v / 5 * 100 };
+  return               { icon: '⭐', tier: 'New Client', next: 1,    pct: 0 };
+}
+
+// ── Business hours parser (mirrors book.html logic) ────────────
+function getDayHours(date) {
+  const bh = businessProfile?.business_hours;
+  const DEFAULT = { open: 9, close: 20 };
+  if (!bh) return DEFAULT;
+  const DAYS  = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+  const SHORT = ['su','mo','tu','we','th','fr','sa'];
+  const dow   = DAYS[date.getDay()];
+  const curIdx = SHORT.indexOf(dow.slice(0, 2));
+
+  if (typeof bh === 'object' && !Array.isArray(bh)) {
+    const day = bh[dow] || bh[dow.slice(0, 3)];
+    if (!day) return { open: 0, close: 0 };
+    const t2h = t => { const p = String(t).split(':').map(Number); return p[0] + (p[1] || 0) / 60; };
+    return { open: t2h(day.open || day.start || '9:00'), close: t2h(day.close || day.end || '19:00') };
+  }
+
+  if (typeof bh === 'string') {
+    const parseH = str => {
+      str = str.trim();
+      let h = parseInt(str), mins = 0;
+      const ci = str.indexOf(':');
+      if (ci > -1) mins = parseInt(str.slice(ci + 1));
+      const isPM = str.toLowerCase().includes('pm');
+      const isAM = str.toLowerCase().includes('am');
+      if (isPM && h !== 12) h += 12;
+      if (isAM && h === 12) h = 0;
+      return h + mins / 60;
+    };
+    for (const seg of bh.split(/[,\n]+/)) {
+      const ci = seg.trim().indexOf(':');
+      if (ci < 0) continue;
+      const dayPart  = seg.slice(0, ci).trim();
+      const hourPart = seg.slice(ci + 1).trim();
+      let covered = false;
+      const di = dayPart.search(/[-–]/);
+      if (di > -1) {
+        const fi = SHORT.indexOf(dayPart.slice(0, di).trim().toLowerCase().slice(0, 2));
+        const ti = SHORT.indexOf(dayPart.slice(di + 1).trim().toLowerCase().slice(0, 2));
+        if (fi > -1 && ti > -1 && curIdx >= fi && curIdx <= ti) covered = true;
+      } else {
+        if (dayPart.toLowerCase().slice(0, 2) === dow.slice(0, 2)) covered = true;
+      }
+      if (!covered) continue;
+      const hi = hourPart.search(/[-–]/);
+      if (hi > -1) return { open: parseH(hourPart.slice(0, hi)), close: parseH(hourPart.slice(hi + 1)) };
+    }
+  }
+  return DEFAULT;
+}
+
+// ── Load appointments ──────────────────────────────────────────
+async function loadAppointments(phone) {
+  // FIX: correct column name is assigned_technician (not technician_name)
+  let filters = `client_phone=ilike.*${phone}*&order=start_time.desc`;
+  if (BUSINESS_ID) filters += `&business_id=eq.${BUSINESS_ID}`;
+
+  const data = await dbGet(
+    'appointments', 'salon', filters,
+    'id,service_summary,start_time,duration_minutes,status,assigned_technician,notes,price_charged'
+  );
+  allAppts = data || [];
+
+  const now      = new Date();
+  const upcoming = allAppts.filter(a => a.start_time && new Date(a.start_time) > now && !['cancelled','completed'].includes(a.status));
+  const past     = allAppts.filter(a => !upcoming.find(u => u.id === a.id));
+
+  $('portalUpcomingCount').textContent = upcoming.length;
+  $('portalPastCount').textContent     = past.length;
+
+  $('portalUpcomingList').innerHTML = upcoming.length
+    ? upcoming.map(a => apptCardHTML(a, true)).join('')
+    : `<div class="empty-state"><div class="empty-icon">📅</div>No upcoming appointments.<br>
+       <a href="/book.html?business_id=${BUSINESS_ID}" style="color:var(--blush);font-weight:600;">Book one now →</a></div>`;
+
+  $('portalPastList').innerHTML = past.length
+    ? past.map(a => apptCardHTML(a, false)).join('')
+    : `<div class="empty-state"><div class="empty-icon">🌸</div>No past visits yet!</div>`;
+
+  attachApptHandlers();
+
+  // Loyalty — count completed or past non-cancelled
+  const visitCount = allAppts.filter(a =>
+    a.status === 'completed' ||
+    (!['cancelled','cancellation_requested'].includes(a.status) && a.start_time && new Date(a.start_time) <= now)
+  ).length;
+  renderLoyalty(visitCount);
+
+  // Populate visit history tab
+  renderVisitHistory(allAppts, visitCount);
+
+  // Load complaints
+  loadComplaints(phone);
+}
+
+// ── Appointment card HTML ──────────────────────────────────────
+function apptCardHTML(a, showActions) {
+  const isCancellable   = showActions && !['cancelled','completed','cancellation_requested'].includes(a.status);
+  const isReschedulable = showActions && ['pending','confirmed','request','active','scheduled'].includes(a.status);
+  // FIX: use assigned_technician
+  const techLabel = a.assigned_technician || 'Next available';
+
+  return `
+    <div class="appt-card ${['confirmed','active','scheduled'].includes(a.status) ? 'upcoming' : a.status === 'pending' ? 'pending' : a.status === 'cancelled' ? 'cancelled' : ''}" id="card-${a.id}">
+      <div class="appt-top">
+        <div>
+          <div class="appt-service">${a.service_summary || 'Appointment'}</div>
+          <div class="appt-meta">
+            📅 ${fmtDate(a.start_time)}<br>
+            👤 ${techLabel}${a.duration_minutes ? ` · ⏱ ${a.duration_minutes} min` : ''}
+          </div>
+        </div>
+        ${statusBadge(a.status)}
+      </div>
+      ${(isCancellable || isReschedulable) ? `
+        <div class="appt-actions">
+          ${isReschedulable ? `<button class="btn-reschedule" data-id="${a.id}" data-action="reschedule">📅 Reschedule</button>` : ''}
+          ${isCancellable   ? `<button class="btn-cancel-appt" data-id="${a.id}" data-action="cancel">✕ Cancel</button>` : ''}
+        </div>
+        <div class="reschedule-panel" id="rs-${a.id}"></div>
+      ` : ''}
+    </div>`;
+}
+
+// ── Appointment action handlers ────────────────────────────────
+function attachApptHandlers() {
+  document.querySelectorAll('[data-action="cancel"]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Cancel this appointment? The salon will be notified.')) return;
+      btn.disabled = true; btn.textContent = '⏳';
+      try {
+        await dbPatch('appointments', 'salon', `id=eq.${btn.dataset.id}`, { status: 'cancellation_requested' });
+        toast('Cancellation requested — the salon will confirm.', 'success');
+        await loadAppointments(userPhone);
+      } catch(e) {
+        toast('Could not cancel. Please call us.', 'error');
+        btn.disabled = false; btn.textContent = '✕ Cancel';
+      }
+    });
+  });
+
+  document.querySelectorAll('[data-action="reschedule"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id    = btn.dataset.id;
+      const panel = $('rs-' + id);
+      if (!panel) return;
+      const isOpen = panel.classList.contains('open');
+      document.querySelectorAll('.reschedule-panel').forEach(p => p.classList.remove('open'));
+      if (!isOpen) renderReschedulePanel(panel, id);
+    });
+  });
+}
+
+// ── Inline reschedule — uses real business hours ───────────────
+function renderReschedulePanel(panel, apptId) {
+  panel.classList.add('open');
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const dates = [];
+  for (let i = 1; i <= 21; i++) {
+    const d = new Date(today); d.setDate(today.getDate() + i);
+    const h = getDayHours(d);
+    if (h.open !== 0 || h.close !== 0) dates.push(d); // skip closed days
+  }
+
+  let selDate = null, selTime = null;
+
+  panel.innerHTML = `
+    <div class="reschedule-title">Choose a new date and time</div>
+    <div class="rs-date-row" id="rsd-${apptId}">
+      ${dates.slice(0, 7).map(d => `
+        <button class="rs-date-btn" data-iso="${d.toISOString().slice(0, 10)}" data-ts="${d.getTime()}">
+          ${d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+        </button>`).join('')}
+    </div>
+    <div id="rst-${apptId}" style="font-size:12px;color:var(--muted);margin-bottom:10px;">Select a date to see available times</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn-rs-confirm" id="rsc-${apptId}" disabled>Confirm new time</button>
+      <button class="btn-rs-close"   id="rsclose-${apptId}">Cancel</button>
+    </div>`;
+
+  $('rsclose-' + apptId)?.addEventListener('click', () => panel.classList.remove('open'));
+
+  panel.querySelectorAll('.rs-date-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      panel.querySelectorAll('.rs-date-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selDate = btn.dataset.iso;
+      selTime = null;
+      const confirmBtn = $('rsc-' + apptId);
+      if (confirmBtn) confirmBtn.disabled = true;
+
+      const timesEl = $('rst-' + apptId);
+      timesEl.className = '';
+      timesEl.innerHTML = '<span class="spinner"></span>';
+
+      // Fetch taken slots for this date
+      let takenFilter = `start_time=gte.${selDate}T00:00:00&start_time=lte.${selDate}T23:59:59&status=neq.cancelled`;
+      if (BUSINESS_ID) takenFilter += `&business_id=eq.${BUSINESS_ID}`;
+      const takenData = await dbGet('appointments', 'salon', takenFilter, 'start_time,duration_minutes');
+      const takenSlots = new Set();
+      (takenData || []).forEach(a => {
+        const apptStart = new Date(a.start_time);
+        const dur = a.duration_minutes || 30;
+        for (let offset = 0; offset < dur; offset += 30) {
+          const t = new Date(apptStart.getTime() + offset * 60000);
+          takenSlots.add(t.toISOString().slice(11, 16));
+        }
+      });
+
+      // Generate slots from real business hours
+      const dateObj = new Date(btn.dataset.ts * 1);
+      const hours   = getDayHours(dateObj);
+      const now     = new Date();
+      const slots   = [];
+      const openM   = Math.round(hours.open  * 60);
+      const closeM  = Math.round(hours.close * 60);
+
+      for (let m = openM; m < closeM; m += 30) {
+        const h  = Math.floor(m / 60);
+        const mn = m % 60;
+        const slotDate = new Date(dateObj);
+        slotDate.setHours(h, mn, 0, 0);
+        if (slotDate <= now) continue;
+        const hhmm  = `${String(h).padStart(2,'0')}:${String(mn).padStart(2,'0')}`;
+        const taken = takenSlots.has(hhmm);
+        slots.push({ hhmm, taken, display: fmt12(hhmm) });
+      }
+
+      timesEl.className = 'rs-time-row';
+      timesEl.innerHTML = slots.map(s =>
+        `<button class="rs-time-btn${s.taken ? ' taken' : ''}" data-t="${s.hhmm}" ${s.taken ? 'disabled' : ''}>${s.display}</button>`
+      ).join('');
+
+      timesEl.querySelectorAll('.rs-time-btn:not(.taken)').forEach(tb => {
+        tb.addEventListener('click', () => {
+          timesEl.querySelectorAll('.rs-time-btn').forEach(b => b.classList.remove('active'));
+          tb.classList.add('active');
+          selTime = tb.dataset.t;
+          if (confirmBtn) confirmBtn.disabled = false;
+        });
+      });
+    });
+  });
+
+  $('rsc-' + apptId)?.addEventListener('click', async () => {
+    if (!selDate || !selTime) return;
+    const [h, m] = selTime.split(':').map(Number);
+    const newStart = new Date(selDate + 'T00:00:00'); newStart.setHours(h, m);
+    const btn = $('rsc-' + apptId);
+    btn.disabled = true; btn.textContent = '⏳ Saving…';
+    try {
+      await dbPatch('appointments', 'salon', `id=eq.${apptId}`, {
+        start_time: newStart.toISOString(), status: 'pending'
+      });
+      toast('Appointment rescheduled!', 'success');
+      panel.classList.remove('open');
+      await loadAppointments(userPhone);
+    } catch(e) {
+      toast('Could not reschedule. Please call us.', 'error');
+      btn.disabled = false; btn.textContent = 'Confirm new time';
+    }
+  });
+}
+
+// ── Loyalty ────────────────────────────────────────────────────
+function renderLoyalty(visits) {
+  const { icon, tier, next, pct } = loyaltyInfo(visits);
+  $('lbTier').textContent = `${icon} ${tier}`;
+  $('lbVisits').textContent = visits;
+  if (next) {
+    $('lbSub').textContent = `${next - visits} more visit${next - visits !== 1 ? 's' : ''} to reach next tier`;
+    $('tierProgressLabel').textContent = `${visits} / ${next} visits`;
+    $('tierBarFill').style.width = pct + '%';
+  } else {
+    $('lbSub').textContent = "You've reached our highest tier! 💎";
+    $('tierBarFill').style.width = '100%';
+    $('tierProgressLabel').textContent = '';
+  }
+}
+
+// ── Visit history tab ──────────────────────────────────────────
+function renderVisitHistory(appts, visitCount) {
+  // Stats
+  $('statTotalVisits').textContent = visitCount;
+
+  const now = new Date();
+  const completed = appts.filter(a =>
+    a.status === 'completed' ||
+    (!['cancelled','cancellation_requested'].includes(a.status) && a.start_time && new Date(a.start_time) <= now)
+  );
+
+  // Favourite service
+  const svcCount = {};
+  completed.forEach(a => {
+    if (a.service_summary) svcCount[a.service_summary] = (svcCount[a.service_summary] || 0) + 1;
+  });
+  const favSvc = Object.entries(svcCount).sort((a, b) => b[1] - a[1])[0];
+  $('statFavService').textContent = favSvc ? favSvc[0].split(' ').slice(0, 1).join('') : '—';
+  $('statFavService').title       = favSvc ? favSvc[0] : '';
+
+  // Total spent (price_charged if available, otherwise 0)
+  const totalSpent = completed.reduce((t, a) => t + (+(a.price_charged || 0)), 0);
+  $('statTotalSpent').textContent = totalSpent > 0 ? '$' + totalSpent.toFixed(0) : '—';
+
+  // Timeline — past appointments only, newest first
+  const pastSorted = [...completed].sort((a, b) => new Date(b.start_time) - new Date(a.start_time));
+
+  const listEl = $('historyVisitList');
+  if (!pastSorted.length) {
+    listEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🌸</div>No visit history yet.</div>`;
+    return;
+  }
+
+  listEl.innerHTML = pastSorted.map(a => {
+    const tech = a.assigned_technician || 'Any technician';
+    return `
+      <div class="history-visit-card">
+        <div class="hv-top">
+          <div>
+            <div class="hv-service">${a.service_summary || 'Appointment'}</div>
+            <div class="hv-date">${fmtDateShort(a.start_time)}</div>
+          </div>
+          ${statusBadge(a.status)}
+        </div>
+        <div class="hv-detail">
+          <div class="hv-detail-item">👤 <strong>${tech}</strong></div>
+          ${a.duration_minutes ? `<div class="hv-detail-item">⏱ <strong>${a.duration_minutes} min</strong></div>` : ''}
+          ${a.price_charged    ? `<div class="hv-detail-item">💰 <strong>$${(+a.price_charged).toFixed(0)}</strong></div>` : ''}
+        </div>
+        ${a.notes ? `<div class="hv-notes">💬 ${a.notes}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+// ── Complaints (from client-profile.html) ─────────────────────
+async function loadComplaints(phone) {
+  const el = $('complaintHistoryList');
+  try {
+    let filters = `client_phone=ilike.*${phone}*&order=complaint_date.desc`;
+    if (BUSINESS_ID) filters += `&business_id=eq.${BUSINESS_ID}`;
+    const data = await dbGet('customer_complaints', 'salon', filters,
+      'id,status,complaint_date,technician,description');
+
+    if (!data || !data.length) {
+      el.innerHTML = `<div style="color:var(--teal);font-size:13px;padding:8px 0;">✅ No complaints on record — great!</div>`;
+      return;
+    }
+
+    el.innerHTML = data.map(c => {
+      const cls = (c.status || '').toLowerCase();
+      return `
+        <div class="complaint-item">
+          <div class="complaint-bar ${cls}"></div>
+          <div class="complaint-body">
+            <div class="complaint-status ${cls}">${c.status || 'Unknown'}</div>
+            <div class="complaint-desc">${c.description || '—'}</div>
+            <div class="complaint-meta">
+              ${c.complaint_date ? '📅 ' + fmtDateShort(c.complaint_date) : ''}
+              ${c.technician     ? ' · 👤 ' + c.technician                : ''}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = `<div style="font-size:13px;color:var(--muted);">Could not load complaints.</div>`;
+  }
+}
+
+// ── Tab switching ──────────────────────────────────────────────
+document.querySelectorAll('.ptab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    $('tab-' + tab.dataset.tab)?.classList.add('active');
+  });
+});
+
+// ── Auth form helpers ──────────────────────────────────────────
+function phoneFormat(v) {
+  const d = v.replace(/\D/g,'').slice(0,10);
+  if (d.length > 6) return `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`;
+  if (d.length > 3) return `(${d.slice(0,3)}) ${d.slice(3)}`;
+  if (d.length > 0) return `(${d}`;
+  return '';
+}
+function pwStrength(pw, fillEl) {
+  let s = 0;
+  if (pw.length >= 6)  s = 1;
+  if (pw.length >= 8)  s = 2;
+  if (pw.length >= 10 && /[A-Z]/.test(pw)) s = 3;
+  if (pw.length >= 12 && /[^a-zA-Z0-9]/.test(pw)) s = 4;
+  const w = ['0%','30%','55%','80%','100%'][s];
+  const c = ['transparent','#C45A4A','#C4993A','#C4856A','#3D7A72'][s];
+  fillEl.style.width = w; fillEl.style.background = c;
+}
+
+$('switchToSignup').addEventListener('click', () => { $('authLogin').style.display='none'; $('authSignup').style.display='block'; });
+$('switchToLogin').addEventListener('click',  () => { $('authSignup').style.display='none'; $('authLogin').style.display='block'; });
+$('signupPassword').addEventListener('input', e => pwStrength(e.target.value, $('pwFill')));
+$('pfNewPw').addEventListener('input',        e => pwStrength(e.target.value, $('pfPwFill')));
+$('signupPhone').addEventListener('input', e => { e.target.value = phoneFormat(e.target.value); });
+$('pfPhone').addEventListener('input',     e => { e.target.value = phoneFormat(e.target.value); });
+
+// Login
+$('btnLogin').addEventListener('click', async () => {
+  const email = $('loginEmail').value.trim();
+  const pw    = $('loginPassword').value;
+  if (!email || !pw) { setStatus($('loginStatus'), 'Please fill in all fields.', 'err'); return; }
+  $('btnLogin').disabled = true; $('btnLogin').textContent = '⏳ Signing in…';
+  const client = await initSb();
+  const { error } = await client.auth.signInWithPassword({ email, password: pw });
+  $('btnLogin').disabled = false; $('btnLogin').textContent = 'Sign In';
+  if (error) { setStatus($('loginStatus'), error.message, 'err'); return; }
+  location.reload();
+});
+$('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') $('btnLogin').click(); });
+
+// Magic link
+$('btnMagicLink').addEventListener('click', async () => {
+  const email = $('loginEmail').value.trim();
+  if (!email) { setStatus($('loginStatus'), 'Enter your email first.', 'err'); return; }
+  $('btnMagicLink').disabled = true; $('btnMagicLink').textContent = '⏳ Sending…';
+  const client = await initSb();
+  const { error } = await client.auth.signInWithOtp({ email, options: { emailRedirectTo: location.href } });
+  $('btnMagicLink').disabled = false; $('btnMagicLink').textContent = '✉️ Send magic link instead';
+  if (error) setStatus($('loginStatus'), error.message, 'err');
+  else       setStatus($('loginStatus'), `Magic link sent to ${email}!`, 'ok');
+});
+
+// Signup
+$('btnSignup').addEventListener('click', async () => {
+  const name  = $('signupName').value.trim();
+  const email = $('signupEmail').value.trim();
+  const phone = $('signupPhone').value.replace(/\D/g, '');
+  const pw    = $('signupPassword').value;
+  if (!name || !email || !pw) { setStatus($('signupStatus'), 'Please fill in all required fields.', 'err'); return; }
+  if (pw.length < 6)          { setStatus($('signupStatus'), 'Password must be at least 6 characters.', 'err'); return; }
+  $('btnSignup').disabled = true; $('btnSignup').textContent = '⏳ Creating account…';
+  const client = await initSb();
+  const { data, error } = await client.auth.signUp({ email, password: pw, options: { data: { full_name: name, phone } } });
+  $('btnSignup').disabled = false; $('btnSignup').textContent = 'Create Account';
+  if (error)       { setStatus($('signupStatus'), error.message, 'err'); return; }
+  if (!data?.user) { setStatus($('signupStatus'), 'Check your email to confirm your account.', 'ok'); return; }
+  // Link existing appointments by phone
+  if (phone && BUSINESS_ID && data.session?.access_token) {
+    try {
+      await fetch(`${SB_URL}/rest/v1/customers?phone=ilike.*${phone}*&business_id=eq.${BUSINESS_ID}`, {
+        method: 'PATCH',
+        headers: makeHeaders(data.session.access_token, 'salon'),
+        body: JSON.stringify({ user_id: data.user.id }),
+      });
+    } catch(_) {}
+  }
+  location.reload();
+});
+
+// Sign out
+$('btnSignOut').addEventListener('click', async () => {
+  const client = await initSb();
+  await client.auth.signOut();
+  location.reload();
+});
+
+// Save profile
+$('btnSaveProfile').addEventListener('click', async () => {
+  const first = $('pfFirst').value.trim();
+  const last  = $('pfLast').value.trim();
+  const email = $('pfEmail').value.trim();
+  const phone = $('pfPhone').value.replace(/\D/g, '');
+  $('btnSaveProfile').disabled = true; $('btnSaveProfile').textContent = '⏳ Saving…';
+  try {
+    const client = await initSb();
+    await client.auth.updateUser({ email, data: { full_name: `${first} ${last}`.trim(), phone } });
+    if (phone && BUSINESS_ID) {
+      const token = await getAccessToken();
+      await fetch(`${SB_URL}/rest/v1/customers?user_id=eq.${currentUser.id}&business_id=eq.${BUSINESS_ID}`, {
+        method: 'PATCH',
+        headers: makeHeaders(token, 'salon'),
+        body: JSON.stringify({ full_name: `${first} ${last}`.trim(), phone, email }),
+      });
+    }
+    setStatus($('profileStatus'), 'Profile updated!', 'ok');
+    toast('Profile saved', 'success');
+  } catch(e) {
+    setStatus($('profileStatus'), 'Could not save: ' + (e.message || 'Please try again.'), 'err');
+  } finally {
+    $('btnSaveProfile').disabled = false; $('btnSaveProfile').textContent = 'Save changes';
+  }
+});
+
+// Change password
+$('btnChangePw').addEventListener('click', async () => {
+  const np = $('pfNewPw').value;
+  const cp = $('pfConfirmPw').value;
+  if (!np || np.length < 6)  { setStatus($('pwStatus'), 'Password must be at least 6 characters.', 'err'); return; }
+  if (np !== cp)             { setStatus($('pwStatus'), 'Passwords do not match.', 'err'); return; }
+  $('btnChangePw').disabled = true; $('btnChangePw').textContent = '⏳ Updating…';
+  try {
+    const client = await initSb();
+    const { error } = await client.auth.updateUser({ password: np });
+    if (error) throw error;
+    $('pfNewPw').value = ''; $('pfConfirmPw').value = ''; $('pfPwFill').style.width = '0';
+    setStatus($('pwStatus'), 'Password updated!', 'ok');
+    toast('Password changed', 'success');
+  } catch(e) {
+    setStatus($('pwStatus'), e.message || 'Could not update password.', 'err');
+  } finally {
+    $('btnChangePw').disabled = false; $('btnChangePw').textContent = 'Update password';
+  }
+});
+
+// ── Boot ────────────────────────────────────────────────────────
+(async () => {
+  const client = await initSb();
+
+  // Load business profile (name + business_hours for reschedule panel)
+  if (BUSINESS_ID) {
+    try {
+      const r = await fetch(`${SB_URL}/rest/v1/business_profiles?id=eq.${BUSINESS_ID}&select=business_name,phone,business_hours`,
+        { headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY } });
+      const d = await r.json();
+      if (d[0]) {
+        businessProfile = d[0];
+        $('portalSalonName').textContent = d[0].business_name || 'My Account';
+        document.title = `My Account — ${d[0].business_name || 'Salon'}`;
+      }
+    } catch(_) {}
+  }
+
+  const { data: { session } } = await client.auth.getSession();
+
+  if (!session?.user) {
+    // Handle URL pre-fill params from book.html confirmation link
+    const mode = params.get('mode') || 'login';
+    if (mode === 'signup') { $('authLogin').style.display = 'none'; $('authSignup').style.display = 'block'; }
+    const ph = params.get('ph');
+    if (ph) {
+      try {
+        const d = atob(ph);
+        $('signupPhone').value = d.length >= 10 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : d;
+      } catch(_) {}
+    }
+    $('authWrap').style.display = 'flex';
+    $('portal').style.display   = 'none';
+    return;
+  }
+
+  // Logged in — show portal
+  currentUser = session.user;
+  $('authWrap').style.display = 'none';
+  $('portal').style.display   = 'flex';
+
+  // Fill profile fields
+  const meta     = currentUser.user_metadata || {};
+  const fullName = meta.full_name || currentUser.email?.split('@')[0] || 'Client';
+  const parts    = fullName.trim().split(' ');
+  $('pfFirst').value = parts[0] || '';
+  $('pfLast').value  = parts.slice(1).join(' ') || '';
+  $('pfEmail').value = currentUser.email || '';
+  $('pfSince').value = currentUser.created_at
+    ? new Date(currentUser.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    : '—';
+
+  // Avatar initials
+  const initials = parts.map(n => n[0]?.toUpperCase() || '').slice(0, 2).join('');
+  $('portalAvatar').textContent = initials;
+
+  // Resolve phone from metadata or customer table
+  userPhone = meta.phone?.replace(/\D/g, '') || '';
+  if (!userPhone && BUSINESS_ID) {
+    try {
+      const r = await fetch(
+        `${SB_URL}/rest/v1/customers?user_id=eq.${currentUser.id}&business_id=eq.${BUSINESS_ID}&select=phone`,
+        { headers: makeHeaders(session.access_token, 'salon') }
+      );
+      const d = await r.json();
+      if (d[0]?.phone) userPhone = d[0].phone.replace(/\D/g, '');
+    } catch(_) {}
+  }
+
+  if (userPhone) {
+    $('pfPhone').value = phoneFormat(userPhone);
+    await loadAppointments(userPhone);
+  } else {
+    $('portalUpcomingList').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📞</div>
+        Add your phone number in the <strong>Profile</strong> tab so we can find your appointments.
+      </div>`;
+  }
+})();
+</script>
+</body>
+</html>

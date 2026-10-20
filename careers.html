@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Join the Victoria Nails team — open positions for nail technicians, receptionists, and housekeepers in South Elgin, IL. Apply today." name="description"/>
+  <title>Careers | Victoria Nails</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --gold:#b8956a; --gold-light:#d4b896; --gold-pale:#f5ede4;
+      --blush:#e8cfc3; --cream:#faf7f4; --ivory:#f2ede8;
+      --charcoal:#1a1714; --ink:#2c2520; --warm-gray:#7a6e68;
+      --border:rgba(184,149,106,.18); --border-soft:rgba(184,149,106,.10);
+      --shadow-soft:0 4px 24px rgba(26,23,20,.06);
+      --shadow-med:0 8px 40px rgba(26,23,20,.10);
+      --shadow-lg:0 20px 60px rgba(26,23,20,.14);
+      --shadow-gold:0 8px 32px rgba(184,149,106,.22);
+      --radius:12px; --radius-lg:20px;
+      --ring:0 0 0 3px rgba(184,149,106,.22);
+      --transition:.3s cubic-bezier(.4,0,.2,1);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Jost',sans-serif;color:var(--ink);background:var(--cream);line-height:1.65;-webkit-font-smoothing:antialiased;}
+    h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.1;color:var(--charcoal);}
+    h1{font-size:clamp(2.4rem,4.5vw,3.8rem);letter-spacing:-.01em;}
+    h2{font-size:clamp(1.8rem,2.8vw,2.7rem);letter-spacing:-.01em;}
+    h3{font-size:clamp(1.15rem,1.6vw,1.4rem);}
+    p{color:var(--warm-gray);}
+    a{text-decoration:none;color:inherit;}
+    img{width:100%;display:block;height:auto;}
+    ::selection{background:rgba(184,149,106,.22);}
+    :focus{outline:none;}
+    :focus-visible{box-shadow:var(--ring);border-radius:var(--radius);}
+    .container{max-width:1220px;margin:0 auto;padding:0 28px;}
+
+    /* Topbar */
+    .topbar{background:var(--charcoal);color:rgba(255,255,255,.6);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;}
+    .topbar a{color:var(--gold-light);transition:color .2s;}
+    .topbar a:hover{color:#fff;}
+    .topbar-dot{color:var(--gold);margin:0 6px;}
+
+    /* Header */
+    header{background:rgba(250,247,244,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000;transition:box-shadow var(--transition);}
+    header.scrolled{box-shadow:var(--shadow-soft);}
+    .nav{display:flex;justify-content:space-between;align-items:center;height:80px;gap:20px;}
+    .brand{display:flex;align-items:center;gap:14px;text-decoration:none;border-radius:var(--radius);padding:6px 10px;transition:background var(--transition);}
+    .brand:hover{background:rgba(184,149,106,.08);}
+    .brand-logo{width:48px;height:48px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border);box-shadow:var(--shadow-gold);background:var(--ivory);}
+    .brand-text{display:flex;flex-direction:column;gap:2px;}
+    .brand-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--charcoal);letter-spacing:.02em;white-space:nowrap;line-height:1;}
+    .brand-tagline{font-size:.73rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+    .nav-links{display:flex;align-items:center;gap:2px;}
+    .nav-links a{padding:9px 14px;border-radius:8px;font-size:.88rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);transition:background var(--transition),color var(--transition);}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(184,149,106,.08);}
+    .nav-cta{display:flex;align-items:center;gap:10px;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:999px;font-family:'Jost',sans-serif;font-size:.88rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;cursor:pointer;border:1.5px solid transparent;transition:background var(--transition),transform var(--transition),box-shadow var(--transition),color var(--transition),border-color var(--transition);user-select:none;}
+    .btn-primary{background:var(--gold);color:#fff;border-color:var(--gold);box-shadow:var(--shadow-gold);}
+    .btn-primary:hover{background:#a07d55;border-color:#a07d55;transform:translateY(-2px);box-shadow:0 12px 36px rgba(184,149,106,.35);}
+    .btn-ghost{background:transparent;color:var(--ink);border-color:var(--border);}
+    .btn-ghost:hover{background:rgba(184,149,106,.08);border-color:var(--gold-light);}
+    .btn-dark{background:var(--charcoal);color:#fff;border-color:var(--charcoal);}
+    .btn-dark:hover{background:#2c2520;transform:translateY(-2px);box-shadow:var(--shadow-med);}
+    .btn-sm{padding:10px 20px;font-size:.82rem;}
+    .btn-block{width:100%;}
+    .btn-white{background:#fff;color:var(--charcoal);border-color:rgba(255,255,255,.3);}
+    .btn-white:hover{background:rgba(255,255,255,.9);transform:translateY(-2px);}
+
+    .hamburger{display:none;width:44px;height:44px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;transition:background var(--transition);}
+    .hamburger:hover{background:var(--ivory);}
+    .hamburger span{display:block;width:20px;height:1.5px;background:var(--charcoal);}
+    .mobile-panel{display:none;padding:14px 0 20px;border-top:1px solid var(--border);}
+    .mobile-panel a{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:var(--radius);background:var(--ivory);margin:8px 0;font-size:.9rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--border-soft);transition:background var(--transition),transform var(--transition);}
+    .mobile-panel a:hover{background:rgba(184,149,106,.12);transform:translateX(4px);}
+    .mobile-panel.is-open{display:block;animation:slideDown .2s ease-out;}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Page hero */
+    .page-hero{
+      position:relative;
+      min-height:480px;
+      display:flex;
+      align-items:center;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(26,23,20,.62) 0%, rgba(26,23,20,.42) 50%, rgba(26,23,20,.55) 100%),
+        url('https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=1600&q=80') center / cover no-repeat;
+    }
+    .page-hero::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at 50% 50%, rgba(184,149,106,.10) 0%, transparent 60%);
+      pointer-events:none;
+    }
+    .page-hero-inner{
+      position:relative;
+      z-index:2;
+      text-align:center;
+      color:#fff;
+      max-width:760px;
+      margin:0 auto;
+      padding:clamp(60px,8vw,90px) 0;
+    }
+    .eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-light);display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;justify-content:center;}
+    .eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--gold-light);}
+    .page-hero h1{color:#fff;text-shadow:0 4px 24px rgba(0,0,0,.22);margin-bottom:18px;}
+    .page-hero .lead{font-size:1.05rem;color:rgba(255,255,255,.78);max-width:54ch;margin:0 auto 32px;line-height:1.7;}
+
+    /* Sections */
+    .section{padding:clamp(56px,7vw,90px) 0;}
+    .section-label{display:inline-flex;align-items:center;gap:10px;font-size:.73rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+    .section-label::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+    .section-head{text-align:center;max-width:640px;margin:0 auto 56px;}
+    .section-head h2{margin-bottom:14px;}
+    .section-head p{font-size:1rem;line-height:1.7;}
+
+    /* Position cards */
+    .positions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+    .position-card{background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:36px 32px;transition:transform var(--transition),box-shadow var(--transition),border-color var(--transition);position:relative;overflow:hidden;}
+    .position-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-med);border-color:var(--gold-light);}
+    .position-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));opacity:0;transition:opacity var(--transition);}
+    .position-card:hover::before{opacity:1;}
+    .position-icon{width:54px;height:54px;border-radius:50%;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:1.4rem;color:var(--gold);}
+    .position-card h3{margin-bottom:10px;font-size:1.5rem;}
+    .position-card p{font-size:.92rem;line-height:1.65;margin-bottom:18px;}
+    .position-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;}
+    .position-tag{font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);background:var(--gold-pale);border:1px solid rgba(184,149,106,.18);padding:5px 10px;border-radius:999px;}
+
+    /* Form section */
+    .form-section{background:var(--ivory);}
+    .form-card{background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:clamp(28px,4vw,48px);box-shadow:var(--shadow-soft);max-width:840px;margin:0 auto;}
+    .form-step-heading{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;color:var(--charcoal);padding-bottom:14px;margin-bottom:22px;border-bottom:1px solid var(--border-soft);display:flex;align-items:center;gap:12px;}
+    .form-step-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--gold-pale);color:var(--gold);font-family:'Jost',sans-serif;font-size:.85rem;font-weight:600;}
+    .form-block{margin-bottom:36px;}
+    .form-block:last-of-type{margin-bottom:0;}
+
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .form-row-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px;}
+    .form-group{margin-bottom:18px;}
+    .form-group label,.form-legend{display:block;font-size:.82rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--charcoal);margin-bottom:8px;}
+    .form-legend{margin-bottom:12px;}
+    .form-required{color:var(--gold);margin-left:3px;}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:13px 15px;border:1.5px solid var(--border);border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:.9rem;color:var(--ink);background:#fff;transition:border-color var(--transition),box-shadow var(--transition);}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold);box-shadow:var(--ring);outline:none;}
+    .form-group textarea{resize:vertical;min-height:110px;line-height:1.6;}
+    .form-help{font-size:.78rem;color:var(--warm-gray);margin-top:6px;line-height:1.5;}
+    .field-footer{display:flex;justify-content:flex-end;margin-top:6px;}
+    .char-count{font-size:.75rem;color:var(--warm-gray);}
+
+    /* Radio/checkbox groups */
+    .choice-group{display:flex;flex-wrap:wrap;gap:10px;}
+    .choice-pill{position:relative;}
+    .choice-pill input{position:absolute;opacity:0;pointer-events:none;}
+    .choice-pill label{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border:1.5px solid var(--border);border-radius:999px;font-size:.85rem;font-weight:500;color:var(--ink);background:#fff;cursor:pointer;text-transform:none;letter-spacing:.02em;transition:all var(--transition);margin-bottom:0;}
+    .choice-pill input:checked + label{background:var(--gold-pale);border-color:var(--gold);color:var(--charcoal);font-weight:600;}
+    .choice-pill input:focus-visible + label{box-shadow:var(--ring);}
+    .choice-pill label:hover{border-color:var(--gold-light);background:rgba(184,149,106,.04);}
+
+    .check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .check-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius);background:#fff;cursor:pointer;transition:all var(--transition);}
+    .check-item:hover{border-color:var(--gold-light);background:rgba(184,149,106,.04);}
+    .check-item input{margin-top:2px;accent-color:var(--gold);flex-shrink:0;}
+    .check-item input:checked ~ .check-text{color:var(--charcoal);font-weight:500;}
+    .check-text{font-size:.88rem;color:var(--ink);line-height:1.4;}
+    .check-item.has-checked{background:var(--gold-pale);border-color:var(--gold);}
+
+    /* Availability table */
+    .availability-grid{display:grid;grid-template-columns:1fr;gap:10px;}
+    .avail-row{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:center;padding:10px 14px;background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius);}
+    .avail-day{font-weight:600;font-size:.88rem;color:var(--charcoal);}
+    .avail-hours{display:flex;flex-wrap:wrap;gap:6px;}
+    .avail-hours .choice-pill label{padding:6px 12px;font-size:.78rem;}
+
+    /* Consent checkboxes */
+    .consent-list{display:flex;flex-direction:column;gap:12px;}
+    .consent-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--gold-pale);border:1px solid rgba(184,149,106,.2);border-radius:var(--radius);}
+    .consent-item input{margin-top:3px;accent-color:var(--gold);flex-shrink:0;width:18px;height:18px;}
+    .consent-text{font-size:.88rem;color:var(--ink);line-height:1.55;}
+    .consent-text strong{color:var(--charcoal);font-weight:600;}
+
+    /* Conditional sections */
+    .conditional{display:none;}
+    .conditional.is-active{display:block;animation:fadeIn .3s ease-out;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+    .conditional-banner{background:linear-gradient(135deg,var(--gold-pale),rgba(184,149,106,.06));border-left:3px solid var(--gold);padding:14px 18px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:22px;}
+    .conditional-banner strong{color:var(--gold);font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:4px;}
+    .conditional-banner span{font-size:.88rem;color:var(--ink);}
+
+    /* Submit + success */
+    .form-actions{margin-top:32px;padding-top:24px;border-top:1px solid var(--border-soft);}
+    .btn-submit{width:100%;padding:16px 32px;font-size:.92rem;}
+    .btn-submit.sending{background:var(--warm-gray);border-color:var(--warm-gray);cursor:not-allowed;transform:none !important;}
+    .form-note{font-size:.8rem;color:var(--warm-gray);margin-top:14px;text-align:center;line-height:1.6;}
+    .form-note a{color:var(--gold);font-weight:500;}
+
+    .form-success{display:none;text-align:center;padding:60px 32px;background:#fff;border:2px solid var(--gold-pale);border-radius:var(--radius-lg);max-width:640px;margin:0 auto;}
+    .form-success-icon{width:72px;height:72px;border-radius:50%;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:2rem;color:var(--gold);}
+    .form-success h3{font-size:1.8rem;color:var(--charcoal);margin-bottom:12px;}
+    .form-success p{color:var(--warm-gray);font-size:.95rem;line-height:1.7;max-width:42ch;margin:0 auto 24px;}
+
+    /* EEO statement */
+    .eeo-strip{background:#fff;padding:36px 0;border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft);}
+    .eeo-inner{max-width:760px;margin:0 auto;text-align:center;}
+    .eeo-inner h4{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--charcoal);margin-bottom:10px;}
+    .eeo-inner p{font-size:.86rem;color:var(--warm-gray);line-height:1.7;}
+
+    /* Reveal */
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+
+    /* CTA Banner */
+    .cta-banner{background:var(--charcoal);padding:clamp(52px,6vw,80px) 0;text-align:center;}
+    .cta-banner h2{color:#fff;margin-bottom:16px;}
+    .cta-banner p{color:rgba(255,255,255,.55);font-size:.95rem;margin-bottom:32px;max-width:50ch;margin-left:auto;margin-right:auto;}
+    .cta-banner-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+    /* Footer */
+    footer{background:var(--charcoal);color:rgba(255,255,255,.6);padding:clamp(48px,6vw,80px) 0 32px;border-top:1px solid rgba(255,255,255,.06);}
+    .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px;margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08);}
+    .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;color:#fff;margin-bottom:12px;}
+    .footer-brand p{font-size:.88rem;color:rgba(255,255,255,.45);max-width:32ch;line-height:1.7;}
+    .footer-col h4{font-family:'Jost',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:18px;}
+    .footer-col a{display:block;font-size:.88rem;color:rgba(255,255,255,.55);margin-bottom:10px;transition:color .2s;}
+    .footer-col a:hover{color:var(--gold-light);}
+    .footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.78rem;color:rgba(255,255,255,.3);}
+
+    /* Floatbar */
+    .floatbar{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:999;display:none;width:min(500px,calc(100% - 24px));padding:10px;border-radius:18px;background:rgba(250,247,244,.96);border:1px solid var(--border);box-shadow:var(--shadow-lg);backdrop-filter:blur(12px);}
+    .floatbar .inner{display:flex;gap:10px;}
+    .floatbar .inner a{flex:1;text-align:center;}
+
+    /* Responsive */
+    @media(max-width:960px){
+      .positions-grid{grid-template-columns:1fr;}
+      .footer-grid{grid-template-columns:1fr 1fr;}
+      .form-row-3{grid-template-columns:1fr 1fr;}
+    }
+    @media(max-width:860px){
+      .nav-links{display:none;}
+      .nav-cta .btn-ghost{display:none;}
+      .hamburger{display:inline-flex;}
+      .brand{padding-left:0;padding-right:0;}
+      .floatbar{display:block;}
+      main{padding-bottom:80px;}
+    }
+    @media(max-width:620px){
+      .container{padding:0 16px;}
+      .topbar{font-size:.72rem;}
+      .topbar .inner{flex-direction:column;align-items:center;text-align:center;gap:4px;padding:8px 0;}
+      .topbar-dot{display:inline;}
+      .nav{height:62px;}
+      .brand-logo{width:38px;height:38px;}
+      .brand-name{font-size:1.1rem;}
+      .brand-tagline{display:none;}
+      .page-hero{min-height:380px;}
+      .footer-grid{grid-template-columns:1fr;}
+      .form-row,.form-row-3{grid-template-columns:1fr;}
+      .check-grid{grid-template-columns:1fr;}
+      .avail-row{grid-template-columns:1fr;gap:8px;}
+      .form-card{padding:24px 18px;}
+      .form-step-heading{font-size:1.2rem;}
+    }
+    @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+  </style>
+</head>
+
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container inner">
+      <div>✦ Walk-ins welcome<span class="topbar-dot">·</span>Same-day appointments available</div>
+      <div>
+        <a href="tel:+18479319359">(847) 931-9359</a>
+        <span class="topbar-dot">·</span>
+        <a href="contact.html">Hours &amp; Location</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header id="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Victoria Nails home">
+        <img class="brand-logo" src="images/victoria-logo.png" alt="Victoria Nails"/>
+        <div class="brand-text">
+          <span class="brand-name">Victoria Nails</span>
+          <span class="brand-tagline">Luxury Nail Care</span>
+        </div>
+      </a>
+      <nav aria-label="Primary navigation" class="nav-links">
+        <a href="services.html">Services</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="reviews.html">Reviews</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-primary btn-sm" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Now</a>
+        <button aria-controls="mobilePanel" aria-expanded="false" aria-label="Open navigation" class="hamburger" id="menuBtn" type="button">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="container">
+      <div class="mobile-panel" id="mobilePanel">
+        <a href="services.html">Services <span>→</span></a>
+        <a href="gallery.html">Gallery <span>→</span></a>
+        <a href="reviews.html">Reviews <span>→</span></a>
+        <a href="contact.html">Contact <span>→</span></a>
+        <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment <span>→</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+      <div class="container">
+        <div class="page-hero-inner">
+          <div class="eyebrow">Careers at Victoria Nails</div>
+          <h1>Join Our Team</h1>
+          <p class="lead">We're building a salon where craft, care, and a calm pace of work come together. If you take pride in what you do and love making people feel their best, we'd love to hear from you.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Open Positions -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="section-label">Open Roles</div>
+          <h2>Three Ways to Join Us</h2>
+          <p>Whether you're behind the desk, behind the chair, or keeping the space pristine, every role here matters to the client experience.</p>
+        </div>
+        <div class="positions-grid">
+
+          <div class="position-card reveal">
+            <div class="position-icon">✦</div>
+            <h3>Receptionist</h3>
+            <p>Be the warm first impression — greet clients, manage the schedule, handle calls, and keep the front of house running smoothly.</p>
+            <div class="position-meta">
+              <span class="position-tag">Part-time</span>
+              <span class="position-tag">Full-time</span>
+              <span class="position-tag">Hourly + Tips</span>
+            </div>
+          </div>
+
+          <div class="position-card reveal" style="transition-delay:.08s">
+            <div class="position-icon">✦</div>
+            <h3>Nail Technician</h3>
+            <p>Deliver beautiful, lasting work — manicures, pedicures, enhancements, and nail art — for clients who appreciate the craft.</p>
+            <div class="position-meta">
+              <span class="position-tag">IL License Required</span>
+              <span class="position-tag">Commission</span>
+              <span class="position-tag">Flexible Schedule</span>
+            </div>
+          </div>
+
+          <div class="position-card reveal" style="transition-delay:.16s">
+            <div class="position-icon">✦</div>
+            <h3>Housekeeper</h3>
+            <p>Keep our salon spotless and inviting. Daily cleaning, sanitization, restocking — the work that makes everything else possible.</p>
+            <div class="position-meta">
+              <span class="position-tag">No Experience Needed</span>
+              <span class="position-tag">Hourly</span>
+              <span class="position-tag">Flexible Hours</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Application Form -->
+    <section class="section form-section" id="apply">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="section-label">Application</div>
+          <h2>Apply Today</h2>
+          <p>Fill out the form below and we'll get back to you within a few business days. All fields marked with <span style="color:var(--gold);font-weight:600;">*</span> are required.</p>
+        </div>
+
+        <div class="form-card reveal" id="formCard">
+          <form id="careerForm" novalidate>
+
+            <!-- STEP 1: Personal info -->
+            <div class="form-block">
+              <div class="form-step-heading"><span class="form-step-num">1</span> Personal Information</div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="firstName">First Name<span class="form-required">*</span></label>
+                  <input id="firstName" name="firstName" type="text" required autocomplete="given-name" placeholder="Jane"/>
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last Name<span class="form-required">*</span></label>
+                  <input id="lastName" name="lastName" type="text" required autocomplete="family-name" placeholder="Doe"/>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">Email<span class="form-required">*</span></label>
+                  <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@example.com"/>
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone<span class="form-required">*</span></label>
+                  <input id="phone" name="phone" type="tel" required autocomplete="tel" placeholder="(847) 000-0000"/>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="address">Street Address</label>
+                <input id="address" name="address" type="text" autocomplete="street-address" placeholder="123 Main St"/>
+              </div>
+
+              <div class="form-row-3">
+                <div class="form-group">
+                  <label for="city">City</label>
+                  <input id="city" name="city" type="text" autocomplete="address-level2" placeholder="South Elgin"/>
+                </div>
+                <div class="form-group">
+                  <label for="state">State</label>
+                  <input id="state" name="state" type="text" autocomplete="address-level1" placeholder="IL" maxlength="2"/>
+                </div>
+                <div class="form-group">
+                  <label for="zip">ZIP</label>
+                  <input id="zip" name="zip" type="text" autocomplete="postal-code" placeholder="60177" maxlength="10"/>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 2: Position -->
+            <div class="form-block">
+              <div class="form-step-heading"><span class="form-step-num">2</span> Position</div>
+
+              <div class="form-group">
+                <label for="position">Which position are you applying for?<span class="form-required">*</span></label>
+                <select id="position" name="position" required>
+                  <option value="">Select a position…</option>
+                  <option value="receptionist">Receptionist</option>
+                  <option value="nail-technician">Nail Technician</option>
+                  <option value="housekeeper">Housekeeper</option>
+                </select>
+              </div>
+
+              <!-- RECEPTIONIST conditional -->
+              <div class="conditional" data-role="receptionist">
+                <div class="conditional-banner">
+                  <strong>Receptionist Details</strong>
+                  <span>Tell us about your preferred schedule and availability.</span>
+                </div>
+
+                <div class="form-group">
+                  <span class="form-legend">Employment Type<span class="form-required">*</span></span>
+                  <div class="choice-group" role="radiogroup">
+                    <div class="choice-pill">
+                      <input type="radio" id="emp-pt" name="employmentType" value="part-time"/>
+                      <label for="emp-pt">Part-time</label>
+                    </div>
+                    <div class="choice-pill">
+                      <input type="radio" id="emp-ft" name="employmentType" value="full-time"/>
+                      <label for="emp-ft">Full-time</label>
+                    </div>
+                    <div class="choice-pill">
+                      <input type="radio" id="emp-either" name="employmentType" value="either"/>
+                      <label for="emp-either">Either</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <span class="form-legend">Weekly Availability<span class="form-required">*</span></span>
+                  <div class="form-help" style="margin-top:-2px;margin-bottom:12px;">Select all days and time blocks you're available.</div>
+                  <div class="availability-grid" id="availabilityGrid">
+                    <!-- rows injected by JS -->
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="receptionistExp">Prior Reception or Customer Service Experience</label>
+                  <textarea id="receptionistExp" name="receptionistExp" placeholder="Briefly tell us about any front-desk, hospitality, or service experience (1–3 sentences)."></textarea>
+                </div>
+              </div>
+
+              <!-- NAIL TECHNICIAN conditional -->
+              <div class="conditional" data-role="nail-technician">
+                <div class="conditional-banner">
+                  <strong>Nail Technician Details</strong>
+                  <span>Illinois law requires a current IDFPR nail technician license to practice.</span>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="ilLicense">IL Nail Tech License #</label>
+                    <input id="ilLicense" name="ilLicense" type="text" placeholder="011-XXXXXX"/>
+                    <div class="form-help">Optional — not yet licensed? You can still apply. If you have one, it's from the Illinois Department of Financial &amp; Professional Regulation.</div>
+                  </div>
+                  <div class="form-group">
+                    <label for="licenseExpiry">License Expiration</label>
+                    <input id="licenseExpiry" name="licenseExpiry" type="date"/>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="yearsExp">Years of Experience<span class="form-required">*</span></label>
+                  <select id="yearsExp" name="yearsExp">
+                    <option value="">Select…</option>
+                    <option value="0-1">Less than 1 year</option>
+                    <option value="1-3">1–3 years</option>
+                    <option value="3-5">3–5 years</option>
+                    <option value="5-10">5–10 years</option>
+                    <option value="10+">10+ years</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <span class="form-legend">Services You're Skilled In<span class="form-required">*</span></span>
+                  <div class="form-help" style="margin-top:-2px;margin-bottom:12px;">Check every service you can confidently perform.</div>
+                  <div class="check-grid">
+                    <label class="check-item"><input type="checkbox" name="skills" value="Manicure"/><span class="check-text">Classic &amp; Spa Manicure</span></label>
+                    <label class="check-item"><input type="checkbox" name="skills" value="Pedicure"/><span class="check-text">Classic &amp; Spa Pedicure</span></label>
+                    <label class="check-item"><input type="checkbox" name="skills" value="Gel"/><span class="check-text">Gel / Shellac</span></label>
+                    <label class="check-item"><input type="checkbox" name="skills" value="Acrylic"/><span class="check-text">Acrylic Full Set &amp; Fills</span></label>
+                    <label class="check-item"><input type="checkbox" name="skills" value="Dip Powder"/><span class="check-text">Dip Powder</span></label>
+                    <label class="check-item"><input type="checkbox" name="skills" value="Nail Art"/><span class="check-text">Nail Art &amp; Design</span></label>
+                    <label class="check-item"><input type="checkbox" name="skills" value="Builder Gel"/><span class="check-text">Builder Gel / Hard Gel</span></label>
+                    <label class="check-item"><input type="checkbox" name="skills" value="Pink &amp; White"/><span class="check-text">Pink &amp; White / French</span></label>
+                    <label class="check-item"><input type="checkbox" name="skills" value="Eyebrow Waxing"/><span class="check-text">Eyebrow Waxing / Shaping</span></label>
+                    <label class="check-item"><input type="checkbox" name="skills" value="Body Waxing"/><span class="check-text">Body Waxing</span></label>
+                    <label class="check-item"><input type="checkbox" name="skills" value="Lashes"/><span class="check-text">Eyelash Extensions</span></label>
+                    <label class="check-item"><input type="checkbox" name="skills" value="Pedicure Reflexology"/><span class="check-text">Reflexology / Massage</span></label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="otherSkills">Other Skills or Certifications</label>
+                  <textarea id="otherSkills" name="otherSkills" placeholder="Specialty techniques, products you love working with, certifications, etc."></textarea>
+                </div>
+              </div>
+
+              <!-- HOUSEKEEPER conditional -->
+              <div class="conditional" data-role="housekeeper">
+                <div class="conditional-banner">
+                  <strong>Housekeeper Details</strong>
+                  <span>No prior experience required — just dependability and care for the space.</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="languages">Languages Spoken (Optional)</label>
+                  <input id="languages" name="languages" type="text" placeholder="English, Spanish, Vietnamese, etc."/>
+                </div>
+
+                <div class="form-group">
+                  <label for="housekeeperNotes">Anything you'd like us to know? (Optional)</label>
+                  <textarea id="housekeeperNotes" name="housekeeperNotes" placeholder="Prior cleaning experience, availability notes, transportation, etc."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 3: Availability + Background -->
+            <div class="form-block">
+              <div class="form-step-heading"><span class="form-step-num">3</span> A Bit More About You</div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="startDate">Earliest Start Date<span class="form-required">*</span></label>
+                  <input id="startDate" name="startDate" type="date" required/>
+                </div>
+                <div class="form-group">
+                  <label for="referredBy">How Did You Hear About Us?</label>
+                  <select id="referredBy" name="referredBy">
+                    <option value="">Select…</option>
+                    <option value="walk-in">Walked by the salon</option>
+                    <option value="referral">Referred by someone</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="google">Google search</option>
+                    <option value="indeed">Indeed / job board</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="aboutYou">Why do you want to work with us?</label>
+                <textarea id="aboutYou" name="aboutYou" placeholder="A few sentences about why you're a good fit." maxlength="600"></textarea>
+                <div class="field-footer"><span class="char-count" id="charCount">0 / 600</span></div>
+              </div>
+
+              <div class="form-group">
+                <span class="form-legend">References (Optional)</span>
+                <div class="form-help" style="margin-top:-2px;margin-bottom:12px;">Prior employer or professional reference. Name and phone is enough.</div>
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom:0;">
+                    <input id="refName" name="refName" type="text" placeholder="Reference name"/>
+                  </div>
+                  <div class="form-group" style="margin-bottom:0;">
+                    <input id="refPhone" name="refPhone" type="tel" placeholder="Reference phone"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 4: Authorization & Consent -->
+            <div class="form-block">
+              <div class="form-step-heading"><span class="form-step-num">4</span> Authorization &amp; Consent</div>
+
+              <div class="consent-list">
+                <label class="consent-item">
+                  <input type="checkbox" name="age18" required/>
+                  <span class="consent-text"><strong>I am 18 years of age or older.</strong> <span style="color:var(--gold);">*</span></span>
+                </label>
+                <label class="consent-item">
+                  <input type="checkbox" name="workAuth" required/>
+                  <span class="consent-text"><strong>I am legally authorized to work in the United States.</strong> <span style="color:var(--gold);">*</span></span>
+                </label>
+                <label class="consent-item">
+                  <input type="checkbox" name="bgCheck"/>
+                  <span class="consent-text">I consent to a background check if an offer is extended.</span>
+                </label>
+                <label class="consent-item">
+                  <input type="checkbox" name="certify" required/>
+                  <span class="consent-text"><strong>I certify that the information provided is true and complete to the best of my knowledge.</strong> <span style="color:var(--gold);">*</span></span>
+                </label>
+              </div>
+
+              <div class="form-group" style="margin-top:24px;">
+                <label for="signature">Digital Signature (type your full legal name)<span class="form-required">*</span></label>
+                <input id="signature" name="signature" type="text" required placeholder="Full legal name"/>
+                <div class="form-help">Today's date will be recorded automatically.</div>
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="form-actions">
+              <button type="submit" id="submitBtn" class="btn btn-primary btn-submit">Submit Application</button>
+              <p class="form-note">Prefer to drop off an application in person? You're welcome to stop by — <a href="contact.html">349 Randall Rd, South Elgin</a>.</p>
+            </div>
+
+          </form>
+
+          <!-- Success state -->
+          <div class="form-success" id="formSuccess">
+            <div class="form-success-icon">✓</div>
+            <h3>Application Received</h3>
+            <p>Thank you for applying to Victoria Nails. We'll review your application and reach out within a few business days. Keep an eye on your email and phone.</p>
+            <a class="btn btn-ghost btn-sm" href="index.html">Back to Home</a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- EEO Statement -->
+    <section class="eeo-strip">
+      <div class="container">
+        <div class="eeo-inner">
+          <h4>Equal Opportunity Employer</h4>
+          <p>Victoria Nails is an equal-opportunity employer. We celebrate diversity and are committed to creating an inclusive environment for all team members regardless of race, religion, color, national origin, sex, sexual orientation, gender identity, age, disability, or veteran status.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="cta-banner">
+      <div class="container">
+        <h2>Questions Before You Apply?</h2>
+        <p>Give us a call or stop by — we're happy to talk about the role, the team, and what your day-to-day would look like.</p>
+        <div class="cta-banner-actions">
+          <a class="btn btn-primary" href="tel:+18479319359">Call (847) 931-9359</a>
+          <a class="btn btn-white" href="contact.html">Visit Us</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">Victoria Nails</div>
+          <p>A luxury nail salon dedicated to impeccable craft, genuine care, and a serene experience every visit.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="services.html#manicure">Manicure</a>
+          <a href="services.html#pedicure">Pedicure</a>
+          <a href="services.html#enhancements">Enhancements</a>
+          <a href="services.html#waxing">Waxing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Info</h4>
+          <a href="gallery.html">Gallery</a>
+          <a href="reviews.html">Reviews</a>
+          <a href="contact.html">Contact</a>
+          <a href="careers.html">Careers</a>
+        </div>
+        <div class="footer-col">
+          <h4>Book</h4>
+          <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Online</a>
+          <a href="https://www.instagram.com/victorianailssouthelgin" rel="noopener" target="_blank">Instagram</a>
+          <a href="https://www.facebook.com/victorianailssalon" rel="noopener" target="_blank">Facebook</a>
+          <a href="https://www.tiktok.com/@victorianailssouthelgin" rel="noopener" target="_blank">TikTok</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Victoria Nails. All rights reserved.</span>
+        <span>Made with care ✦</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floatbar (mobile) -->
+  <div class="floatbar" aria-label="Quick actions">
+    <div class="inner">
+      <a class="btn btn-primary btn-block" href="#apply">Apply Now</a>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      // ====================================================================
+      // BACKEND: genie-application-submit Edge Function → salon.applicants
+      // The full payload below is stored verbatim in applicants.application_data
+      // (jsonb), while name/email/phone/role/status stay as flat columns for
+      // fast list/filter in hiring.html. If CAREERS_ENDPOINT is ever emptied
+      // out, submission falls back to a mailto: link instead.
+      // ====================================================================
+      // Wired to the deployed genie-application-submit Edge Function.
+      // Applications insert into salon.applicants and appear in hiring.html.
+      const CAREERS_ENDPOINT = 'https://pbojacnagutipfhcxltj.supabase.co/functions/v1/genie-application-submit';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBib2phY25hZ3V0aXBmaGN4bHRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMDkwODAsImV4cCI6MjA2MzU4NTA4MH0.ZLCcAzTYljoZycpBGwMtthP5VyAJ4schuIvt4HibGc0';
+      const FALLBACK_EMAIL   = 'careers@victorianailssalon.com';
+      const BUSINESS_ID      = '0af9e368-f488-449b-8013-7f44361be462';
+
+      // ---------- Sticky header ----------
+      const hdr = document.getElementById('site-header');
+      window.addEventListener('scroll', () => hdr.classList.toggle('scrolled', window.scrollY > 30), {passive:true});
+
+      // ---------- Mobile menu ----------
+      const menuBtn = document.getElementById('menuBtn');
+      const panel = document.getElementById('mobilePanel');
+      if(menuBtn && panel){
+        menuBtn.addEventListener('click', () => {
+          const open = panel.classList.contains('is-open');
+          panel.classList.toggle('is-open', !open);
+          menuBtn.setAttribute('aria-expanded', String(!open));
+        });
+        panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+          panel.classList.remove('is-open'); menuBtn.setAttribute('aria-expanded','false');
+        }));
+      }
+
+      // ---------- Scroll reveal ----------
+      const reveals = document.querySelectorAll('.reveal');
+      const obs = new IntersectionObserver(entries => entries.forEach(e => {
+        if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+      }), {threshold:.1});
+      reveals.forEach(el => obs.observe(el));
+      setTimeout(() => document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible')), 1500);
+
+      // ---------- Build availability grid (receptionist) ----------
+      // Shift blocks match Victoria Nails' actual business hours —
+      // Mon–Fri 10am–8pm, Sat 9am–6pm, closed Sunday. Update here if hours change.
+      const dayConfig = [
+        { day: 'Sunday',    closed: true },
+        { day: 'Monday',    slots: [{key:'morning',label:'Morning (10a–1p)'},{key:'afternoon',label:'Afternoon (1p–5p)'},{key:'evening',label:'Evening (5p–8p)'}] },
+        { day: 'Tuesday',   slots: [{key:'morning',label:'Morning (10a–1p)'},{key:'afternoon',label:'Afternoon (1p–5p)'},{key:'evening',label:'Evening (5p–8p)'}] },
+        { day: 'Wednesday', slots: [{key:'morning',label:'Morning (10a–1p)'},{key:'afternoon',label:'Afternoon (1p–5p)'},{key:'evening',label:'Evening (5p–8p)'}] },
+        { day: 'Thursday',  slots: [{key:'morning',label:'Morning (10a–1p)'},{key:'afternoon',label:'Afternoon (1p–5p)'},{key:'evening',label:'Evening (5p–8p)'}] },
+        { day: 'Friday',    slots: [{key:'morning',label:'Morning (10a–1p)'},{key:'afternoon',label:'Afternoon (1p–5p)'},{key:'evening',label:'Evening (5p–8p)'}] },
+        { day: 'Saturday',  slots: [{key:'morning',label:'Morning (9a–12p)'},{key:'afternoon',label:'Afternoon (12p–3p)'},{key:'evening',label:'Evening (3p–6p)'}] },
+      ];
+      const grid = document.getElementById('availabilityGrid');
+      if (grid) {
+        dayConfig.forEach((cfg, di) => {
+          const row = document.createElement('div');
+          row.className = 'avail-row';
+          if (cfg.closed) {
+            row.innerHTML = `
+              <div class="avail-day">${cfg.day}</div>
+              <div class="avail-hours"><span style="font-size:.82rem;color:var(--warm-gray);font-style:italic;">Closed</span></div>
+            `;
+          } else {
+            row.innerHTML = `
+              <div class="avail-day">${cfg.day}</div>
+              <div class="avail-hours">
+                ${cfg.slots.map(s => `
+                  <div class="choice-pill">
+                    <input type="checkbox" id="avail-${di}-${s.key}" name="availability" value="${cfg.day}:${s.key}"/>
+                    <label for="avail-${di}-${s.key}">${s.label}</label>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+          }
+          grid.appendChild(row);
+        });
+      }
+
+      // ---------- Conditional sections ----------
+      const positionSelect = document.getElementById('position');
+      const conditionals = document.querySelectorAll('.conditional');
+      function updateConditional() {
+        const v = positionSelect.value;
+        conditionals.forEach(c => {
+          const match = c.dataset.role === v;
+          c.classList.toggle('is-active', match);
+          // disable/enable required attrs so hidden sections don't block submit
+          c.querySelectorAll('input, select, textarea').forEach(input => {
+            if (!match) {
+              if (input.required) { input.dataset.wasRequired = '1'; input.required = false; }
+            } else {
+              if (input.dataset.wasRequired === '1') input.required = true;
+            }
+          });
+        });
+      }
+      positionSelect.addEventListener('change', updateConditional);
+
+      // Mark default-required fields in conditionals (so we can re-enable them)
+      document.querySelectorAll('.conditional [required]').forEach(i => i.dataset.wasRequired = '1');
+      // Run once to disable hidden requireds on initial load
+      updateConditional();
+
+      // ---------- Visual feedback for checkboxes ----------
+      document.querySelectorAll('.check-item input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          cb.closest('.check-item').classList.toggle('has-checked', cb.checked);
+        });
+      });
+
+      // ---------- Char counter ----------
+      const aboutField = document.getElementById('aboutYou');
+      const charCount = document.getElementById('charCount');
+      if (aboutField && charCount) {
+        aboutField.addEventListener('input', () => {
+          charCount.textContent = aboutField.value.length + ' / 600';
+        });
+      }
+
+      // ---------- Phone formatting ----------
+      function formatPhone(input) {
+        let v = input.value.replace(/\D/g, '').slice(0, 10);
+        if (v.length >= 7) input.value = `(${v.slice(0,3)}) ${v.slice(3,6)}-${v.slice(6)}`;
+        else if (v.length >= 4) input.value = `(${v.slice(0,3)}) ${v.slice(3)}`;
+        else if (v.length >= 1) input.value = `(${v}`;
+        else input.value = '';
+      }
+      document.querySelectorAll('input[type="tel"]').forEach(el => {
+        el.addEventListener('input', () => formatPhone(el));
+      });
+
+      // ---------- Collect payload ----------
+      function collectPayload() {
+        const form = document.getElementById('careerForm');
+        const fd = new FormData(form);
+        const skills = fd.getAll('skills');
+        const availability = fd.getAll('availability');
+        const payload = {
+          business_id: BUSINESS_ID,
+          submitted_at: new Date().toISOString(),
+          position: fd.get('position'),
+          first_name: fd.get('firstName'),
+          last_name: fd.get('lastName'),
+          email: fd.get('email'),
+          phone: fd.get('phone'),
+          address: {
+            street: fd.get('address') || '',
+            city: fd.get('city') || '',
+            state: fd.get('state') || '',
+            zip: fd.get('zip') || ''
+          },
+          employment_type: fd.get('employmentType') || null,
+          availability: availability,
+          receptionist_experience: fd.get('receptionistExp') || null,
+          il_license: fd.get('ilLicense') || null,
+          license_expiry: fd.get('licenseExpiry') || null,
+          years_exp: fd.get('yearsExp') || null,
+          skills: skills,
+          other_skills: fd.get('otherSkills') || null,
+          languages: fd.get('languages') || null,
+          housekeeper_notes: fd.get('housekeeperNotes') || null,
+          start_date: fd.get('startDate'),
+          referred_by: fd.get('referredBy') || null,
+          about_you: fd.get('aboutYou') || null,
+          reference_name: fd.get('refName') || null,
+          reference_phone: fd.get('refPhone') || null,
+          authorizations: {
+            age_18_plus: !!fd.get('age18'),
+            work_authorized: !!fd.get('workAuth'),
+            background_check_consent: !!fd.get('bgCheck'),
+            certified_true: !!fd.get('certify')
+          },
+          signature: fd.get('signature')
+        };
+        return payload;
+      }
+
+      // ---------- mailto fallback ----------
+      function buildMailto(payload) {
+        const lines = [
+          `Position: ${payload.position}`,
+          `Name: ${payload.first_name} ${payload.last_name}`,
+          `Email: ${payload.email}`,
+          `Phone: ${payload.phone}`,
+          `Address: ${payload.address.street}, ${payload.address.city}, ${payload.address.state} ${payload.address.zip}`,
+          ``,
+          `Start Date: ${payload.start_date}`,
+          `Referred By: ${payload.referred_by || '—'}`,
+          ``,
+        ];
+        if (payload.position === 'receptionist') {
+          lines.push(`Employment Type: ${payload.employment_type || '—'}`);
+          lines.push(`Availability: ${(payload.availability || []).join(', ') || '—'}`);
+          if (payload.receptionist_experience) lines.push(`Experience: ${payload.receptionist_experience}`);
+        }
+        if (payload.position === 'nail-technician') {
+          lines.push(`IL License: ${payload.il_license || '—'}`);
+          lines.push(`License Expiry: ${payload.license_expiry || '—'}`);
+          lines.push(`Years Experience: ${payload.years_exp || '—'}`);
+          lines.push(`Skills: ${(payload.skills || []).join(', ') || '—'}`);
+          if (payload.other_skills) lines.push(`Other Skills: ${payload.other_skills}`);
+        }
+        if (payload.position === 'housekeeper') {
+          if (payload.languages) lines.push(`Languages: ${payload.languages}`);
+          if (payload.housekeeper_notes) lines.push(`Notes: ${payload.housekeeper_notes}`);
+        }
+        if (payload.about_you) lines.push(``, `About: ${payload.about_you}`);
+        if (payload.reference_name) lines.push(``, `Reference: ${payload.reference_name} — ${payload.reference_phone || ''}`);
+        lines.push(``, `Authorizations: 18+: ${payload.authorizations.age_18_plus} | Work Auth: ${payload.authorizations.work_authorized} | BG Check: ${payload.authorizations.background_check_consent} | Certified: ${payload.authorizations.certified_true}`);
+        lines.push(`Signature: ${payload.signature}`);
+        const subject = `Application — ${payload.position} — ${payload.first_name} ${payload.last_name}`;
+        const body = lines.join('\n');
+        return `mailto:${FALLBACK_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      }
+
+      // ---------- Submit handler ----------
+      const form = document.getElementById('careerForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const successEl = document.getElementById('formSuccess');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+
+        submitBtn.classList.add('sending');
+        submitBtn.textContent = 'Submitting…';
+        submitBtn.disabled = true;
+
+        const payload = collectPayload();
+
+        try {
+          if (CAREERS_ENDPOINT) {
+            const res = await fetch(CAREERS_ENDPOINT, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+              },
+              body: JSON.stringify(payload)
+            });
+            if (!res.ok) throw new Error('Endpoint returned ' + res.status);
+          } else {
+            // No endpoint configured — open mailto fallback
+            window.location.href = buildMailto(payload);
+          }
+
+          // Show success
+          form.style.display = 'none';
+          successEl.style.display = 'block';
+          window.scrollTo({top: successEl.offsetTop - 100, behavior:'smooth'});
+        } catch (err) {
+          console.error('Application submit failed:', err);
+          submitBtn.classList.remove('sending');
+          submitBtn.textContent = 'Try Again';
+          submitBtn.disabled = false;
+          alert('Sorry — there was an issue submitting your application. Please try again, call (847) 931-9359, or email ' + FALLBACK_EMAIL + ' directly.');
+        }
+      });
+
+      // ---------- Anchor smoothness when navigating to #apply from floatbar ----------
+      document.querySelectorAll('a[href="#apply"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.getElementById('apply').scrollIntoView({behavior:'smooth', block:'start'});
+        });
+      });
+
+    })();
+  </script>
+</body>
+</html>

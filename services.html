@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta name="description" content="Victoria Nails — full service menu including manicure, pedicure, gel, acrylic, nail enhancements, waxing and more. Book online today."/>
+  <title>Services | Victoria Nails</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --gold:#b8956a; --gold-light:#d4b896; --gold-pale:#f5ede4;
+      --blush:#e8cfc3; --cream:#faf7f4; --ivory:#f2ede8;
+      --charcoal:#1a1714; --ink:#2c2520; --warm-gray:#7a6e68;
+      --border:rgba(184,149,106,.18); --border-soft:rgba(184,149,106,.10);
+      --shadow-soft:0 4px 24px rgba(26,23,20,.06);
+      --shadow-med:0 8px 40px rgba(26,23,20,.10);
+      --shadow-lg:0 20px 60px rgba(26,23,20,.14);
+      --shadow-gold:0 8px 32px rgba(184,149,106,.22);
+      --radius:12px; --radius-lg:20px;
+      --ring:0 0 0 3px rgba(184,149,106,.22);
+      --transition:.3s cubic-bezier(.4,0,.2,1);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Jost',sans-serif;color:var(--ink);background:var(--cream);line-height:1.65;-webkit-font-smoothing:antialiased;}
+    h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.1;color:var(--charcoal);}
+    h1{font-size:clamp(2.4rem,4.5vw,3.8rem);letter-spacing:-.01em;}
+    h2{font-size:clamp(1.8rem,2.8vw,2.7rem);letter-spacing:-.01em;}
+    h3{font-size:clamp(1.15rem,1.6vw,1.4rem);}
+    p{color:var(--warm-gray);}
+    a{text-decoration:none;color:inherit;}
+    img{width:100%;display:block;height:auto;}
+    ::selection{background:rgba(184,149,106,.22);}
+    :focus{outline:none;}
+    :focus-visible{box-shadow:var(--ring);border-radius:var(--radius);}
+    .container{max-width:1220px;margin:0 auto;padding:0 28px;}
+
+    /* Topbar */
+    .topbar{background:var(--charcoal);color:rgba(255,255,255,.6);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;}
+    .topbar a{color:var(--gold-light);transition:color .2s;}
+    .topbar a:hover{color:#fff;}
+    .topbar-dot{color:var(--gold);margin:0 6px;}
+
+    /* Header */
+    header{background:rgba(250,247,244,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000;transition:box-shadow var(--transition);}
+    header.scrolled{box-shadow:var(--shadow-soft);}
+    .nav{display:flex;justify-content:space-between;align-items:center;height:80px;gap:20px;}
+    .brand{display:flex;align-items:center;gap:14px;text-decoration:none;border-radius:var(--radius);padding:6px 10px;transition:background var(--transition);}
+    .brand:hover{background:rgba(184,149,106,.08);}
+    .brand-logo{width:48px;height:48px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border);box-shadow:var(--shadow-gold);background:var(--ivory);}
+    .brand-text{display:flex;flex-direction:column;gap:2px;}
+    .brand-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--charcoal);letter-spacing:.02em;white-space:nowrap;line-height:1;}
+    .brand-tagline{font-size:.73rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+    .nav-links{display:flex;align-items:center;gap:2px;}
+    .nav-links a{padding:9px 14px;border-radius:8px;font-size:.88rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);transition:background var(--transition),color var(--transition);}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(184,149,106,.08);}
+    .nav-cta{display:flex;align-items:center;gap:10px;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:999px;font-family:'Jost',sans-serif;font-size:.88rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;cursor:pointer;border:1.5px solid transparent;transition:background var(--transition),transform var(--transition),box-shadow var(--transition),color var(--transition),border-color var(--transition);user-select:none;}
+    .btn-primary{background:var(--gold);color:#fff;border-color:var(--gold);box-shadow:var(--shadow-gold);}
+    .btn-primary:hover{background:#a07d55;border-color:#a07d55;transform:translateY(-2px);box-shadow:0 12px 36px rgba(184,149,106,.35);}
+    .btn-ghost{background:transparent;color:var(--ink);border-color:var(--border);}
+    .btn-ghost:hover{background:rgba(184,149,106,.08);border-color:var(--gold-light);}
+    .btn-dark{background:var(--charcoal);color:#fff;border-color:var(--charcoal);}
+    .btn-dark:hover{background:#2c2520;transform:translateY(-2px);box-shadow:var(--shadow-med);}
+    .btn-sm{padding:10px 20px;font-size:.82rem;}
+    .btn-block{width:100%;}
+    .btn-white{background:#fff;color:var(--charcoal);border-color:rgba(255,255,255,.3);}
+    .btn-white:hover{background:rgba(255,255,255,.9);transform:translateY(-2px);}
+
+    .hamburger{display:none;width:44px;height:44px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;transition:background var(--transition);}
+    .hamburger:hover{background:var(--ivory);}
+    .hamburger span{display:block;width:20px;height:1.5px;background:var(--charcoal);}
+    .mobile-panel{display:none;padding:14px 0 20px;border-top:1px solid var(--border);}
+    .mobile-panel a{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:var(--radius);background:var(--ivory);margin:8px 0;font-size:.9rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--border-soft);transition:background var(--transition),transform var(--transition);}
+    .mobile-panel a:hover{background:rgba(184,149,106,.12);transform:translateX(4px);}
+    .mobile-panel.is-open{display:block;animation:slideDown .2s ease-out;}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Page hero */
+    .page-hero{
+      position:relative;
+      padding:clamp(72px,9vw,120px) 0;
+      overflow:hidden;
+      background:
+        linear-gradient(135deg, rgba(26,23,20,.78) 0%, rgba(44,37,32,.58) 50%, rgba(184,149,106,.12) 100%),
+        url('images/b8583971442d48568f1d10b9554b4238.jpg') center/cover no-repeat;
+    }
+    .page-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 65% 50%, rgba(184,149,106,.1) 0%, transparent 70%);}
+    .page-hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
+    .page-hero-content{color:#fff;}
+    .eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-light);display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+    .eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--gold-light);}
+    .page-hero h1{color:#fff;text-shadow:0 4px 24px rgba(0,0,0,.22);margin-bottom:18px;}
+    .page-hero .lead{font-size:1rem;color:rgba(255,255,255,.72);max-width:46ch;margin-bottom:32px;line-height:1.7;}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+    .page-hero-photo{border-radius:var(--radius-lg);aspect-ratio:4/3;background:url('images/be0604d6040d0cb8768e97db94f49382.jpg') center/cover no-repeat;box-shadow:0 24px 60px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.12);animation:heroFadeUp .9s .3s ease-out both;}
+    @keyframes heroFadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Stats strip */
+    .stats-strip{background:var(--charcoal);padding:28px 0;}
+    .stats-row{display:flex;justify-content:center;gap:clamp(28px,4vw,72px);flex-wrap:wrap;}
+    .stat-item{text-align:center;}
+    .stat-num{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:500;color:var(--gold-light);line-height:1;}
+    .stat-label{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:6px;}
+
+    /* Sections */
+    section{padding:clamp(60px,7vw,100px) 0;}
+    .section-label{display:inline-flex;align-items:center;gap:10px;font-size:.73rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+    .section-label::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+    .section-title{text-align:center;max-width:640px;margin:0 auto clamp(40px,5vw,64px);}
+    .section-title h2{margin-bottom:14px;}
+    .divider{width:48px;height:1px;background:var(--gold);margin:18px auto;}
+
+    /* ===== NAV TABS ===== */
+    .service-tabs-wrap{background:#fff;border-bottom:1px solid var(--border-soft);position:sticky;top:80px;z-index:900;}
+    .service-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+    .service-tabs::-webkit-scrollbar{display:none;}
+    .tab-btn{flex-shrink:0;padding:18px 22px;font-family:'Jost',sans-serif;font-size:.8rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--warm-gray);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color var(--transition),border-color var(--transition);}
+    .tab-btn:hover{color:var(--ink);}
+    .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+    /* ===== SERVICE SECTIONS ===== */
+    .svc-section{padding:clamp(60px,6vw,90px) 0;border-bottom:1px solid var(--border-soft);}
+    .svc-section:last-child{border-bottom:none;}
+    .svc-section-bg{background:#fff;}
+    .svc-section-ivory{background:var(--ivory);}
+    .svc-section-cream{background:var(--cream);}
+
+    .svc-header{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;margin-bottom:clamp(32px,4vw,52px);}
+    .svc-header-left{}
+    .svc-eyebrow{font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+    .svc-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--gold);}
+    .svc-header h2{margin-bottom:10px;}
+    .svc-header p{font-size:.95rem;max-width:55ch;line-height:1.7;}
+    .svc-header-cta{flex-shrink:0;}
+
+    /* ===== CARD GRIDS ===== */
+    .menu-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+    .menu-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    .menu-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+
+    /* Menu card */
+    .menu-card{background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;transition:transform var(--transition),box-shadow var(--transition);}
+    .menu-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);}
+    .svc-section-bg .menu-card{background:var(--ivory);}
+    .svc-section-ivory .menu-card{background:#fff;}
+    .svc-section-cream .menu-card{background:#fff;}
+
+    .menu-card-img{aspect-ratio:16/10;overflow:hidden;position:relative;flex-shrink:0;}
+    .menu-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;}
+    .menu-card:hover .menu-card-img img{transform:scale(1.06);}
+    .menu-card-img-badge{position:absolute;top:12px;right:12px;background:var(--gold);color:#fff;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px;}
+
+    .menu-card-body{padding:20px;flex:1;display:flex;flex-direction:column;gap:10px;}
+    .menu-card-name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:500;color:var(--charcoal);}
+    .menu-card-desc{font-size:.88rem;color:var(--warm-gray);line-height:1.6;flex:1;}
+    .menu-card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px;}
+    .menu-card-price{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:500;color:var(--gold);}
+    .menu-card-time{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--warm-gray);display:flex;align-items:center;gap:5px;}
+    .menu-card-time::before{content:'⏱';font-size:.8rem;}
+
+    /* Wide card */
+    .menu-card-wide{background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius-lg);overflow:hidden;display:grid;grid-template-columns:1fr 1fr;transition:transform var(--transition),box-shadow var(--transition);}
+    .menu-card-wide:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
+    .menu-card-wide .menu-card-img{aspect-ratio:auto;min-height:220px;}
+    .menu-card-wide .menu-card-body{padding:28px;}
+
+    /* List menu */
+    .menu-list{background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-soft);}
+    .menu-list-head{padding:22px 26px 18px;border-bottom:1px solid var(--border-soft);}
+    .menu-list-head h3{margin-bottom:4px;}
+    .menu-list-head p{font-size:.88rem;}
+    .menu-list-item{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 26px;border-bottom:1px solid var(--border-soft);transition:background var(--transition),transform var(--transition);}
+    .menu-list-item:last-child{border-bottom:none;}
+    .menu-list-item:hover{background:var(--gold-pale);transform:translateX(4px);}
+    .menu-list-item-name{font-weight:600;font-size:.95rem;color:var(--charcoal);}
+    .menu-list-item-desc{font-size:.82rem;color:var(--warm-gray);margin-top:2px;}
+    .menu-list-price{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:500;color:var(--gold);white-space:nowrap;flex-shrink:0;}
+
+    /* Add-on chips */
+    .addon-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .addon-chip{background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius);padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;transition:background var(--transition),transform var(--transition),box-shadow var(--transition);}
+    .addon-chip:hover{background:var(--gold-pale);transform:translateY(-3px);box-shadow:var(--shadow-soft);}
+    .addon-chip-name{font-weight:600;font-size:.93rem;color:var(--charcoal);}
+    .addon-chip-desc{font-size:.8rem;color:var(--warm-gray);margin-top:2px;}
+    .addon-chip-price{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--gold);white-space:nowrap;flex-shrink:0;}
+
+    /* Featured highlight block */
+    .feature-block{background:var(--charcoal);border-radius:var(--radius-lg);overflow:hidden;display:grid;grid-template-columns:1fr 1fr;margin-bottom:clamp(32px,4vw,52px);}
+    .feature-block-content{padding:clamp(32px,4vw,52px);display:flex;flex-direction:column;justify-content:center;gap:20px;}
+    .feature-block-content .eyebrow{color:var(--gold-light);}
+    .feature-block-content .eyebrow::before{background:var(--gold-light);}
+    .feature-block-content h3{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,2.5vw,2.2rem);color:#fff;font-weight:500;}
+    .feature-block-content p{color:rgba(255,255,255,.6);font-size:.93rem;line-height:1.7;}
+    .feature-block-img{background:url('483447510_18347405995144778_3152467201551757641_n.jpg') center/cover no-repeat;min-height:300px;}
+
+    /* Chip tags */
+    .chip-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
+    .chip{font-size:.72rem;font-weight:500;letter-spacing:.06em;padding:5px 10px;border-radius:999px;border:1px solid var(--border);color:var(--warm-gray);background:var(--ivory);}
+    .chip-gold{border-color:var(--gold);color:var(--gold);background:rgba(184,149,106,.07);}
+
+    /* Waxing tips card */
+    .tips-card{background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-soft);}
+    .tips-card h3{margin-bottom:16px;}
+    .tip-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;font-size:.9rem;}
+    .tip-icon{width:30px;height:30px;border-radius:50%;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:.82rem;flex-shrink:0;}
+
+    /* Waxing layout */
+    .wax-layout{display:grid;grid-template-columns:1.5fr 1fr;gap:24px;}
+
+    /* Reveal */
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+
+    /* CTA Banner */
+    .cta-banner{background:var(--charcoal);padding:clamp(52px,6vw,80px) 0;text-align:center;}
+    .cta-banner h2{color:#fff;margin-bottom:16px;}
+    .cta-banner p{color:rgba(255,255,255,.55);font-size:.95rem;margin-bottom:32px;max-width:50ch;margin-left:auto;margin-right:auto;}
+    .cta-banner-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+    /* Footer */
+    footer{background:var(--charcoal);color:rgba(255,255,255,.6);padding:clamp(48px,6vw,80px) 0 32px;border-top:1px solid rgba(255,255,255,.06);}
+    .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px;margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08);}
+    .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;color:#fff;margin-bottom:12px;}
+    .footer-brand p{font-size:.88rem;color:rgba(255,255,255,.45);max-width:32ch;line-height:1.7;}
+    .footer-col h4{font-family:'Jost',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:18px;}
+    .footer-col a{display:block;font-size:.88rem;color:rgba(255,255,255,.55);margin-bottom:10px;transition:color .2s;}
+    .footer-col a:hover{color:var(--gold-light);}
+    .footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.78rem;color:rgba(255,255,255,.3);}
+
+    /* Float */
+    .floatbar{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:999;display:none;width:min(500px,calc(100% - 24px));padding:10px;border-radius:18px;background:rgba(250,247,244,.96);border:1px solid var(--border);box-shadow:var(--shadow-lg);backdrop-filter:blur(12px);}
+    .floatbar .inner{display:flex;gap:10px;}
+    .floatbar .inner a{flex:1;text-align:center;}
+
+    /* Price note banner */
+    .price-note{background:var(--gold-pale);border-left:3px solid var(--gold);padding:14px 20px;border-radius:8px;margin-bottom:32px;font-size:.88rem;color:var(--ink);}
+    .price-note strong{color:var(--charcoal);font-weight:600;}
+
+    /* Responsive */
+    @media(max-width:1100px){
+      .menu-grid-4{grid-template-columns:repeat(2,1fr);}
+      .menu-grid-3{grid-template-columns:repeat(2,1fr);}
+      .addon-grid{grid-template-columns:repeat(2,1fr);}
+    }
+    @media(max-width:860px){
+      .nav-links{display:none;}
+      .nav-cta .btn-ghost{display:none;}
+      .hamburger{display:inline-flex;}
+      .brand{padding-left:0;padding-right:0;}
+      .page-hero-inner{grid-template-columns:1fr;}
+      .page-hero-photo{display:none;}
+      .floatbar{display:block;}
+      .feature-block{grid-template-columns:1fr;}
+      .feature-block-img{min-height:200px;}
+      .menu-card-wide{grid-template-columns:1fr;}
+      .svc-header{grid-template-columns:1fr;}
+      .svc-header-cta{display:none;}
+      .service-tabs-wrap{top:62px;}
+      .footer-grid{grid-template-columns:1fr 1fr;}
+      .wax-layout{grid-template-columns:1fr;}
+    }
+    @media(max-width:620px){
+      .container{padding:0 16px;}
+      .topbar{font-size:.72rem;}
+      .topbar .inner{flex-direction:column;align-items:center;text-align:center;gap:4px;padding:8px 0;}
+      .topbar-dot{display:inline;}
+      .nav{height:62px;}
+      .brand-logo{width:38px;height:38px;}
+      .brand-name{font-size:1.1rem;}
+      .brand-tagline{display:none;}
+      .page-hero{padding:clamp(48px,10vw,72px) 0;}
+      .menu-grid-4,.menu-grid-3,.menu-grid-2{grid-template-columns:1fr;}
+      .addon-grid{grid-template-columns:1fr;}
+      .footer-grid{grid-template-columns:1fr;}
+      .stats-row{gap:24px;}
+      .menu-list-item{padding:13px 16px;gap:10px;}
+      .service-tabs-wrap{top:62px;}
+      .svc-section{padding:clamp(40px,6vw,60px) 0;}
+      main{padding-bottom:80px;}
+    }
+    @media(max-width:380px){
+      .menu-grid-4,.menu-grid-3,.menu-grid-2{grid-template-columns:1fr;}
+    }
+    @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+  </style>
+</head>
+
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container inner">
+      <div>✦ Walk-ins welcome<span class="topbar-dot">·</span>Same-day appointments available</div>
+      <div>
+        <a href="tel:+18479319359">(847) 931-9359</a>
+        <span class="topbar-dot">·</span>
+        <a href="contact.html">Hours &amp; Location</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header id="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Victoria Nails home">
+        <img class="brand-logo" src="images/victoria-logo.png" alt="Victoria Nails"/>
+        <div class="brand-text">
+          <span class="brand-name">Victoria Nails</span>
+          <span class="brand-tagline">Luxury Nail Care</span>
+        </div>
+      </a>
+      <nav aria-label="Primary navigation" class="nav-links">
+        <a class="active" href="services.html">Services</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="reviews.html">Reviews</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-primary btn-sm" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Now</a>
+        <button aria-controls="mobilePanel" aria-expanded="false" aria-label="Open navigation" class="hamburger" id="menuBtn" type="button">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="container">
+      <div class="mobile-panel" id="mobilePanel">
+        <a href="services.html">Services <span>→</span></a>
+        <a href="gallery.html">Gallery <span>→</span></a>
+        <a href="reviews.html">Reviews <span>→</span></a>
+        <a href="contact.html">Contact <span>→</span></a>
+        <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment <span>→</span></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Hero -->
+  <section class="page-hero" aria-label="Services hero">
+    <div class="container">
+      <div class="page-hero-inner">
+        <div class="page-hero-content">
+          <div class="eyebrow">Our Full Menu</div>
+          <h1>Every Service, Elevated</h1>
+          <p class="lead">From classic manicures to elegant nail enhancements, luxury pedicures to full-service waxing — everything you need, all in one place.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment</a>
+          </div>
+        </div>
+        <div class="page-hero-photo" role="img" aria-label="Victoria Nails nail art service"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Strip -->
+  <div class="stats-strip">
+    <div class="container">
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-num">5</div>
+          <div class="stat-label">Service Categories</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">40+</div>
+          <div class="stat-label">Menu Items</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">16</div>
+          <div class="stat-label">Expert Technicians</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">10+</div>
+          <div class="stat-label">Years of Care</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky Tab Nav -->
+  <div class="service-tabs-wrap" aria-label="Service categories">
+    <div class="container">
+      <div class="service-tabs" role="tablist">
+        <button class="tab-btn active" data-target="manicure">Manicure</button>
+        <button class="tab-btn" data-target="pedicure">Pedicure</button>
+        <button class="tab-btn" data-target="enhancements">Enhancements</button>
+        <button class="tab-btn" data-target="add-ons">Add-Ons</button>
+        <button class="tab-btn" data-target="waxing">Waxing</button>
+      </div>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- ======================== MANICURE ======================== -->
+    <div id="manicure" class="svc-section svc-section-bg">
+      <div class="container">
+        <div class="svc-header reveal">
+          <div class="svc-header-left">
+            <div class="svc-eyebrow">Manicure Services</div>
+            <h2>Hand &amp; Nail Care</h2>
+            <p>From a clean classic finish to long-lasting gel and durable builder gel — our manicures leave your hands radiant, hydrated, and beautifully finished with expert precision and care.</p>
+          </div>
+          <div class="svc-header-cta">
+            <a class="btn btn-primary" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Manicure</a>
+          </div>
+        </div>
+
+        <div class="menu-grid-3">
+
+          <article class="menu-card reveal" style="transition-delay:.04s">
+            <div class="menu-card-img">
+              <img src="images/504453051_18356772292144778_992606774918720267_n.jpg" alt="Classic Manicure — Victoria Nails"/>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Classic Manicure</div>
+              <div class="menu-card-desc">Trim, shape, and buff nails followed by cuticle care and polish application.</div>
+              <div class="chip-row"><span class="chip">Regular Polish</span><span class="chip">Cuticle Care</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$20</span>
+                <span class="menu-card-time">30 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal" style="transition-delay:.08s">
+            <div class="menu-card-img">
+              <img src="images/497194434_18353988445144778_1697815634990731622_n.jpg" alt="Gel Manicure — Victoria Nails"/>
+              <div class="menu-card-img-badge">Popular</div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Gel Manicure</div>
+              <div class="menu-card-desc">Nail shaping and cuticle care with gel polish application for long-lasting, high-shine color.</div>
+              <div class="chip-row"><span class="chip">Gel Polish</span><span class="chip">LED Cure</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$40</span>
+                <span class="menu-card-time">45 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal" style="transition-delay:.12s">
+            <div class="menu-card-img">
+              <img src="images/500579432_18355554520144778_1408243905823369086_n.jpg" alt="Dipping Nails — Victoria Nails"/>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Dipping Nails</div>
+              <div class="menu-card-desc">Classic French tip design with nail shaping, cuticle care, and polish application.</div>
+              <div class="chip-row"><span class="chip">Dip Powder</span><span class="chip">French Tip</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$50</span>
+                <span class="menu-card-time">60 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal" style="transition-delay:.16s">
+            <div class="menu-card-img">
+              <img src="images/485646826_1453111585942903_2965999747786059404_n.jpg" alt="Gel X — Victoria Nails"/>
+              <div class="menu-card-img-badge">Signature</div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Gel X</div>
+              <div class="menu-card-desc">A popular soft gel extension system combining the ease of press-on nails with the durability and finish of gel nails.</div>
+              <div class="chip-row"><span class="chip chip-gold">Soft Gel</span><span class="chip chip-gold">Extensions</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$65</span>
+                <span class="menu-card-time">60 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal" style="transition-delay:.20s">
+            <div class="menu-card-img">
+              <img src="images/621808021_17996412722884450_6814455501699905715_n.jpg" alt="Builder Gel Fill — Victoria Nails"/>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Builder Gel Fill</div>
+              <div class="menu-card-desc">Perfect for extending the life of your gel enhancements — filling the growth gap, reshaping, and reinforcing your nails for strength and durability.</div>
+              <div class="chip-row"><span class="chip">Fill</span><span class="chip">Reshape</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$65</span>
+                <span class="menu-card-time">60 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal" style="transition-delay:.24s">
+            <div class="menu-card-img">
+              <img src="images/505450646_18357222775144778_5104132791703890334_n.jpg" alt="Builder Gel Set — Victoria Nails"/>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Builder Gel Set</div>
+              <div class="menu-card-desc">A thicker, more viscous gel used to create strong, durable extensions or overlays — designed to build structure and shape on natural nails.</div>
+              <div class="chip-row"><span class="chip chip-gold">Full Set</span><span class="chip chip-gold">Strong Build</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$75</span>
+                <span class="menu-card-time">60 min</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== PEDICURE ======================== -->
+    <div id="pedicure" class="svc-section svc-section-ivory">
+      <div class="container">
+        <div class="svc-header reveal">
+          <div class="svc-header-left">
+            <div class="svc-eyebrow">Pedicure Services</div>
+            <h2>Foot &amp; Leg Rituals</h2>
+            <p>Indulgent pedicures with premium soaks, exfoliation, restorative massage, and immaculate finishing. From a clean classic to our Signature ritual with hot stones — your feet deserve the best.</p>
+          </div>
+          <div class="svc-header-cta">
+            <a class="btn btn-primary" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Pedicure</a>
+          </div>
+        </div>
+
+        <div class="menu-grid-4">
+
+          <article class="menu-card reveal" style="transition-delay:.04s">
+            <div class="menu-card-img">
+              <img src="images/classic-pedicure.jpeg" alt="Classic Pedicure — Victoria Nails"/>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Classic Pedicure</div>
+              <div class="menu-card-desc">Basic pedicure treatment including nail shaping, cuticle care, foot scrub, massage, and nail polish application.</div>
+              <div class="chip-row"><span class="chip">Soak</span><span class="chip">Massage</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$38</span>
+                <span class="menu-card-time">30 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal" style="transition-delay:.08s">
+            <div class="menu-card-img">
+              <img src="images/spa-pedicure.jpeg" alt="Spa Pedicure — Victoria Nails"/>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Spa Pedicure</div>
+              <div class="menu-card-desc">Pedicure plus sea salt and foot mask. Ideal for exfoliating your feet and legs.</div>
+              <div class="chip-row"><span class="chip">Sea Salt Scrub</span><span class="chip">Foot Mask</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$48</span>
+                <span class="menu-card-time">45 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal" style="transition-delay:.12s">
+            <div class="menu-card-img">
+              <img src="images/organic-pedicure.jpeg" alt="Organic Dream Pedicure — Victoria Nails"/>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Organic Dream Pedicure</div>
+              <div class="menu-card-desc">Classic pedicure with special organic aromatherapy, sugar scrubs, exfoliation mask, and lotion massage. <em>Add $5 for CBD.</em></div>
+              <div class="chip-row"><span class="chip">Organic</span><span class="chip">Aromatherapy</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$50</span>
+                <span class="menu-card-time">45 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal" style="transition-delay:.16s">
+            <div class="menu-card-img">
+              <img src="images/gel-pedicure.jpeg" alt="Gel Pedicure — Victoria Nails"/>
+              <div class="menu-card-img-badge">Popular</div>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Gel Pedicure</div>
+              <div class="menu-card-desc">Long-lasting pedicure option using gel polish for a chip-free, glossy finish that can last up to 2–3 weeks.</div>
+              <div class="chip-row"><span class="chip">Gel Polish</span><span class="chip">LED Cure</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$58</span>
+                <span class="menu-card-time">45 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal" style="transition-delay:.20s">
+            <div class="menu-card-img">
+              <img src="images/vocano-pedicure.jpeg" alt="Volcano Pedicure — Victoria Nails"/>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Volcano Pedicure</div>
+              <div class="menu-card-desc">Detox volcano crystal and activators combined with a collagen massage lotion made from organic base ingredients. <em>Add $5 for CBD.</em></div>
+              <div class="chip-row"><span class="chip">Detox</span><span class="chip">Collagen</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$60</span>
+                <span class="menu-card-time">55 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal" style="transition-delay:.24s">
+            <div class="menu-card-img">
+              <img src="images/platinum-pedicure.jpeg" alt="Platinum Pedicure — Victoria Nails"/>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Platinum Pedicure</div>
+              <div class="menu-card-desc">Spa pedicure plus paraffin wax treatment — ideal for moisturizing and softening the skin.</div>
+              <div class="chip-row"><span class="chip">Paraffin Wax</span><span class="chip">Hydrating</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$65</span>
+                <span class="menu-card-time">55 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal" style="transition-delay:.28s">
+            <div class="menu-card-img">
+              <img src="images/colagen-pedicure.jpeg" alt="Collagen Pedicure — Victoria Nails"/>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Collagen Pedicure</div>
+              <div class="menu-card-desc">Classic pedicure with collagen package — deeply nourishing for skin and cuticles.</div>
+              <div class="chip-row"><span class="chip">Collagen</span><span class="chip">Nourishing</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$60</span>
+                <span class="menu-card-time">55 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="menu-card reveal" style="transition-delay:.32s">
+            <div class="menu-card-img">
+              <img src="images/golden-pedicure.jpeg" alt="Golden Pedicure — Victoria Nails"/>
+            </div>
+            <div class="menu-card-body">
+              <div class="menu-card-name">Golden Pedicure</div>
+              <div class="menu-card-desc">Classic pedicure with our premium Golden Package — an indulgent, spa-grade experience.</div>
+              <div class="chip-row"><span class="chip chip-gold">Premium</span><span class="chip chip-gold">Spa</span></div>
+              <div class="menu-card-footer">
+                <span class="menu-card-price">$70</span>
+                <span class="menu-card-time">60 min</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Signature Pedicure Feature Block -->
+        <div class="feature-block reveal" style="margin-top:24px;">
+          <div class="feature-block-content">
+            <div class="eyebrow">Our Most Indulgent</div>
+            <h3>Signature Pedicure</h3>
+            <p>Platinum Pedicure plus hot stone massage — ideal for achy, tired feet. The ultimate restorative ritual when you need to truly unwind and recover.</p>
+            <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+              <span style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold-light);">$75</span>
+              <span style="font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);">65 min</span>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
+              <a class="btn btn-primary" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Now</a>
+            </div>
+          </div>
+          <div class="feature-block-img"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ======================== ENHANCEMENTS ======================== -->
+    <div id="enhancements" class="svc-section svc-section-cream">
+      <div class="container">
+        <div class="svc-header reveal">
+          <div class="svc-header-left">
+            <div class="svc-eyebrow">Nail Enhancement Services</div>
+            <h2>Acrylic, Ombre &amp; Pink + White</h2>
+            <p>Our full range of nail enhancement options — from classic acrylic sets and fills to ombre styles and the timeless pink &amp; white look. Strong, sculpted, and finished to last.</p>
+          </div>
+          <div class="svc-header-cta">
+            <a class="btn btn-primary" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Enhancement</a>
+          </div>
+        </div>
+
+        <div class="menu-list reveal">
+          <div class="menu-list-head">
+            <h3>Acrylic Services</h3>
+            <p>Classic acrylic full sets and maintenance fills with no-chip options.</p>
+          </div>
+          <div class="menu-list-item">
+            <div>
+              <div class="menu-list-item-name">Acrylic Full Set</div>
+              <div class="menu-list-item-desc">Complete set of acrylic extensions with shaping and polish.</div>
+            </div>
+            <div class="menu-list-price">$40</div>
+          </div>
+          <div class="menu-list-item">
+            <div>
+              <div class="menu-list-item-name">Acrylic Fill</div>
+              <div class="menu-list-item-desc">Maintenance fill to keep your acrylics looking fresh.</div>
+            </div>
+            <div class="menu-list-price">$30</div>
+          </div>
+          <div class="menu-list-item">
+            <div>
+              <div class="menu-list-item-name">Full Set with No-chip</div>
+              <div class="menu-list-item-desc">Full acrylic set finished with chip-resistant gel polish.</div>
+            </div>
+            <div class="menu-list-price">$55</div>
+          </div>
+          <div class="menu-list-item">
+            <div>
+              <div class="menu-list-item-name">Fill with No-chip</div>
+              <div class="menu-list-item-desc">Acrylic fill with a long-lasting no-chip finish.</div>
+            </div>
+            <div class="menu-list-price">$45</div>
+          </div>
+        </div>
+
+        <div style="height:20px;"></div>
+
+        <div class="menu-list reveal">
+          <div class="menu-list-head">
+            <h3>Ombre Services</h3>
+            <p>Beautifully blended color gradients for a soft, elegant look.</p>
+          </div>
+          <div class="menu-list-item">
+            <div>
+              <div class="menu-list-item-name">Ombre Full Set</div>
+              <div class="menu-list-item-desc">Complete set featuring a seamless ombre gradient finish.</div>
+            </div>
+            <div class="menu-list-price">$65</div>
+          </div>
+          <div class="menu-list-item">
+            <div>
+              <div class="menu-list-item-name">Ombre Fill</div>
+              <div class="menu-list-item-desc">Fill service maintaining your ombre style and shape.</div>
+            </div>
+            <div class="menu-list-price">$55</div>
+          </div>
+          <div class="menu-list-item">
+            <div>
+              <div class="menu-list-item-name">Pink Ombre Fill</div>
+              <div class="menu-list-item-desc">Ombre fill specifically in our signature pink gradient.</div>
+            </div>
+            <div class="menu-list-price">$45</div>
+          </div>
+        </div>
+
+        <div style="height:20px;"></div>
+
+        <div class="menu-list reveal">
+          <div class="menu-list-head">
+            <h3>Pink &amp; White Services</h3>
+            <p>The timeless Pink &amp; White look — clean, classic, and elegant.</p>
+          </div>
+          <div class="menu-list-item">
+            <div>
+              <div class="menu-list-item-name">Pink &amp; White Full Set</div>
+              <div class="menu-list-item-desc">Full set with classic pink base and pristine white tips.</div>
+            </div>
+            <div class="menu-list-price">$65</div>
+          </div>
+          <div class="menu-list-item">
+            <div>
+              <div class="menu-list-item-name">Pink &amp; White Fill</div>
+              <div class="menu-list-item-desc">Fill maintaining your pink &amp; white enhancement.</div>
+            </div>
+            <div class="menu-list-price">$55</div>
+          </div>
+          <div class="menu-list-item">
+            <div>
+              <div class="menu-list-item-name">Pink Fill</div>
+              <div class="menu-list-item-desc">Fill service for the pink portion of your enhancement.</div>
+            </div>
+            <div class="menu-list-price">$45</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ======================== ADD-ONS ======================== -->
+    <div id="add-ons" class="svc-section svc-section-bg">
+      <div class="container">
+        <div class="svc-header reveal">
+          <div class="svc-header-left">
+            <div class="svc-eyebrow">Additional Services</div>
+            <h2>Add-Ons &amp; Extras</h2>
+            <p>Customize your service with nail shape changes, length upgrades, French finishes, removals, repairs, and more. Pair any add-on with your core service for a fully tailored result.</p>
+          </div>
+        </div>
+
+        <div class="addon-grid reveal">
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">Change Nail Shape</div>
+              <div class="addon-chip-desc">Reshape to your preferred style.</div>
+            </div>
+            <div class="addon-chip-price">$5</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">Cuticle Trim</div>
+              <div class="addon-chip-desc">Precision cuticle grooming.</div>
+            </div>
+            <div class="addon-chip-price">$10</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">3X Long Nails</div>
+              <div class="addon-chip-desc">Extra-long length upgrade.</div>
+            </div>
+            <div class="addon-chip-price">$15</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">2X Long Nails</div>
+              <div class="addon-chip-desc">Longer length upgrade.</div>
+            </div>
+            <div class="addon-chip-price">$10</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">1X Long Nails</div>
+              <div class="addon-chip-desc">Slight length upgrade.</div>
+            </div>
+            <div class="addon-chip-price">$5</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">Almond French</div>
+              <div class="addon-chip-desc">Classic French on almond shape.</div>
+            </div>
+            <div class="addon-chip-price">$15</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">Regular French</div>
+              <div class="addon-chip-desc">Traditional white-tip finish.</div>
+            </div>
+            <div class="addon-chip-price">$10</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">Stiletto</div>
+              <div class="addon-chip-desc">Pointed stiletto shape.</div>
+            </div>
+            <div class="addon-chip-price">$10</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">Oval / Almond / Coffin / Tapered</div>
+              <div class="addon-chip-desc">Premium shape options.</div>
+            </div>
+            <div class="addon-chip-price">$5</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">No-Chip / Dip Removal Only</div>
+              <div class="addon-chip-desc">Gentle, safe product removal.</div>
+            </div>
+            <div class="addon-chip-price">$20</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">Acrylic Removal Only</div>
+              <div class="addon-chip-desc">Full acrylic removal.</div>
+            </div>
+            <div class="addon-chip-price">$20</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">Buff Shine</div>
+              <div class="addon-chip-desc">Polish-free natural shine finish.</div>
+            </div>
+            <div class="addon-chip-price">$7</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">Toes Trim</div>
+              <div class="addon-chip-desc">Toenail trim &amp; tidy.</div>
+            </div>
+            <div class="addon-chip-price">$15</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">Nails Trim</div>
+              <div class="addon-chip-desc">Fingernail trim &amp; tidy.</div>
+            </div>
+            <div class="addon-chip-price">$10</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">1 Repair Only</div>
+              <div class="addon-chip-desc">Single-nail repair service.</div>
+            </div>
+            <div class="addon-chip-price">$5</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">1–2 Nail Repairs w/ Service</div>
+              <div class="addon-chip-desc">Minor repairs during your appointment.</div>
+            </div>
+            <div class="addon-chip-price">$5</div>
+          </div>
+          <div class="addon-chip">
+            <div>
+              <div class="addon-chip-name">3–4 Nail Repairs w/ Service</div>
+              <div class="addon-chip-desc">Multiple repairs during your appointment.</div>
+            </div>
+            <div class="addon-chip-price">$10</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== WAXING ======================== -->
+    <div id="waxing" class="svc-section svc-section-ivory">
+      <div class="container">
+        <div class="svc-header reveal">
+          <div class="svc-header-left">
+            <div class="svc-eyebrow">Waxing Services</div>
+            <h2>Smooth, Clean &amp; Cared-For</h2>
+            <p>Precision waxing from brows and lip to full face, underarm, Brazilian, and full leg. Professional, clean, and comfortable — with aftercare guidance to keep skin happy.</p>
+          </div>
+          <div class="svc-header-cta">
+            <a class="btn btn-primary" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Waxing</a>
+          </div>
+        </div>
+
+        <div class="wax-layout">
+
+          <div class="menu-list reveal">
+            <div class="menu-list-head">
+              <h3>Wax Menu</h3>
+              <p>All services performed by licensed technicians with high-quality wax.</p>
+            </div>
+            <div class="menu-list-item">
+              <div>
+                <div class="menu-list-item-name">Upper Lip</div>
+                <div class="menu-list-item-desc">Remove unwanted hair from the area above the upper lip.</div>
+              </div>
+              <div class="menu-list-price">$8</div>
+            </div>
+            <div class="menu-list-item">
+              <div>
+                <div class="menu-list-item-name">Chin</div>
+                <div class="menu-list-item-desc">Remove unwanted hair from the area below the lower lip, along the chin or jawline.</div>
+              </div>
+              <div class="menu-list-price">$10</div>
+            </div>
+            <div class="menu-list-item">
+              <div>
+                <div class="menu-list-item-name">Eyebrow Waxing</div>
+                <div class="menu-list-item-desc">Shaping and grooming of eyebrows. <em>15 min.</em></div>
+              </div>
+              <div class="menu-list-price">$12</div>
+            </div>
+            <div class="menu-list-item">
+              <div>
+                <div class="menu-list-item-name">Underarm Wax</div>
+                <div class="menu-list-item-desc">Hair removal from the underarm area. <em>20 min.</em></div>
+              </div>
+              <div class="menu-list-price">$20</div>
+            </div>
+            <div class="menu-list-item">
+              <div>
+                <div class="menu-list-item-name">Full Face</div>
+                <div class="menu-list-item-desc">Facial waxing to eliminate unwanted hair from various areas of the face. <em>30 min.</em></div>
+              </div>
+              <div class="menu-list-price">$30</div>
+            </div>
+            <div class="menu-list-item">
+              <div>
+                <div class="menu-list-item-name">Back Wax</div>
+                <div class="menu-list-item-desc">Complete removal of hair from the back. <em>45 min.</em></div>
+              </div>
+              <div class="menu-list-price">$40</div>
+            </div>
+            <div class="menu-list-item">
+              <div>
+                <div class="menu-list-item-name">Brazilian Wax</div>
+                <div class="menu-list-item-desc">Removal of hair from the bikini area. <em>30 min.</em></div>
+              </div>
+              <div class="menu-list-price">$50</div>
+            </div>
+            <div class="menu-list-item">
+              <div>
+                <div class="menu-list-item-name">Full Leg Wax</div>
+                <div class="menu-list-item-desc">Removal of hair from both legs up to the bikini line. <em>60 min.</em></div>
+              </div>
+              <div class="menu-list-price">$70</div>
+            </div>
+          </div>
+
+          <div class="tips-card reveal">
+            <div class="svc-eyebrow">Prep &amp; Aftercare</div>
+            <h3>Get the Best Results</h3>
+            <div class="tip-row"><div class="tip-icon">📏</div><span>Hair should be at least ¼ inch long for effective waxing</span></div>
+            <div class="tip-row"><div class="tip-icon">🚿</div><span>Exfoliate the area 1–2 days before your appointment</span></div>
+            <div class="tip-row"><div class="tip-icon">☀️</div><span>Avoid sun, hot tubs, and heavy exercise for 24 hours after</span></div>
+            <div class="tip-row"><div class="tip-icon">🧴</div><span>Apply soothing lotion after your session to reduce redness</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;">
+              <a class="btn btn-dark btn-sm" href="tel:+18479319359">Call Us</a>
+              <a class="btn btn-ghost btn-sm" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Online</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- CTA Banner -->
+  <div class="cta-banner">
+    <div class="container">
+      <div class="eyebrow" style="justify-content:center;color:var(--gold-light);">Ready to Book?</div>
+      <h2>Experience the Victoria Difference</h2>
+      <p>Book online in seconds or call us to find the perfect service for you. Walk-ins always welcome.</p>
+      <div class="cta-banner-actions">
+        <a class="btn btn-primary" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment</a>
+        <a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.2);" href="contact.html">Hours &amp; Location</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">Victoria Nails</div>
+          <p>A luxury nail salon dedicated to impeccable craft, genuine care, and a serene experience every visit.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="#manicure">Manicure</a>
+          <a href="#pedicure">Pedicure</a>
+          <a href="#enhancements">Enhancements</a>
+          <a href="#add-ons">Add-Ons</a>
+          <a href="#waxing">Waxing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Info</h4>
+          <a href="gallery.html">Gallery</a>
+          <a href="reviews.html">Reviews</a>
+          <a href="contact.html">Contact</a>
+          <a href="careers.html">Careers</a>
+        </div>
+        <div class="footer-col">
+          <h4>Book</h4>
+          <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Online</a>
+          <a href="https://www.instagram.com/victorianailssouthelgin" rel="noopener" target="_blank">Instagram</a>
+          <a href="https://www.facebook.com/victorianailssalon" rel="noopener" target="_blank">Facebook</a>
+          <a href="https://www.tiktok.com/@victorianailssouthelgin" rel="noopener" target="_blank">TikTok</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Victoria Nails. All rights reserved.</span>
+        <span>Made with care ✦</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="floatbar" aria-label="Quick actions">
+    <div class="inner">
+      <a class="btn btn-primary btn-block" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment</a>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      // Sticky header
+      const hdr = document.getElementById('site-header');
+      window.addEventListener('scroll', () => hdr.classList.toggle('scrolled', window.scrollY > 30), {passive:true});
+
+      // Mobile menu
+      const menuBtn = document.getElementById('menuBtn');
+      const panel = document.getElementById('mobilePanel');
+      if(menuBtn && panel){
+        menuBtn.addEventListener('click', () => {
+          const open = panel.classList.contains('is-open');
+          panel.classList.toggle('is-open', !open);
+          menuBtn.setAttribute('aria-expanded', String(!open));
+        });
+        panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+          panel.classList.remove('is-open'); menuBtn.setAttribute('aria-expanded','false');
+        }));
+      }
+
+      // Scroll reveal
+      const reveals = document.querySelectorAll('.reveal');
+      const obs = new IntersectionObserver(entries => entries.forEach(e => {
+        if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+      }), {threshold:.1});
+      reveals.forEach(el => obs.observe(el));
+      // Fallback: reveal anything not yet visible after 1.5s
+      setTimeout(() => document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible')), 1500);
+
+      // Tab nav — smooth scroll + active state
+      const tabs = document.querySelectorAll('.tab-btn');
+      tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = document.getElementById(btn.dataset.target);
+          if(target){
+            const offset = 80 + 50;
+            const top = target.getBoundingClientRect().top + window.scrollY - offset;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+          tabs.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+
+      // Update active tab on scroll
+      const sections = Array.from(document.querySelectorAll('[id]')).filter(el =>
+        ['manicure','pedicure','enhancements','add-ons','waxing'].includes(el.id)
+      );
+      const tabMap = {};
+      tabs.forEach(b => tabMap[b.dataset.target] = b);
+
+      const scrollSpy = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if(e.isIntersecting){
+            tabs.forEach(b => b.classList.remove('active'));
+            if(tabMap[e.target.id]) tabMap[e.target.id].classList.add('active');
+          }
+        });
+      }, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
+      sections.forEach(s => scrollSpy.observe(s));
+
+    })();
+  </script>
+</body>
+</html>

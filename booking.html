@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#b8956a"/>
+  <meta name="description" content="Book your manicure, pedicure, or waxing appointment at Victoria Nails."/>
+  <meta name="robots" content="noindex,follow"/>
+  <title>Book Appointment | Victoria Nails</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --gold:#b8956a; --gold-light:#d4b896; --gold-pale:#f5ede4;
+      --cream:#faf7f4; --ivory:#f2ede8;
+      --charcoal:#1a1714; --ink:#2c2520; --warm-gray:#7a6e68;
+      --border:rgba(184,149,106,.18); --border-soft:rgba(184,149,106,.10);
+      --shadow-soft:0 4px 24px rgba(26,23,20,.06);
+      --shadow-med:0 8px 40px rgba(26,23,20,.10);
+      --shadow-lg:0 20px 60px rgba(26,23,20,.14);
+      --shadow-gold:0 8px 32px rgba(184,149,106,.22);
+      --radius:12px; --radius-lg:20px;
+      --ring:0 0 0 3px rgba(184,149,106,.22);
+      --transition:.3s cubic-bezier(.4,0,.2,1);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Jost',sans-serif;color:var(--ink);background:var(--cream);line-height:1.65;-webkit-font-smoothing:antialiased;}
+    h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.1;color:var(--charcoal);}
+    h1{font-size:clamp(2.1rem,3.8vw,3.2rem);letter-spacing:-.01em;}
+    h2{font-size:clamp(1.5rem,2.4vw,2.2rem);}
+    p{color:var(--warm-gray);}
+    a{text-decoration:none;color:inherit;}
+    ::selection{background:rgba(184,149,106,.22);}
+    :focus{outline:none;}
+    :focus-visible{box-shadow:var(--ring);border-radius:var(--radius);}
+    .container{max-width:1220px;margin:0 auto;padding:0 28px;}
+
+    /* Topbar */
+    .topbar{background:var(--charcoal);color:rgba(255,255,255,.6);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;}
+    .topbar a{color:var(--gold-light);transition:color .2s;}
+    .topbar a:hover{color:#fff;}
+    .topbar-dot{color:var(--gold);margin:0 6px;}
+
+    /* Header */
+    header{background:rgba(250,247,244,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000;}
+    .nav{display:flex;justify-content:space-between;align-items:center;height:80px;gap:20px;}
+    .brand{display:flex;align-items:center;gap:14px;border-radius:var(--radius);padding:6px 10px;transition:background var(--transition);}
+    .brand:hover{background:rgba(184,149,106,.08);}
+    .brand-logo{width:48px;height:48px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border);box-shadow:var(--shadow-gold);background:var(--ivory);display:block;}
+    .brand-text{display:flex;flex-direction:column;gap:2px;}
+    .brand-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--charcoal);letter-spacing:.02em;white-space:nowrap;line-height:1;}
+    .brand-tagline{font-size:.73rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+    .nav-links{display:flex;align-items:center;gap:2px;}
+    .nav-links a{padding:9px 14px;border-radius:8px;font-size:.88rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);transition:background var(--transition),color var(--transition);}
+    .nav-links a:hover{color:var(--gold);background:rgba(184,149,106,.08);}
+    .nav-cta{display:flex;align-items:center;gap:10px;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:999px;font-family:'Jost',sans-serif;font-size:.88rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;cursor:pointer;border:1.5px solid transparent;transition:background var(--transition),transform var(--transition),box-shadow var(--transition),color var(--transition),border-color var(--transition);}
+    .btn-primary{background:var(--gold);color:#fff;border-color:var(--gold);box-shadow:var(--shadow-gold);}
+    .btn-primary:hover{background:#a07d55;border-color:#a07d55;transform:translateY(-2px);box-shadow:0 12px 36px rgba(184,149,106,.35);}
+    .btn-ghost{background:transparent;color:var(--ink);border-color:var(--border);}
+    .btn-ghost:hover{background:rgba(184,149,106,.08);border-color:var(--gold-light);}
+    .btn-sm{padding:10px 20px;font-size:.82rem;}
+    .btn-lg{padding:17px 40px;font-size:1rem;}
+
+    .hamburger{display:none;width:44px;height:44px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;}
+    .hamburger span{display:block;width:20px;height:1.5px;background:var(--charcoal);}
+    .mobile-menu{display:none;position:absolute;left:18px;right:18px;top:84px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px;box-shadow:var(--shadow-lg);z-index:999;}
+    .mobile-menu.open{display:block;}
+    .mobile-menu a{display:block;padding:12px 14px;border-radius:var(--radius);font-size:.9rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;transition:background .2s;}
+    .mobile-menu a:hover{background:rgba(184,149,106,.1);}
+
+    /* Redirect card */
+    main{padding:clamp(48px,7vw,90px) 0 clamp(72px,9vw,110px);}
+    .redirect-card{
+      max-width:680px;margin:0 auto;text-align:center;
+      background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius-lg);
+      box-shadow:var(--shadow-med);padding:clamp(32px,5vw,56px) clamp(24px,4vw,48px);
+    }
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:.72rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+    .eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--gold);}
+    .redirect-card h1{margin-bottom:14px;}
+    .redirect-card p{font-size:.96rem;max-width:46ch;margin:0 auto 28px;}
+    .redirect-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+    .redirect-status{margin-top:22px;font-size:.84rem;color:var(--warm-gray);}
+    .redirect-status a{color:var(--gold);text-decoration:underline;text-underline-offset:3px;}
+
+    .spinner{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--gold);display:inline-block;vertical-align:-2px;margin-right:7px;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    .tip-note{
+      max-width:680px;margin:20px auto 0;
+      background:var(--gold-pale);border:1px solid var(--border);border-radius:var(--radius);
+      padding:14px 18px;font-size:.86rem;color:var(--ink);text-align:center;
+    }
+    .tip-note strong{color:var(--charcoal);}
+
+    /* Footer */
+    footer{background:var(--charcoal);color:rgba(255,255,255,.55);padding:36px 0;border-top:1px solid rgba(255,255,255,.06);text-align:center;}
+    .footer-bottom-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:12px;}
+    .footer-bottom-links a{font-size:.82rem;color:rgba(255,255,255,.45);transition:color .2s;letter-spacing:.04em;}
+    .footer-bottom-links a:hover{color:var(--gold-light);}
+
+    @media (max-width:860px){
+      .nav-links{display:none;}
+      .nav-cta .btn-ghost{display:none;}
+      .hamburger{display:inline-flex;}
+    }
+    @media (max-width:620px){
+      .container{padding:0 18px;}
+      .topbar .inner{flex-direction:column;align-items:center;text-align:center;gap:4px;padding:8px 0;}
+      .nav{height:62px;}
+      .brand-logo{width:38px;height:38px;}
+      .brand-tagline{display:none;}
+      .mobile-menu{top:66px;}
+    }
+    @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+  </style>
+</head>
+
+<body>
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container inner">
+      <div>✦ Walk-ins welcome<span class="topbar-dot">·</span>Same-day appointments available</div>
+      <div>
+        <a href="tel:+18479319359">(847) 931-9359</a>
+        <span class="topbar-dot">·</span>
+        <a href="contact.html">Hours &amp; Location</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header id="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Victoria Nails home">
+        <img class="brand-logo" src="images/victoria-logo.png" alt="Victoria Nails" onerror="this.onerror=null;this.src='victoria-logo.png';"/>
+        <div class="brand-text">
+          <span class="brand-name">Victoria Nails</span>
+          <span class="brand-tagline">Luxury Nail Care</span>
+        </div>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="services.html">Services</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="reviews.html">Reviews</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-primary btn-sm" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Now</a>
+        <button class="hamburger" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="container" style="position:relative;">
+      <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+        <a href="services.html">Services <span>→</span></a>
+        <a href="gallery.html">Gallery <span>→</span></a>
+        <a href="reviews.html">Reviews <span>→</span></a>
+        <a href="contact.html">Contact <span>→</span></a>
+        <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment <span>→</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="redirect-card">
+        <div class="eyebrow">Online Booking</div>
+        <h1>Reserve Your Appointment</h1>
+        <p>Choose your service, pick your preferred time, and secure your spot. Our booking system opens in a moment.</p>
+        <div class="redirect-actions">
+          <a class="btn btn-primary btn-lg" id="openBooking" href="https://booking.galaxyaccess.us/victoria349" rel="noopener">Open Booking</a>
+          <a class="btn btn-ghost" href="services.html">View Services</a>
+        </div>
+        <p class="redirect-status" id="redirectStatus">
+          <span class="spinner" aria-hidden="true"></span>Taking you there now — if nothing happens,
+          <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener">tap here</a>.
+        </p>
+      </div>
+
+      <div class="tip-note">
+        <strong>Have a gift card?</strong> Apply your code at checkout, or present it in-salon at the time of your visit.
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div style="font-size:.82rem;letter-spacing:.04em;">© <span id="year"></span> Victoria Nails · Powered by SalonGenie</div>
+      <div class="footer-bottom-links">
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+        <a href="careers.html">Careers</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var BOOK_URL = "https://booking.galaxyaccess.us/victoria349";
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      // Mobile menu
+      var menuBtn = document.getElementById("menuBtn");
+      var mobileMenu = document.getElementById("mobileMenu");
+      if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener("click", function () {
+          var open = mobileMenu.classList.toggle("open");
+          menuBtn.setAttribute("aria-expanded", String(open));
+        });
+        document.addEventListener("click", function (e) {
+          if (window.innerWidth > 860) return;
+          if (!mobileMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+            mobileMenu.classList.remove("open");
+          }
+        });
+      }
+
+      // Auto-forward to the booking system. Cancelled if the visitor clicks
+      // anything first, so the manual buttons always win.
+      var cancelled = false;
+      function cancel() { cancelled = true; }
+      document.addEventListener("click", cancel, { once: true });
+      document.addEventListener("keydown", cancel, { once: true });
+
+      setTimeout(function () {
+        if (cancelled) return;
+        window.location.replace(BOOK_URL);
+      }, 1200);
+
+      // If the redirect is blocked, swap the status line for a plain prompt.
+      setTimeout(function () {
+        if (cancelled) return;
+        var status = document.getElementById("redirectStatus");
+        if (!status) return;
+        var link = document.createElement("a");
+        link.href = BOOK_URL;
+        link.rel = "noopener";
+        link.textContent = "open booking";
+        status.textContent = "Didn't load? ";
+        status.appendChild(link);
+        status.appendChild(document.createTextNode(" directly."));
+      }, 4000);
+    })();
+  </script>
+</body>
+</html>

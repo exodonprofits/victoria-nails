@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Reviews — Victoria Nails. Read what our clients say about their nail care experience in South Elgin, IL." name="description"/>
+  <title>Reviews | Victoria Nails</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --gold:#b8956a; --gold-light:#d4b896; --gold-pale:#f5ede4;
+      --blush:#e8cfc3; --cream:#faf7f4; --ivory:#f2ede8;
+      --charcoal:#1a1714; --ink:#2c2520; --warm-gray:#7a6e68;
+      --border:rgba(184,149,106,.18); --border-soft:rgba(184,149,106,.10);
+      --shadow-soft:0 4px 24px rgba(26,23,20,.06);
+      --shadow-med:0 8px 40px rgba(26,23,20,.10);
+      --shadow-lg:0 20px 60px rgba(26,23,20,.14);
+      --shadow-gold:0 8px 32px rgba(184,149,106,.22);
+      --radius:12px; --radius-lg:20px;
+      --ring:0 0 0 3px rgba(184,149,106,.22);
+      --transition:.3s cubic-bezier(.4,0,.2,1);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Jost',sans-serif;color:var(--ink);background:var(--cream);line-height:1.65;-webkit-font-smoothing:antialiased;}
+    h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.1;color:var(--charcoal);}
+    h1{font-size:clamp(2.4rem,4.5vw,3.8rem);letter-spacing:-.01em;}
+    h2{font-size:clamp(1.8rem,2.8vw,2.7rem);letter-spacing:-.01em;}
+    h3{font-size:clamp(1.15rem,1.6vw,1.4rem);}
+    p{color:var(--warm-gray);}
+    a{text-decoration:none;color:inherit;}
+    img{width:100%;display:block;height:auto;}
+    ::selection{background:rgba(184,149,106,.22);}
+    :focus{outline:none;}
+    :focus-visible{box-shadow:var(--ring);border-radius:var(--radius);}
+    .container{max-width:1220px;margin:0 auto;padding:0 28px;}
+
+    /* Topbar */
+    .topbar{background:var(--charcoal);color:rgba(255,255,255,.6);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;}
+    .topbar a{color:var(--gold-light);transition:color .2s;}
+    .topbar a:hover{color:#fff;}
+    .topbar-dot{color:var(--gold);margin:0 6px;}
+
+    /* Header */
+    header{background:rgba(250,247,244,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000;transition:box-shadow var(--transition);}
+    header.scrolled{box-shadow:var(--shadow-soft);}
+    .nav{display:flex;justify-content:space-between;align-items:center;height:80px;gap:20px;}
+    .brand{display:flex;align-items:center;gap:14px;text-decoration:none;border-radius:var(--radius);padding:6px 10px;transition:background var(--transition);}
+    .brand:hover{background:rgba(184,149,106,.08);}
+    .brand-logo{width:48px;height:48px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border);box-shadow:var(--shadow-gold);background:var(--ivory);}
+    .brand-text{display:flex;flex-direction:column;gap:2px;}
+    .brand-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--charcoal);letter-spacing:.02em;white-space:nowrap;line-height:1;}
+    .brand-tagline{font-size:.73rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+    .nav-links{display:flex;align-items:center;gap:2px;}
+    .nav-links a{padding:9px 14px;border-radius:8px;font-size:.88rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);transition:background var(--transition),color var(--transition);}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(184,149,106,.08);}
+    .nav-cta{display:flex;align-items:center;gap:10px;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:999px;font-family:'Jost',sans-serif;font-size:.88rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;cursor:pointer;border:1.5px solid transparent;transition:background var(--transition),transform var(--transition),box-shadow var(--transition),color var(--transition),border-color var(--transition);user-select:none;}
+    .btn-primary{background:var(--gold);color:#fff;border-color:var(--gold);box-shadow:var(--shadow-gold);}
+    .btn-primary:hover{background:#a07d55;border-color:#a07d55;transform:translateY(-2px);box-shadow:0 12px 36px rgba(184,149,106,.35);}
+    .btn-ghost{background:transparent;color:var(--ink);border-color:var(--border);}
+    .btn-ghost:hover{background:rgba(184,149,106,.08);border-color:var(--gold-light);}
+    .btn-dark{background:var(--charcoal);color:#fff;border-color:var(--charcoal);}
+    .btn-dark:hover{background:#2c2520;transform:translateY(-2px);box-shadow:var(--shadow-med);}
+    .btn-sm{padding:10px 20px;font-size:.82rem;}
+    .btn-block{width:100%;}
+    .btn-white{background:#fff;color:var(--charcoal);border-color:rgba(255,255,255,.3);}
+    .btn-white:hover{background:rgba(255,255,255,.9);transform:translateY(-2px);}
+
+    .hamburger{display:none;width:44px;height:44px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;transition:background var(--transition);}
+    .hamburger:hover{background:var(--ivory);}
+    .hamburger span{display:block;width:20px;height:1.5px;background:var(--charcoal);}
+    .mobile-panel{display:none;padding:14px 0 20px;border-top:1px solid var(--border);}
+    .mobile-panel a{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:var(--radius);background:var(--ivory);margin:8px 0;font-size:.9rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--border-soft);transition:background var(--transition),transform var(--transition);}
+    .mobile-panel a:hover{background:rgba(184,149,106,.12);transform:translateX(4px);}
+    .mobile-panel.is-open{display:block;animation:slideDown .2s ease-out;}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Page hero */
+    .page-hero{
+      position:relative;
+      padding:clamp(72px,9vw,120px) 0;
+      min-height: 500px;
+      overflow:hidden;
+      background:
+        linear-gradient(135deg, rgba(26,23,20,.78) 0%, rgba(44,37,32,.58) 50%, rgba(184,149,106,.12) 100%),
+        url('images/review.png') center/cover no-repeat;
+    }
+
+    .page-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 65% 50%, rgba(184,149,106,.1) 0%, transparent 70%);}
+    .page-hero-inner{position:relative;z-index:2;text-align:center;color:#fff;}
+    .eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-light);display:flex;align-items:center;gap:10px;margin-bottom:20px;justify-content:center;}
+    .eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--gold-light);}
+    .page-hero h1{color:#fff;text-shadow:0 4px 24px rgba(0,0,0,.22);margin-bottom:18px;}
+    .page-hero .lead{font-size:1rem;color:rgba(255,255,255,.72);max-width:50ch;margin:0 auto 32px;line-height:1.7;}
+
+    /* Stats strip */
+    .stats-strip{background:var(--charcoal);padding:28px 0;}
+    .stats-row{display:flex;justify-content:center;gap:clamp(28px,4vw,72px);flex-wrap:wrap;}
+    .stat-item{text-align:center;}
+    .stat-num{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:500;color:var(--gold-light);line-height:1;}
+    .stat-label{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:6px;}
+
+    /* Sections */
+    section{padding:clamp(60px,7vw,100px) 0;}
+    .section-label{display:inline-flex;align-items:center;gap:10px;font-size:.73rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+    .section-label::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+    .section-title{text-align:center;max-width:640px;margin:0 auto clamp(40px,5vw,64px);}
+    .section-title h2{margin-bottom:14px;}
+    .divider{width:48px;height:1px;background:var(--gold);margin:18px auto;}
+
+    /* Reviews section */
+    .reviews-section{background:#fff;}
+    .reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+    
+    /* Testimonial cards */
+    .testimonial{background:var(--ivory);border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:28px;position:relative;transition:transform var(--transition),box-shadow var(--transition);}
+    .testimonial:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);}
+
+    /* Featured testimonial */
+    .testimonial.featured{grid-column:span 3;background:var(--charcoal);border-color:rgba(184,149,106,.2);display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;padding:44px;}
+    .testimonial.featured .testimonial-quote{color:var(--gold);opacity:.6;font-size:5rem;line-height:1;}
+    .testimonial.featured .testimonial-text{color:rgba(255,255,255,.9);font-size:1.15rem;line-height:1.75;}
+    .testimonial.featured .testimonial-name{color:#fff;font-size:1rem;}
+    .testimonial.featured .testimonial-stars{color:var(--gold-light);}
+    .testimonial.featured .testimonial-avatar{background:rgba(184,149,106,.2);border:2px solid rgba(184,149,106,.35);color:var(--gold-light);}
+
+    /* Regular testimonials */
+    .testimonial-quote{font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--gold);opacity:.4;line-height:1;margin-bottom:12px;}
+    .testimonial-text{font-size:.95rem;color:var(--ink);line-height:1.7;margin-bottom:20px;}
+
+    /* Testimonial author */
+    .testimonial-author{display:flex;align-items:center;gap:12px;}
+    .testimonial-avatar{width:44px;height:44px;border-radius:50%;background:var(--gold-pale);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:600;color:var(--gold);letter-spacing:.05em;flex-shrink:0;}
+    .testimonial-name{font-size:.9rem;font-weight:600;color:var(--charcoal);margin-bottom:2px;}
+    .testimonial-stars{color:var(--gold);font-size:.8rem;letter-spacing:2px;}
+
+    /* Review source */
+    .review-source{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:16px;}
+    .review-source-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+
+    /* Review CTA section */
+    .review-cta{background:var(--gold-pale);position:relative;overflow:hidden;padding:clamp(52px,6vw,80px) 0;}
+    .review-cta::before{content:'';position:absolute;top:-80px;right:-60px;width:360px;height:360px;background:radial-gradient(circle,rgba(184,149,106,.22) 0%,transparent 65%);pointer-events:none;}
+    .review-cta-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;}
+    .review-cta h2{margin-bottom:12px;color:var(--charcoal);}
+    .review-cta p{max-width:48ch;color:var(--warm-gray);}
+    .review-cta-actions{display:flex;gap:12px;flex-wrap:wrap;}
+
+    /* Reveal */
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+
+    /* CTA Banner */
+    .cta-banner{background:var(--charcoal);padding:clamp(52px,6vw,80px) 0;text-align:center;}
+    .cta-banner h2{color:#fff;margin-bottom:16px;}
+    .cta-banner p{color:rgba(255,255,255,.55);font-size:.95rem;margin-bottom:32px;max-width:50ch;margin-left:auto;margin-right:auto;}
+    .cta-banner-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+    /* Footer */
+    footer{background:var(--charcoal);color:rgba(255,255,255,.6);padding:clamp(48px,6vw,80px) 0 32px;border-top:1px solid rgba(255,255,255,.06);}
+    .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px;margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08);}
+    .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;color:#fff;margin-bottom:12px;}
+    .footer-brand p{font-size:.88rem;color:rgba(255,255,255,.45);max-width:32ch;line-height:1.7;}
+    .footer-col h4{font-family:'Jost',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:18px;}
+    .footer-col a{display:block;font-size:.88rem;color:rgba(255,255,255,.55);margin-bottom:10px;transition:color .2s;}
+    .footer-col a:hover{color:var(--gold-light);}
+    .footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.78rem;color:rgba(255,255,255,.3);}
+
+    /* Float */
+    .floatbar{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:999;display:none;width:min(500px,calc(100% - 24px));padding:10px;border-radius:18px;background:rgba(250,247,244,.96);border:1px solid var(--border);box-shadow:var(--shadow-lg);backdrop-filter:blur(12px);}
+    .floatbar .inner{display:flex;gap:10px;}
+    .floatbar .inner a{flex:1;text-align:center;}
+
+    /* Responsive */
+    @media(max-width:900px){
+      .reviews-grid{grid-template-columns:repeat(2,1fr);}
+      .testimonial.featured{grid-column:span 2;}
+    }
+    @media(max-width:860px){
+      .nav-links{display:none;}
+      .nav-cta .btn-ghost{display:none;}
+      .hamburger{display:inline-flex;}
+      .brand{padding-left:0;padding-right:0;}
+      .floatbar{display:block;}
+      .footer-grid{grid-template-columns:1fr 1fr;}
+      .review-cta-inner{grid-template-columns:1fr;}
+    }
+    @media(max-width:700px){
+      .testimonial.featured{grid-column:span 1;grid-template-columns:1fr;}
+      .testimonial.featured .testimonial-quote{font-size:3.5rem;margin-bottom:16px;}
+    }
+    @media(max-width:620px){
+      .container{padding:0 16px;}
+      .topbar{font-size:.72rem;}
+      .topbar .inner{flex-direction:column;align-items:center;text-align:center;gap:4px;padding:8px 0;}
+      .topbar-dot{display:inline;}
+      .nav{height:62px;}
+      .brand-logo{width:38px;height:38px;}
+      .brand-name{font-size:1.1rem;}
+      .brand-tagline{display:none;}
+      .page-hero{padding:clamp(48px,10vw,72px) 0;}
+      .reviews-grid{grid-template-columns:1fr;}
+      .footer-grid{grid-template-columns:1fr;}
+      .stats-row{gap:24px;}
+      main{padding-bottom:80px;}
+    }
+    @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+  </style>
+</head>
+
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container inner">
+      <div>✦ Walk-ins welcome<span class="topbar-dot">·</span>Same-day appointments available</div>
+      <div>
+        <a href="tel:+18479319359">(847) 931-9359</a>
+        <span class="topbar-dot">·</span>
+        <a href="contact.html">Hours &amp; Location</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header id="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Victoria Nails home">
+        <img class="brand-logo" src="images/victoria-logo.png" alt="Victoria Nails"/>
+        <div class="brand-text">
+          <span class="brand-name">Victoria Nails</span>
+          <span class="brand-tagline">Luxury Nail Care</span>
+        </div>
+      </a>
+      <nav aria-label="Primary navigation" class="nav-links">
+        <a href="services.html">Services</a>
+        <a href="gallery.html">Gallery</a>
+        <a class="active" href="reviews.html">Reviews</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-primary btn-sm" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Now</a>
+        <button aria-controls="mobilePanel" aria-expanded="false" aria-label="Open navigation" class="hamburger" id="menuBtn" type="button">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="container">
+      <div class="mobile-panel" id="mobilePanel">
+        <a href="services.html">Services <span>→</span></a>
+        <a href="gallery.html">Gallery <span>→</span></a>
+        <a href="reviews.html">Reviews <span>→</span></a>
+        <a href="contact.html">Contact <span>→</span></a>
+        <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment <span>→</span></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero-inner">
+        <div class="eyebrow">Client Reviews</div>
+        <h1>Voices We Cherish</h1>
+        <p class="lead">Every review is a reminder of why we love what we do. Here's what our community says about their experiences at Victoria Nails.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Strip -->
+  <div class="stats-strip">
+    <div class="container">
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-num">5.0</div>
+          <div class="stat-label">Average Rating</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Happy Clients</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">6+</div>
+          <div class="stat-label">Years in Business</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Would Return</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- Reviews Section -->
+    <section class="reviews-section">
+      <div class="container">
+        <div class="section-title reveal">
+          <div class="section-label">Reviews</div>
+          <h2>What Our Clients Say</h2>
+          <div class="divider"></div>
+          <p>Real experiences from real clients who trust us with their nail care.</p>
+        </div>
+
+        <div class="reviews-grid">
+
+          <!-- Featured Review -->
+          <div class="testimonial featured reveal">
+            <div class="testimonial-quote">"</div>
+            <div>
+              <div class="review-source"><div class="review-source-dot"></div>Google Review</div>
+              <p class="testimonial-text">Absolutely the best nail salon experience I've ever had. From the moment you walk in, the atmosphere is calming and elegant. The staff are not only incredibly talented but genuinely warm. My nails have never looked or lasted better. I won't go anywhere else.</p>
+              <div class="testimonial-author" style="margin-top:24px;">
+                <div class="testimonial-avatar">SL</div>
+                <div>
+                  <div class="testimonial-name">Sarah L.</div>
+                  <div class="testimonial-stars">★★★★★</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Regular Reviews -->
+          <div class="testimonial reveal" style="transition-delay:.04s">
+            <div class="review-source"><div class="review-source-dot"></div>Google Review</div>
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text">My absolute go-to for manicures and pedicures. The staff is warm, detail-oriented, and always delivers exactly what I picture.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">JM</div>
+              <div>
+                <div class="testimonial-name">Jessica M.</div>
+                <div class="testimonial-stars">★★★★★</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial reveal" style="transition-delay:.08s">
+            <div class="review-source"><div class="review-source-dot"></div>Yelp</div>
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text">Beautiful results every single visit. The salon feels serene, unhurried, and beautifully managed. I recommend it to everyone I know.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">AR</div>
+              <div>
+                <div class="testimonial-name">Amanda R.</div>
+                <div class="testimonial-stars">★★★★★</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial reveal" style="transition-delay:.12s">
+            <div class="review-source"><div class="review-source-dot"></div>Google Review</div>
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text">I've tried so many salons in the area and Victoria Nails is by far the most consistent. Clean, professional, and the nail art is stunning every time.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">KT</div>
+              <div>
+                <div class="testimonial-name">Katie T.</div>
+                <div class="testimonial-stars">★★★★★</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial reveal" style="transition-delay:.16s">
+            <div class="review-source"><div class="review-source-dot"></div>Google Review</div>
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text">The attention to detail is remarkable. They take their time, never rush, and the results speak for themselves. A true hidden gem in South Elgin.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">MK</div>
+              <div>
+                <div class="testimonial-name">Maria K.</div>
+                <div class="testimonial-stars">★★★★★</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial reveal" style="transition-delay:.20s">
+            <div class="review-source"><div class="review-source-dot"></div>Yelp</div>
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text">I brought my mom here for her birthday and we both left absolutely delighted. The space is gorgeous and everyone is so kind. We'll be back monthly!</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">RP</div>
+              <div>
+                <div class="testimonial-name">Rachel P.</div>
+                <div class="testimonial-stars">★★★★★</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial reveal" style="transition-delay:.24s">
+            <div class="review-source"><div class="review-source-dot"></div>Google Review</div>
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text">The gel nails lasted three full weeks with zero chipping. That alone tells you everything about the quality of their work and products.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">NW</div>
+              <div>
+                <div class="testimonial-name">Nicole W.</div>
+                <div class="testimonial-stars">★★★★★</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial reveal" style="transition-delay:.28s">
+            <div class="review-source"><div class="review-source-dot"></div>Google Review</div>
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text">I've been coming here for over two years and have never had a bad experience. The consistency is what keeps me coming back season after season.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">LD</div>
+              <div>
+                <div class="testimonial-name">Lauren D.</div>
+                <div class="testimonial-stars">★★★★★</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Leave a Review CTA -->
+    <section class="review-cta">
+      <div class="container">
+        <div class="review-cta-inner reveal">
+          <div>
+            <div class="section-label">Share Your Experience</div>
+            <h2>Loved Your Visit?</h2>
+            <p>Your words mean the world to our team and help new clients discover us. Leave us a review on Google — it only takes a minute.</p>
+          </div>
+          <div class="review-cta-actions">
+            <a class="btn btn-primary" href="https://www.google.com/search?q=Victoria+Nails+South+Elgin+IL#lrd=0x0:0x0,3" rel="noopener" target="_blank">Leave a Google Review</a>
+            <a class="btn btn-ghost" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Again</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CTA Banner -->
+  <div class="cta-banner">
+    <div class="container">
+      <div class="section-label" style="justify-content:center;color:var(--gold-light);margin-bottom:20px;">Ready to Experience the Difference?</div>
+      <h2>Book Your Appointment</h2>
+      <p>Join our community of happy clients. Choose a service, pick your technician, and secure your time — available 24/7.</p>
+      <div class="cta-banner-actions">
+        <a class="btn btn-primary" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Online</a>
+        <a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.2);" href="services.html">View Services</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">Victoria Nails</div>
+          <p>A luxury nail salon dedicated to impeccable craft, genuine care, and a serene experience every visit.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="services.html#manicure">Manicure</a>
+          <a href="services.html#pedicure">Pedicure</a>
+          <a href="services.html#enhancements">Enhancements</a>
+          <a href="services.html#waxing">Waxing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Info</h4>
+          <a href="gallery.html">Gallery</a>
+          <a href="reviews.html">Reviews</a>
+          <a href="contact.html">Contact</a>
+          <a href="careers.html">Careers</a>
+        </div>
+        <div class="footer-col">
+          <h4>Book</h4>
+          <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Online</a>
+          <a href="https://www.instagram.com/victorianailssouthelgin" rel="noopener" target="_blank">Instagram</a>
+          <a href="https://www.facebook.com/victorianailssalon" rel="noopener" target="_blank">Facebook</a>
+          <a href="https://www.tiktok.com/@victorianailssouthelgin" rel="noopener" target="_blank">TikTok</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Victoria Nails. All rights reserved.</span>
+        <span>Made with care ✦</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="floatbar" aria-label="Quick actions">
+    <div class="inner">
+      <a class="btn btn-primary btn-block" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment</a>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      // Sticky header
+      const hdr = document.getElementById('site-header');
+      window.addEventListener('scroll', () => hdr.classList.toggle('scrolled', window.scrollY > 30), {passive:true});
+
+      // Mobile menu
+      const menuBtn = document.getElementById('menuBtn');
+      const panel = document.getElementById('mobilePanel');
+      if(menuBtn && panel){
+        menuBtn.addEventListener('click', () => {
+          const open = panel.classList.contains('is-open');
+          panel.classList.toggle('is-open', !open);
+          menuBtn.setAttribute('aria-expanded', String(!open));
+        });
+        panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+          panel.classList.remove('is-open'); menuBtn.setAttribute('aria-expanded','false');
+        }));
+      }
+
+      // Scroll reveal
+      const reveals = document.querySelectorAll('.reveal');
+      const obs = new IntersectionObserver(entries => entries.forEach(e => {
+        if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+      }), {threshold:.1});
+      reveals.forEach(el => obs.observe(el));
+      // Fallback: reveal anything not yet visible after 1.5s
+      setTimeout(() => document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible')), 1500);
+
+    })();
+  </script>
+</body>
+</html>

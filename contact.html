@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Contact Victoria Nails — 349 Randall Rd, South Elgin, IL. Call us, send a message, or book online." name="description"/>
+  <title>Contact &amp; Hours | Victoria Nails</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --gold:#b8956a; --gold-light:#d4b896; --gold-pale:#f5ede4;
+      --blush:#e8cfc3; --cream:#faf7f4; --ivory:#f2ede8;
+      --charcoal:#1a1714; --ink:#2c2520; --warm-gray:#7a6e68;
+      --border:rgba(184,149,106,.18); --border-soft:rgba(184,149,106,.10);
+      --shadow-soft:0 4px 24px rgba(26,23,20,.06);
+      --shadow-med:0 8px 40px rgba(26,23,20,.10);
+      --shadow-lg:0 20px 60px rgba(26,23,20,.14);
+      --shadow-gold:0 8px 32px rgba(184,149,106,.22);
+      --radius:12px; --radius-lg:20px;
+      --ring:0 0 0 3px rgba(184,149,106,.22);
+      --transition:.3s cubic-bezier(.4,0,.2,1);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Jost',sans-serif;color:var(--ink);background:var(--cream);line-height:1.65;-webkit-font-smoothing:antialiased;}
+    h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.1;color:var(--charcoal);}
+    h1{font-size:clamp(2.4rem,4.5vw,3.8rem);letter-spacing:-.01em;}
+    h2{font-size:clamp(1.8rem,2.8vw,2.7rem);letter-spacing:-.01em;}
+    h3{font-size:clamp(1.15rem,1.6vw,1.4rem);}
+    p{color:var(--warm-gray);}
+    a{text-decoration:none;color:inherit;}
+    img{width:100%;display:block;height:auto;}
+    ::selection{background:rgba(184,149,106,.22);}
+    :focus{outline:none;}
+    :focus-visible{box-shadow:var(--ring);border-radius:var(--radius);}
+    .container{max-width:1220px;margin:0 auto;padding:0 28px;}
+
+    /* Topbar */
+    .topbar{background:var(--charcoal);color:rgba(255,255,255,.6);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;}
+    .topbar a{color:var(--gold-light);transition:color .2s;}
+    .topbar a:hover{color:#fff;}
+    .topbar-dot{color:var(--gold);margin:0 6px;}
+
+    /* Header */
+    header{background:rgba(250,247,244,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000;transition:box-shadow var(--transition);}
+    header.scrolled{box-shadow:var(--shadow-soft);}
+    .nav{display:flex;justify-content:space-between;align-items:center;height:80px;gap:20px;}
+    .brand{display:flex;align-items:center;gap:14px;text-decoration:none;border-radius:var(--radius);padding:6px 10px;transition:background var(--transition);}
+    .brand:hover{background:rgba(184,149,106,.08);}
+    .brand-logo{width:48px;height:48px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border);box-shadow:var(--shadow-gold);background:var(--ivory);}
+    .brand-text{display:flex;flex-direction:column;gap:2px;}
+    .brand-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--charcoal);letter-spacing:.02em;white-space:nowrap;line-height:1;}
+    .brand-tagline{font-size:.73rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+    .nav-links{display:flex;align-items:center;gap:2px;}
+    .nav-links a{padding:9px 14px;border-radius:8px;font-size:.88rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);transition:background var(--transition),color var(--transition);}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(184,149,106,.08);}
+    .nav-cta{display:flex;align-items:center;gap:10px;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:999px;font-family:'Jost',sans-serif;font-size:.88rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;cursor:pointer;border:1.5px solid transparent;transition:background var(--transition),transform var(--transition),box-shadow var(--transition),color var(--transition),border-color var(--transition);user-select:none;}
+    .btn-primary{background:var(--gold);color:#fff;border-color:var(--gold);box-shadow:var(--shadow-gold);}
+    .btn-primary:hover{background:#a07d55;border-color:#a07d55;transform:translateY(-2px);box-shadow:0 12px 36px rgba(184,149,106,.35);}
+    .btn-ghost{background:transparent;color:var(--ink);border-color:var(--border);}
+    .btn-ghost:hover{background:rgba(184,149,106,.08);border-color:var(--gold-light);}
+    .btn-dark{background:var(--charcoal);color:#fff;border-color:var(--charcoal);}
+    .btn-dark:hover{background:#2c2520;transform:translateY(-2px);box-shadow:var(--shadow-med);}
+    .btn-sm{padding:10px 20px;font-size:.82rem;}
+    .btn-block{width:100%;}
+    .btn-white{background:#fff;color:var(--charcoal);border-color:rgba(255,255,255,.3);}
+    .btn-white:hover{background:rgba(255,255,255,.9);transform:translateY(-2px);}
+
+    .hamburger{display:none;width:44px;height:44px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;transition:background var(--transition);}
+    .hamburger:hover{background:var(--ivory);}
+    .hamburger span{display:block;width:20px;height:1.5px;background:var(--charcoal);}
+    .mobile-panel{display:none;padding:14px 0 20px;border-top:1px solid var(--border);}
+    .mobile-panel a{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:var(--radius);background:var(--ivory);margin:8px 0;font-size:.9rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--border-soft);transition:background var(--transition),transform var(--transition);}
+    .mobile-panel a:hover{background:rgba(184,149,106,.12);transform:translateX(4px);}
+    .mobile-panel.is-open{display:block;animation:slideDown .2s ease-out;}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Page hero */
+    .page-hero{
+      position:relative;
+      min-height:500px;
+      display:flex;
+      align-items:center;
+      overflow:hidden;
+      background:
+        linear-gradient(90deg, rgba(26,23,20,.58) 0%, rgba(26,23,20,.34) 32%, rgba(26,23,20,.16) 55%, rgba(255,255,255,.04) 100%),
+        url('images/contact.png') center right / cover no-repeat;
+    }
+
+    .page-hero::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 78% 50%, rgba(255,255,255,.10) 0%, transparent 34%),
+        linear-gradient(to bottom, rgba(255,255,255,.03), rgba(255,255,255,.03));
+      pointer-events:none;
+    }
+
+    .page-hero-inner{
+      position:relative;
+      z-index:2;
+      text-align:center;
+      color:#fff;
+      max-width:760px;
+      margin:0 auto;
+    }
+    .eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-light);display:flex;align-items:center;gap:10px;margin-bottom:20px;justify-content:center;}
+    .eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--gold-light);}
+    .page-hero h1{color:#fff;text-shadow:0 4px 24px rgba(0,0,0,.22);margin-bottom:18px;}
+    .page-hero .lead{font-size:1rem;color:rgba(255,255,255,.72);max-width:50ch;margin:0 auto 32px;line-height:1.7;}
+
+    /* Sections */
+    section{padding:clamp(60px,7vw,100px) 0;}
+    .section-label{display:inline-flex;align-items:center;gap:10px;font-size:.73rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+    .section-label::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+
+    /* Quick contact strip */
+    .quick-strip{background:var(--ivory);border-bottom:1px solid var(--border-soft);padding:28px 0;}
+    .quick-strip-inner{display:flex;align-items:center;justify-content:center;gap:clamp(24px,4vw,56px);flex-wrap:wrap;}
+    .quick-item{display:flex;align-items:center;gap:10px;font-size:.9rem;color:var(--charcoal);transition:color var(--transition);}
+    .quick-item:hover{color:var(--gold);}
+    .quick-item a{color:inherit;}
+    .quick-item-icon{font-size:1.1rem;}
+
+    /* Contact grid */
+    .contact-section{background:#fff;padding:clamp(60px,7vw,100px) 0;}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,4vw,64px);}
+
+    /* Info cards */
+    .info-card{background:var(--ivory);border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:32px;margin-bottom:24px;transition:transform var(--transition),box-shadow var(--transition);}
+    .info-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-soft);}
+    .info-card-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;}
+    .info-card-header h3{margin:0;color:var(--charcoal);}
+    .info-card-badge{margin-left:auto;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:var(--gold-pale);color:var(--gold);border:1px solid rgba(184,149,106,.25);border-radius:999px;padding:4px 12px;}
+
+    .contact-detail{display:flex;gap:14px;margin-bottom:20px;align-items:flex-start;}
+    .contact-detail:last-child{margin-bottom:0;}
+    .contact-detail-icon{font-size:1.1rem;padding-top:2px;flex-shrink:0;color:var(--gold);}
+    .contact-detail-text{display:flex;flex-direction:column;gap:3px;}
+    .contact-detail-text strong{font-size:.82rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--warm-gray);}
+    .contact-detail-text span,.contact-detail-text a{font-size:.95rem;color:var(--charcoal);line-height:1.5;}
+    .contact-detail-text a{transition:color var(--transition);}
+    .contact-detail-text a:hover{color:var(--gold);}
+
+    /* Hours table */
+    .hours-table{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+    .hours-row{display:flex;justify-content:space-between;align-items:center;font-size:.88rem;padding:8px 12px;border-radius:8px;color:var(--charcoal);transition:background var(--transition);}
+    .hours-row:hover{background:rgba(184,149,106,.06);}
+    .hours-row.hours-today{background:var(--gold-pale);font-weight:600;}
+    .hours-day{color:var(--warm-gray);min-width:80px;}
+    .hours-today .hours-day{color:var(--gold);}
+    .hours-time{font-weight:500;}
+    .hours-status{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;}
+    .hours-status.open{background:rgba(34,197,94,.1);color:#16a34a;}
+    .hours-status.closed{background:rgba(239,68,68,.08);color:#dc2626;}
+    .hours-status-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+    /* Social links */
+    .social-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;padding-top:24px;border-top:1px solid var(--border-soft);}
+    .social-link{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid var(--border);color:var(--charcoal);transition:all var(--transition);}
+    .social-link:hover{background:var(--gold-pale);border-color:var(--gold);color:var(--gold);transform:translateY(-2px);}
+
+    /* Map card */
+    .map-card{border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border-soft);box-shadow:var(--shadow-soft);transition:box-shadow var(--transition);}
+    .map-card:hover{box-shadow:var(--shadow-med);}
+    .map-card iframe{display:block;width:100%;height:280px;border:0;}
+    .map-card-footer{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;background:#fff;gap:16px;}
+    .map-address{display:flex;flex-direction:column;gap:2px;font-size:.9rem;line-height:1.4;}
+    .map-address span:first-child{color:var(--charcoal);font-weight:600;}
+    .map-address span:last-child{color:var(--warm-gray);}
+
+    /* Form card */
+    .form-card{background:var(--ivory);border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:36px;transition:transform var(--transition),box-shadow var(--transition);}
+    .form-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-soft);}
+    .form-header{margin-bottom:28px;}
+    .form-header h3{margin-bottom:8px;color:var(--charcoal);}
+    .form-header p{font-size:.92rem;color:var(--warm-gray);line-height:1.6;}
+    .form-response-badge{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;background:var(--gold-pale);color:var(--gold);border:1px solid rgba(184,149,106,.25);border-radius:999px;padding:6px 12px;margin-top:12px;}
+
+    /* Form elements */
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .form-group{margin-bottom:20px;}
+    .form-group label{display:block;font-size:.85rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--charcoal);margin-bottom:8px;}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:.9rem;color:var(--ink);background:#fff;transition:border-color var(--transition),box-shadow var(--transition);}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold);box-shadow:var(--ring);outline:none;}
+    .form-group textarea{resize:vertical;min-height:120px;line-height:1.6;}
+    .field-footer{display:flex;justify-content:flex-end;margin-top:6px;}
+    .char-count{font-size:.75rem;color:var(--warm-gray);}
+
+    .form-actions{margin-top:28px;}
+    .form-note{font-size:.82rem;color:var(--warm-gray);margin-top:16px;line-height:1.6;}
+    .form-note a{color:var(--gold);font-weight:500;}
+
+    /* Form success */
+    .form-success{display:none;text-align:center;padding:40px 20px;background:#fff;border:2px solid var(--gold-pale);border-radius:var(--radius-lg);}
+    .form-success-icon{font-size:3rem;color:var(--gold);margin-bottom:16px;}
+    .form-success h4{color:var(--charcoal);margin-bottom:8px;}
+    .form-success p{color:var(--warm-gray);font-size:.9rem;}
+
+    /* Button states */
+    .btn-submit.sending{background:var(--warm-gray);border-color:var(--warm-gray);cursor:not-allowed;transform:none !important;}
+    .btn-submit.sending:hover{background:var(--warm-gray);border-color:var(--warm-gray);}
+
+    /* Reveal */
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+
+    /* CTA Banner */
+    /* Careers callout */
+    .careers-callout{background:var(--ivory);border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft);padding:36px 0;}
+    .careers-callout-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;max-width:960px;margin:0 auto;}
+    .careers-callout-text{flex:1;min-width:260px;}
+    .careers-callout-text .eyebrow-mini{font-size:.7rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+    .careers-callout-text h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--charcoal);margin-bottom:4px;}
+    .careers-callout-text p{font-size:.9rem;color:var(--warm-gray);line-height:1.55;}
+
+    .cta-banner{background:var(--charcoal);padding:clamp(52px,6vw,80px) 0;text-align:center;}
+    .cta-banner h2{color:#fff;margin-bottom:16px;}
+    .cta-banner p{color:rgba(255,255,255,.55);font-size:.95rem;margin-bottom:32px;max-width:50ch;margin-left:auto;margin-right:auto;}
+    .cta-banner-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+    /* Footer */
+    footer{background:var(--charcoal);color:rgba(255,255,255,.6);padding:clamp(48px,6vw,80px) 0 32px;border-top:1px solid rgba(255,255,255,.06);}
+    .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px;margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08);}
+    .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;color:#fff;margin-bottom:12px;}
+    .footer-brand p{font-size:.88rem;color:rgba(255,255,255,.45);max-width:32ch;line-height:1.7;}
+    .footer-col h4{font-family:'Jost',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:18px;}
+    .footer-col a{display:block;font-size:.88rem;color:rgba(255,255,255,.55);margin-bottom:10px;transition:color .2s;}
+    .footer-col a:hover{color:var(--gold-light);}
+    .footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.78rem;color:rgba(255,255,255,.3);}
+
+    /* Float */
+    .floatbar{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:999;display:none;width:min(500px,calc(100% - 24px));padding:10px;border-radius:18px;background:rgba(250,247,244,.96);border:1px solid var(--border);box-shadow:var(--shadow-lg);backdrop-filter:blur(12px);}
+    .floatbar .inner{display:flex;gap:10px;}
+    .floatbar .inner a{flex:1;text-align:center;}
+
+    /* Responsive */
+    @media(max-width:860px){
+      .nav-links{display:none;}
+      .nav-cta .btn-ghost{display:none;}
+      .hamburger{display:inline-flex;}
+      .brand{padding-left:0;padding-right:0;}
+      .contact-grid{grid-template-columns:1fr;}
+      .floatbar{display:block;}
+      .footer-grid{grid-template-columns:1fr 1fr;}
+      .form-row{grid-template-columns:1fr;}
+    }
+    @media(max-width:620px){
+      .container{padding:0 16px;}
+      .topbar{font-size:.72rem;}
+      .topbar .inner{flex-direction:column;align-items:center;text-align:center;gap:4px;padding:8px 0;}
+      .topbar-dot{display:inline;}
+      .nav{height:62px;}
+      .brand-logo{width:38px;height:38px;}
+      .brand-name{font-size:1.1rem;}
+      .brand-tagline{display:none;}
+      .page-hero{padding:clamp(48px,10vw,72px) 0;}
+      .footer-grid{grid-template-columns:1fr;}
+      .quick-strip-inner{gap:20px;}
+      .quick-item{font-size:.85rem;}
+      .info-card,.form-card{padding:24px;}
+      .contact-section{padding:clamp(40px,6vw,60px) 0;}
+      main{padding-bottom:80px;}
+    }
+    @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+  </style>
+</head>
+
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container inner">
+      <div>✦ Walk-ins welcome<span class="topbar-dot">·</span>Same-day appointments available</div>
+      <div>
+        <a href="tel:+18479319359">(847) 931-9359</a>
+        <span class="topbar-dot">·</span>
+        <a href="contact.html">Hours &amp; Location</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header id="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Victoria Nails home">
+        <img class="brand-logo" src="images/victoria-logo.png" alt="Victoria Nails"/>
+        <div class="brand-text">
+          <span class="brand-name">Victoria Nails</span>
+          <span class="brand-tagline">Luxury Nail Care</span>
+        </div>
+      </a>
+      <nav aria-label="Primary navigation" class="nav-links">
+        <a href="services.html">Services</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="reviews.html">Reviews</a>
+        <a class="active" href="contact.html">Contact</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-primary btn-sm" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Now</a>
+        <button aria-controls="mobilePanel" aria-expanded="false" aria-label="Open navigation" class="hamburger" id="menuBtn" type="button">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="container">
+      <div class="mobile-panel" id="mobilePanel">
+        <a href="services.html">Services <span>→</span></a>
+        <a href="gallery.html">Gallery <span>→</span></a>
+        <a href="reviews.html">Reviews <span>→</span></a>
+        <a href="contact.html">Contact <span>→</span></a>
+        <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment <span>→</span></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero-inner">
+        <div class="eyebrow">Get in Touch</div>
+        <h1>Visit Us Today</h1>
+        <p class="lead">Located in South Elgin, we're here to make your visit seamless. Walk-ins welcome, or book online to secure your preferred time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Contact Strip -->
+  <div class="quick-strip">
+    <div class="container">
+      <div class="quick-strip-inner">
+        <a href="tel:+18479319359" class="quick-item">
+          <span class="quick-item-icon">📞</span>
+          <span>(847) 931-9359</span>
+        </a>
+        <a href="https://maps.google.com/?q=349+Randall+Rd+South+Elgin+IL" rel="noopener" target="_blank" class="quick-item">
+          <span class="quick-item-icon">📍</span>
+          <span>349 Randall Rd, South Elgin</span>
+        </a>
+        <div class="quick-item">
+          <span class="quick-item-icon">🕐</span>
+          <span id="openStatus">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- Contact Information & Form -->
+    <section class="contact-section">
+      <div class="container">
+        <div class="contact-grid">
+
+          <!-- LEFT: Info Cards & Map -->
+          <div>
+
+            <!-- Hours & Contact Info -->
+            <div class="info-card reveal">
+              <div class="info-card-header">
+                <h3>Hours &amp; Contact</h3>
+                <span class="info-card-badge" id="hoursBadge">Today</span>
+              </div>
+
+              <div class="contact-detail">
+                <div class="contact-detail-icon">📍</div>
+                <div class="contact-detail-text">
+                  <strong>Address</strong>
+                  <span>349 Randall Rd<br>South Elgin, IL 60177</span>
+                </div>
+              </div>
+
+              <div class="contact-detail">
+                <div class="contact-detail-icon">📞</div>
+                <div class="contact-detail-text">
+                  <strong>Phone</strong>
+                  <a href="tel:+18479319359">(847) 931-9359</a>
+                </div>
+              </div>
+
+              <div class="contact-detail">
+                <div class="contact-detail-icon">✉️</div>
+                <div class="contact-detail-text">
+                  <strong>Email</strong>
+                  <a href="mailto:victorianails349@gmail.com">victorianails349@gmail.com</a>
+                </div>
+              </div>
+
+              <div class="contact-detail">
+                <div class="contact-detail-icon">🕐</div>
+                <div class="contact-detail-text">
+                  <strong>Hours</strong>
+                  <div class="hours-table">
+                    <div class="hours-row" id="hours-sun">
+                      <span class="hours-day">Sunday</span>
+                      <span class="hours-time">11:00 AM – 4:00 PM</span>
+                    </div>
+                    <div class="hours-row" id="hours-mon">
+                      <span class="hours-day">Monday</span>
+                      <span class="hours-time">10:00 AM – 8:00 PM</span>
+                    </div>
+                    <div class="hours-row" id="hours-tue">
+                      <span class="hours-day">Tuesday</span>
+                      <span class="hours-time">10:00 AM – 8:00 PM</span>
+                    </div>
+                    <div class="hours-row" id="hours-wed">
+                      <span class="hours-day">Wednesday</span>
+                      <span class="hours-time">10:00 AM – 8:00 PM</span>
+                    </div>
+                    <div class="hours-row" id="hours-thu">
+                      <span class="hours-day">Thursday</span>
+                      <span class="hours-time">10:00 AM – 8:00 PM</span>
+                    </div>
+                    <div class="hours-row" id="hours-fri">
+                      <span class="hours-day">Friday</span>
+                      <span class="hours-time">10:00 AM – 8:00 PM</span>
+                    </div>
+                    <div class="hours-row" id="hours-sat">
+                      <span class="hours-day">Saturday</span>
+                      <span class="hours-time">9:00 AM – 6:00 PM</span>
+                    </div>
+                  </div>
+                  <div id="hoursStatusPill" style="margin-top:12px;"></div>
+                </div>
+              </div>
+
+              <div class="social-links">
+                <a href="https://www.instagram.com/victorianailssouthelgin" rel="noopener" target="_blank" class="social-link">
+                  📷 Instagram
+                </a>
+                <a href="https://www.facebook.com/victorianailssalon" rel="noopener" target="_blank" class="social-link">
+                  👥 Facebook
+                </a>
+                <a href="https://www.tiktok.com/@victorianailssouthelgin" rel="noopener" target="_blank" class="social-link">
+                  🎵 TikTok
+                </a>
+              </div>
+            </div>
+
+            <!-- Map -->
+            <div class="map-card reveal" style="transition-delay:.08s">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2959.8!2d-88.3123!3d42.0008!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s349+Randall+Rd%2C+South+Elgin%2C+IL+60177!5e0!3m2!1sen!2sus!4v1700000000000"
+                loading="lazy"
+                allowfullscreen=""
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Victoria Nails location map"
+                aria-label="Google Map showing Victoria Nails at 349 Randall Rd, South Elgin, IL">
+              </iframe>
+              <div class="map-card-footer">
+                <div class="map-address">
+                  <span>349 Randall Rd</span>
+                  <span>South Elgin, IL 60177</span>
+                </div>
+                <a class="btn btn-ghost btn-sm" href="https://maps.google.com/?q=349+Randall+Rd+South+Elgin+IL" rel="noopener" target="_blank">Get Directions</a>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: Contact Form -->
+          <div>
+            <div class="form-card reveal" style="transition-delay:.12s">
+              <div class="form-header">
+                <h3>Send a Message</h3>
+                <p>Questions about services, pricing, or anything else — we'd love to hear from you.</p>
+                <span class="form-response-badge">⚡ Replies in &lt;24h</span>
+              </div>
+
+              <div class="form-success" id="formSuccess">
+                <div class="form-success-icon">✦</div>
+                <h4>Message Sent!</h4>
+                <p>Thank you — we'll be in touch within one business day.</p>
+              </div>
+
+              <form id="contactForm" novalidate>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="name">Name</label>
+                    <input id="name" name="name" placeholder="Jane Doe" required type="text"/>
+                  </div>
+                  <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input id="phone" name="phone" placeholder="(847) 000-0000" type="tel"/>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" placeholder="you@example.com" required type="email"/>
+                </div>
+                <div class="form-group">
+                  <label for="service">Service Interested In</label>
+                  <select id="service" name="service">
+                    <option value="">— Select a service (optional) —</option>
+                    <option>Manicure</option>
+                    <option>Pedicure</option>
+                    <option>Gel Nails</option>
+                    <option>Acrylic Nails</option>
+                    <option>Nail Enhancements</option>
+                    <option>Waxing</option>
+                    <option>Other / Not sure</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea id="message" name="message" placeholder="Tell us what you'd like — service, preferred date, or any questions…" required maxlength="600"></textarea>
+                  <div class="field-footer"><span class="char-count" id="charCount">0 / 600</span></div>
+                </div>
+                <div class="form-actions">
+                  <button class="btn btn-primary btn-block btn-submit" type="submit" id="submitBtn">Send Message</button>
+                </div>
+                <p class="form-note">To reserve a specific time, use our <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">online booking</a> — it's the fastest way to secure your appointment.</p>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Careers callout -->
+  <section class="careers-callout" aria-label="Careers">
+    <div class="container">
+      <div class="careers-callout-inner">
+        <div class="careers-callout-text">
+          <div class="eyebrow-mini">We're Hiring ✦</div>
+          <h3>Looking to join our team?</h3>
+          <p>Open positions for receptionists, nail technicians, and housekeepers. See current openings and apply online.</p>
+        </div>
+        <a class="btn btn-primary btn-sm" href="careers.html">View Open Positions</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <div class="cta-banner">
+    <div class="container">
+      <div class="section-label" style="justify-content:center;color:var(--gold-light);margin-bottom:20px;">Ready to Visit?</div>
+      <h2>Book Your Appointment</h2>
+      <p>Choose a service, pick your technician, and secure your time — available 24/7.</p>
+      <div class="cta-banner-actions">
+        <a class="btn btn-primary" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Online</a>
+        <a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.2);" href="services.html">View Services</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">Victoria Nails</div>
+          <p>A luxury nail salon dedicated to impeccable craft, genuine care, and a serene experience every visit.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="services.html#manicure">Manicure</a>
+          <a href="services.html#pedicure">Pedicure</a>
+          <a href="services.html#enhancements">Enhancements</a>
+          <a href="services.html#waxing">Waxing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Info</h4>
+          <a href="gallery.html">Gallery</a>
+          <a href="reviews.html">Reviews</a>
+          <a href="contact.html">Contact</a>
+          <a href="careers.html">Careers</a>
+        </div>
+        <div class="footer-col">
+          <h4>Book</h4>
+          <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Online</a>
+          <a href="https://www.instagram.com/victorianailssouthelgin" rel="noopener" target="_blank">Instagram</a>
+          <a href="https://www.facebook.com/victorianailssalon" rel="noopener" target="_blank">Facebook</a>
+          <a href="https://www.tiktok.com/@victorianailssouthelgin" rel="noopener" target="_blank">TikTok</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Victoria Nails. All rights reserved.</span>
+        <span>Made with care ✦</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="floatbar" aria-label="Quick actions">
+    <div class="inner">
+      <a class="btn btn-primary btn-block" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment</a>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      // Sticky header
+      const hdr = document.getElementById('site-header');
+      window.addEventListener('scroll', () => hdr.classList.toggle('scrolled', window.scrollY > 30), {passive:true});
+
+      // Mobile menu
+      const menuBtn = document.getElementById('menuBtn');
+      const panel = document.getElementById('mobilePanel');
+      if(menuBtn && panel){
+        menuBtn.addEventListener('click', () => {
+          const open = panel.classList.contains('is-open');
+          panel.classList.toggle('is-open', !open);
+          menuBtn.setAttribute('aria-expanded', String(!open));
+        });
+        panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+          panel.classList.remove('is-open'); menuBtn.setAttribute('aria-expanded','false');
+        }));
+      }
+
+      // Scroll reveal
+      const reveals = document.querySelectorAll('.reveal');
+      const obs = new IntersectionObserver(entries => entries.forEach(e => {
+        if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+      }), {threshold:.1});
+      reveals.forEach(el => obs.observe(el));
+      // Fallback: reveal anything not yet visible after 1.5s
+      setTimeout(() => document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible')), 1500);
+
+      // Open/Closed status
+      const hours = { 0:[11,16], 1:[10,20], 2:[10,20], 3:[10,20], 4:[10,20], 5:[10,20], 6:[9,18] };
+      const now = new Date();
+      const day = now.getDay(), h = now.getHours() + now.getMinutes()/60;
+      const [open, close] = hours[day];
+      const isOpen = h >= open && h < close;
+      
+      const badge = document.getElementById('openStatus');
+      const pill = document.getElementById('hoursStatusPill');
+      if (badge) badge.textContent = isOpen ? 'Open Now' : 'Closed';
+      if (pill) {
+        pill.innerHTML = `<span class="hours-status ${isOpen?'open':'closed'}"><span class="hours-status-dot"></span>${isOpen ? 'Open now' : 'Closed'}</span>`;
+      }
+      
+      const ids = ['hours-sun','hours-mon','hours-tue','hours-wed','hours-thu','hours-fri','hours-sat'];
+      const el = document.getElementById(ids[day]);
+      if (el) el.classList.add('hours-today');
+
+      // Character counter
+      const msgField = document.getElementById('message');
+      const charCount = document.getElementById('charCount');
+      if (msgField && charCount) {
+        msgField.addEventListener('input', () => {
+          charCount.textContent = msgField.value.length + ' / 600';
+        });
+      }
+
+      // Form submit
+      const form = document.getElementById('contactForm');
+      const btn = document.getElementById('submitBtn');
+      const successEl = document.getElementById('formSuccess');
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          if (!form.checkValidity()) { form.reportValidity(); return; }
+          btn.classList.add('sending');
+          btn.textContent = 'Sending…';
+          btn.disabled = true;
+          setTimeout(() => {
+            form.style.display = 'none';
+            if (successEl) successEl.style.display = 'block';
+          }, 1200);
+        });
+      }
+
+    })();
+  </script>
+</body>
+</html>

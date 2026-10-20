@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Purchase an e-gift card or check your gift card balance for Victoria Nails."/>
+  <title>Gift Cards | Victoria Nails</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+
+  <style>
+    :root{
+      --gold:#b8956a; --gold-light:#d4b896; --gold-pale:#f5ede4;
+      --blush:#e8cfc3; --cream:#faf7f4; --ivory:#f2ede8;
+      --charcoal:#1a1714; --ink:#2c2520; --warm-gray:#7a6e68;
+      --border:rgba(184,149,106,.18); --border-soft:rgba(184,149,106,.10);
+      --shadow-soft:0 4px 24px rgba(26,23,20,.06);
+      --shadow-med:0 8px 40px rgba(26,23,20,.10);
+      --shadow-lg:0 20px 60px rgba(26,23,20,.14);
+      --shadow-gold:0 8px 32px rgba(184,149,106,.22);
+      --radius:12px; --radius-lg:20px;
+      --ring:0 0 0 3px rgba(184,149,106,.22);
+      --transition:.3s cubic-bezier(.4,0,.2,1);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Jost',sans-serif;color:var(--ink);background:var(--cream);line-height:1.65;-webkit-font-smoothing:antialiased;}
+    h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.1;color:var(--charcoal);}
+    h1{font-size:clamp(2.4rem,4.5vw,3.8rem);letter-spacing:-.01em;}
+    h2{font-size:clamp(1.8rem,2.8vw,2.7rem);letter-spacing:-.01em;}
+    h3{font-size:clamp(1.15rem,1.6vw,1.4rem);}
+    p{color:var(--warm-gray);}
+    a{text-decoration:none;color:inherit;}
+    img{width:100%;display:block;height:auto;}
+    ::selection{background:rgba(184,149,106,.22);}
+    :focus{outline:none;}
+    :focus-visible{box-shadow:var(--ring);border-radius:var(--radius);}
+    .container{max-width:1220px;margin:0 auto;padding:0 28px;}
+
+    /* Topbar */
+    .topbar{background:var(--charcoal);color:rgba(255,255,255,.6);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;}
+    .topbar a{color:var(--gold-light);transition:color .2s;}
+    .topbar a:hover{color:#fff;}
+    .topbar-dot{color:var(--gold);margin:0 6px;}
+
+    /* Header */
+    header{background:rgba(250,247,244,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000;transition:box-shadow var(--transition);}
+    header.scrolled{box-shadow:var(--shadow-soft);}
+    .nav{display:flex;justify-content:space-between;align-items:center;height:80px;gap:20px;}
+    .brand{display:flex;align-items:center;gap:14px;text-decoration:none;border-radius:var(--radius);padding:6px 10px;transition:background var(--transition);}
+    .brand:hover{background:rgba(184,149,106,.08);}
+    .brand-logo{width:48px;height:48px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border);box-shadow:var(--shadow-gold);background:var(--ivory);}
+    .brand-text{display:flex;flex-direction:column;gap:2px;}
+    .brand-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--charcoal);letter-spacing:.02em;white-space:nowrap;line-height:1;}
+    .brand-tagline{font-size:.73rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+    .nav-links{display:flex;align-items:center;gap:2px;}
+    .nav-links a{padding:9px 14px;border-radius:8px;font-size:.88rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);transition:background var(--transition),color var(--transition);}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(184,149,106,.08);}
+    .nav-cta{display:flex;align-items:center;gap:10px;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:999px;font-family:'Jost',sans-serif;font-size:.88rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;cursor:pointer;border:1.5px solid transparent;transition:background var(--transition),transform var(--transition),box-shadow var(--transition),color var(--transition),border-color var(--transition);user-select:none;}
+    .btn-primary{background:var(--gold);color:#fff;border-color:var(--gold);box-shadow:var(--shadow-gold);}
+    .btn-primary:hover{background:#a07d55;border-color:#a07d55;transform:translateY(-2px);box-shadow:0 12px 36px rgba(184,149,106,.35);}
+    .btn-ghost{background:transparent;color:var(--ink);border-color:var(--border);}
+    .btn-ghost:hover{background:rgba(184,149,106,.08);border-color:var(--gold-light);}
+    .btn-dark{background:var(--charcoal);color:#fff;border-color:var(--charcoal);}
+    .btn-dark:hover{background:#2c2520;transform:translateY(-2px);box-shadow:var(--shadow-med);}
+    .btn-sm{padding:10px 20px;font-size:.82rem;}
+    .btn-mini{padding:8px 16px;font-size:.8rem;}
+    .btn-block{width:100%;}
+    .btn-white{background:#fff;color:var(--charcoal);border-color:rgba(255,255,255,.3);}
+    .btn-white:hover{background:rgba(255,255,255,.9);transform:translateY(-2px);}
+
+    .hamburger{display:none;width:44px;height:44px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;transition:background var(--transition);}
+    .hamburger:hover{background:var(--ivory);}
+    .hamburger span{display:block;width:20px;height:1.5px;background:var(--charcoal);}
+    .mobile-panel{display:none;padding:14px 0 20px;border-top:1px solid var(--border);}
+    .mobile-panel a{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:var(--radius);background:var(--ivory);margin:8px 0;font-size:.9rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--border-soft);transition:background var(--transition),transform var(--transition);}
+    .mobile-panel a:hover{background:rgba(184,149,106,.12);transform:translateX(4px);}
+    .mobile-panel.is-open{display:block;animation:slideDown .2s ease-out;}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Page hero */
+    .page-hero{
+      position:relative;
+      padding:clamp(72px,9vw,120px) 0;
+      min-height: 500px;
+      overflow:hidden;
+      background:
+        linear-gradient(135deg, rgba(26,23,20,.78) 0%, rgba(44,37,32,.58) 50%, rgba(184,149,106,.12) 100%),
+        url('images/gift-hero.png') center/cover no-repeat;
+    }
+    .page-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 65% 50%, rgba(184,149,106,.1) 0%, transparent 70%);}
+    .page-hero-inner{position:relative;z-index:2;text-align:center;color:#fff;}
+    .eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-light);display:flex;align-items:center;gap:10px;margin-bottom:20px;justify-content:center;}
+    .eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--gold-light);}
+    .page-hero h1{color:#fff;text-shadow:0 4px 24px rgba(0,0,0,.22);margin-bottom:18px;}
+    .page-hero .lead{font-size:1rem;color:rgba(255,255,255,.72);max-width:54ch;margin:0 auto 32px;line-height:1.7;}
+    .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;}
+    .hero-pills{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+    .hero-pill{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);font-size:.78rem;letter-spacing:.06em;color:rgba(255,255,255,.8);backdrop-filter:blur(8px);}
+
+    /* Sections */
+    section{padding:clamp(60px,7vw,100px) 0;}
+    .section-label{display:inline-flex;align-items:center;gap:10px;font-size:.73rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+    .section-label::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+
+    /* Gift card sections */
+    .gift-section{background:#fff;padding:clamp(60px,7vw,100px) 0;}
+    .panels-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,4vw,64px);}
+
+    /* Panel cards */
+    .panel{background:var(--ivory);border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:36px;transition:transform var(--transition),box-shadow var(--transition);}
+    .panel:hover{transform:translateY(-4px);box-shadow:var(--shadow-soft);}
+    .panel-head{margin-bottom:32px;}
+    .panel-head h2{margin-bottom:12px;color:var(--charcoal);}
+    .panel-head p{font-size:.92rem;color:var(--warm-gray);line-height:1.6;}
+
+    /* Tabs */
+    .tabs{display:flex;gap:4px;background:var(--gold-pale);border-radius:var(--radius);padding:4px;margin-bottom:24px;}
+    .tab{padding:12px 20px;border-radius:8px;font-size:.88rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--warm-gray);cursor:pointer;transition:all var(--transition);flex:1;text-align:center;}
+    .tab:hover{color:var(--charcoal);}
+    .tab.active{background:#fff;color:var(--gold);box-shadow:var(--shadow-soft);}
+
+    /* Form elements */
+    label{display:block;font-size:.85rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--charcoal);margin-bottom:8px;}
+    input,select{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:.9rem;color:var(--ink);background:#fff;transition:border-color var(--transition),box-shadow var(--transition);margin-bottom:16px;}
+    input:focus,select:focus{border-color:var(--gold);box-shadow:var(--ring);outline:none;}
+    .hint{font-size:.8rem;color:var(--warm-gray);margin-top:-12px;margin-bottom:16px;line-height:1.5;}
+
+    /* Amount chips */
+    .amounts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;}
+    .chip{padding:16px 12px;border:1.5px solid var(--border);border-radius:var(--radius);background:#fff;text-align:center;font-weight:600;color:var(--warm-gray);cursor:pointer;transition:all var(--transition);}
+    .chip:hover{border-color:var(--gold-light);color:var(--ink);}
+    .chip.active{border-color:var(--gold);background:var(--gold-pale);color:var(--gold);}
+
+    /* Form rows */
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+    .divider-line{border:0;height:1px;background:var(--border-soft);margin:24px 0;}
+
+    /* Actions */
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+
+    /* Status messages */
+    .status-msg{padding:16px 20px;border-radius:var(--radius);background:var(--gold-pale);border-left:3px solid var(--gold);font-size:.88rem;color:var(--ink);margin-bottom:20px;}
+
+    /* Setup notice */
+    .setup-notice{display:flex;align-items:flex-start;gap:12px;padding:16px 20px;border-radius:var(--radius);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);font-size:.88rem;color:#16a34a;margin-bottom:20px;}
+    .mono{font-family:'SF Mono',Monaco,'Cascadia Code','Roboto Mono',Consolas,'Courier New',monospace;background:rgba(0,0,0,.08);padding:2px 6px;border-radius:4px;}
+
+    /* Results */
+    .result{background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:24px;margin-bottom:20px;box-shadow:var(--shadow-soft);}
+    .codebox{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;background:var(--ivory);border:1px solid var(--border-soft);border-radius:var(--radius);margin:16px 0;}
+    .code{font-family:'SF Mono',Monaco,'Cascadia Code','Roboto Mono',Consolas,'Courier New',monospace;font-size:.9rem;font-weight:600;color:var(--charcoal);letter-spacing:.05em;}
+    .small{font-size:.8rem;color:var(--warm-gray);margin-bottom:6px;}
+
+    /* QR and Barcode */
+    .qrwrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
+    .qrbox,.barbox{text-align:center;}
+    .qrbox div:first-child,.barbox div:first-child{margin-bottom:8px;}
+
+    /* Quick action strip */
+    .quick-strip{background:var(--ivory);border-bottom:1px solid var(--border-soft);padding:24px 0;}
+    .quick-card{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-soft);}
+    .quick-actions{display:flex;gap:12px;flex-wrap:wrap;}
+
+    /* Reveal */
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+
+    /* CTA Banner */
+    .cta-banner{background:var(--charcoal);padding:clamp(52px,6vw,80px) 0;text-align:center;}
+    .cta-banner h2{color:#fff;margin-bottom:16px;}
+    .cta-banner p{color:rgba(255,255,255,.55);font-size:.95rem;margin-bottom:32px;max-width:50ch;margin-left:auto;margin-right:auto;}
+    .cta-banner-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+    /* Footer */
+    footer{background:var(--charcoal);color:rgba(255,255,255,.6);padding:clamp(48px,6vw,80px) 0 32px;border-top:1px solid rgba(255,255,255,.06);}
+    .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px;margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08);}
+    .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;color:#fff;margin-bottom:12px;}
+    .footer-brand p{font-size:.88rem;color:rgba(255,255,255,.45);max-width:32ch;line-height:1.7;}
+    .footer-col h4{font-family:'Jost',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:18px;}
+    .footer-col a{display:block;font-size:.88rem;color:rgba(255,255,255,.55);margin-bottom:10px;transition:color .2s;}
+    .footer-col a:hover{color:var(--gold-light);}
+    .footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.78rem;color:rgba(255,255,255,.3);}
+
+    /* Float */
+    .floatbar{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:999;display:none;width:min(500px,calc(100% - 24px));padding:10px;border-radius:18px;background:rgba(250,247,244,.96);border:1px solid var(--border);box-shadow:var(--shadow-lg);backdrop-filter:blur(12px);}
+    .floatbar .inner{display:flex;gap:10px;}
+    .floatbar .inner a{flex:1;text-align:center;}
+
+    .hidden{display:none !important;}
+
+    /* Zota POS Integration Styles */
+    .zota-modal{
+      position:fixed;
+      inset:0;
+      z-index:9999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+    .zota-modal-overlay{
+      position:absolute;
+      inset:0;
+      background:rgba(26,23,20,.85);
+      backdrop-filter:blur(8px);
+    }
+    .zota-modal-content{
+      position:relative;
+      background:#fff;
+      border-radius:var(--radius-lg);
+      box-shadow:var(--shadow-lg);
+      width:100%;
+      max-width:700px;
+      max-height:90vh;
+      overflow:hidden;
+    }
+    .zota-modal-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:24px 28px;
+      border-bottom:1px solid var(--border-soft);
+      background:var(--ivory);
+    }
+    .zota-modal-header h3{
+      margin:0;
+      color:var(--charcoal);
+      font-size:1.3rem;
+    }
+    .zota-modal-close{
+      background:none;
+      border:none;
+      font-size:1.5rem;
+      color:var(--warm-gray);
+      cursor:pointer;
+      padding:8px;
+      border-radius:50%;
+      transition:background var(--transition);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:36px;
+      height:36px;
+    }
+    .zota-modal-close:hover{
+      background:var(--gold-pale);
+      color:var(--charcoal);
+    }
+    .zota-modal-body{
+      padding:28px;
+      max-height:calc(90vh - 100px);
+      overflow-y:auto;
+    }
+    
+    /* Purchase Summary */
+    .purchase-summary{
+      background:var(--gold-pale);
+      border:1px solid var(--border-soft);
+      border-radius:var(--radius);
+      padding:20px;
+      margin-bottom:24px;
+    }
+    .summary-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+    }
+    .summary-item:last-child{
+      margin-bottom:0;
+    }
+    .summary-label{
+      font-size:.9rem;
+      color:var(--warm-gray);
+      font-weight:500;
+    }
+    .summary-value{
+      font-weight:600;
+      color:var(--charcoal);
+    }
+    
+    /* Iframe Container */
+    .zota-iframe-container{
+      position:relative;
+      min-height:400px;
+    }
+    #zotaIframe{
+      width:100%;
+      height:500px;
+      border:1px solid var(--border-soft);
+      border-radius:var(--radius);
+    }
+    .zota-fallback{
+      display:none;
+    }
+    .zota-fallback.active{
+      display:block;
+    }
+    .zota-fallback-content{
+      text-align:center;
+      padding:40px 20px;
+      background:var(--ivory);
+      border:1px solid var(--border-soft);
+      border-radius:var(--radius);
+    }
+    .zota-fallback-content h4{
+      margin-bottom:12px;
+      color:var(--charcoal);
+    }
+    .zota-fallback-content p{
+      margin-bottom:24px;
+      color:var(--warm-gray);
+    }
+    .zota-fallback-note{
+      margin-top:16px;
+      padding:12px;
+      background:rgba(184,149,106,.1);
+      border-radius:8px;
+    }
+    .zota-fallback-note small{
+      color:var(--warm-gray);
+      font-size:.8rem;
+    }
+
+    /* Responsive */
+    @media(max-width:860px){
+      .nav-links{display:none;}
+      .nav-cta .btn-ghost{display:none;}
+      .hamburger{display:inline-flex;}
+      .panels-grid{grid-template-columns:1fr;}
+      .floatbar{display:block;}
+      .footer-grid{grid-template-columns:1fr 1fr;}
+      .quick-card{grid-template-columns:1fr;}
+      .amounts{grid-template-columns:repeat(2,1fr);}
+      .qrwrap{grid-template-columns:1fr;}
+    }
+    @media(max-width:620px){
+      .container{padding:0 16px;}
+      .topbar{font-size:.72rem;}
+      .topbar .inner{flex-direction:column;align-items:center;text-align:center;gap:4px;padding:8px 0;}
+      .topbar-dot{display:inline;}
+      .nav{height:62px;}
+      .brand-logo{width:38px;height:38px;}
+      .brand-tagline{display:none;}
+      .page-hero{padding:clamp(48px,10vw,72px) 0;}
+      .footer-grid{grid-template-columns:1fr;}
+      .row{grid-template-columns:1fr;}
+      .panel{padding:24px;}
+      .amounts{grid-template-columns:1fr;}
+      .actions{flex-direction:column;}
+      main{padding-bottom:80px;}
+    }
+    @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+  </style>
+</head>
+
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container inner">
+      <div>✦ Gift cards delivered by email in minutes</div>
+      <div>
+        <a href="tel:+18479319359">(847) 931-9359</a>
+        <span class="topbar-dot">·</span>
+        <a href="contact.html">Hours &amp; Location</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header id="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Victoria Nails home">
+        <img class="brand-logo" src="images/victoria-logo.png" alt="Victoria Nails"/>
+        <div class="brand-text">
+          <span class="brand-name">Victoria Nails</span>
+          <span class="brand-tagline">Luxury Nail Care</span>
+        </div>
+      </a>
+      <nav aria-label="Primary navigation" class="nav-links">
+        <a href="services.html">Services</a>
+        <a href="gallery.html">Gallery</a>
+        <a class="active" href="gift-cards.html?business_id=__BID__">Gift Cards</a>
+        <a href="reviews.html">Reviews</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-ghost btn-sm" href="gift-cards.html?business_id=__BID__">Gift Cards</a>
+        <a class="btn btn-primary btn-sm" id="bookLinkHeader" href="https://salongenie.com/book/victoria-nails" rel="noopener" target="_blank">Book Now</a>
+        <button aria-controls="mobilePanel" aria-expanded="false" aria-label="Open navigation" class="hamburger" id="menuBtn" type="button">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="container">
+      <div class="mobile-panel" id="mobilePanel">
+        <a href="services.html">Services <span>→</span></a>
+        <a href="gallery.html">Gallery <span>→</span></a>
+        <a href="gift-cards.html?business_id=__BID__">Gift Cards <span>→</span></a>
+        <a href="reviews.html">Reviews <span>→</span></a>
+        <a href="contact.html">Contact <span>→</span></a>
+        <a id="bookLinkMobile" href="https://salongenie.com/book/victoria-nails" rel="noopener" target="_blank">Book Appointment <span>→</span></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero-inner">
+        <div class="eyebrow">E-Gift Cards</div>
+        <h1>Send the Perfect Gift<br><em>in Minutes</em></h1>
+        <p class="lead">Choose an amount or gift a specific service. We generate a secure gift card code with QR and barcode — delivered instantly by email.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#buy">Purchase a Gift Card</a>
+          <a class="btn btn-white" href="#balance">Check My Balance</a>
+        </div>
+        <div class="hero-pills">
+          <span class="hero-pill">🔒 Secure code generation</span>
+          <span class="hero-pill">📩 Delivered by email</span>
+          <span class="hero-pill">💅 Redeem in-salon</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Action Strip -->
+  <div class="quick-strip">
+    <div class="container">
+      <div class="quick-card reveal">
+        <div>
+          <h3>Gift it. Book it. Love it.</h3>
+          <p>Buy a digital gift card in seconds, or check a balance anytime. Use the buttons to jump to what you need.</p>
+        </div>
+        <div class="quick-actions">
+          <a class="btn btn-primary btn-sm" href="#buy">Buy Gift Card</a>
+          <a class="btn btn-ghost btn-sm" href="#balance">Check Balance</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- Gift Card Panels -->
+    <section class="gift-section">
+      <div class="container">
+        <div class="panels-grid">
+
+          <!-- Buy Gift Card Panel -->
+          <div class="panel reveal" id="buy">
+            <div class="panel-head">
+              <h2>Buy Gift Card</h2>
+              <p>Choose "By Amount" or gift a specific service. Preview available now. Purchase via SalonGenie checkout.</p>
+            </div>
+
+            <div class="tabs" role="tablist" aria-label="Gift card type">
+              <div class="tab active" id="tabAmount" role="tab" tabindex="0" aria-selected="true">By Amount</div>
+              <div class="tab" id="tabService" role="tab" tabindex="0" aria-selected="false">By Service</div>
+            </div>
+
+            <div class="setup-notice hidden" id="setupNotice">
+              <span>ℹ️</span>
+              <span><strong>Setup needed:</strong> Configure <span class="mono">SG_URL</span>, <span class="mono">SG_ANON_KEY</span>, and <span class="mono">DEFAULT_BUSINESS_ID</span> in the script.</span>
+            </div>
+
+            <div id="amountMode">
+              <label>Choose Amount</label>
+              <div class="amounts" id="amountChips">
+                <div class="chip active" data-amt="25">$25</div>
+                <div class="chip" data-amt="50">$50</div>
+                <div class="chip" data-amt="75">$75</div>
+                <div class="chip" data-amt="100">$100</div>
+              </div>
+              <div class="row">
+                <div>
+                  <label>Custom Amount (optional)</label>
+                  <input id="customAmount" type="number" min="1" step="0.01" placeholder="e.g. 120"/>
+                  <div class="hint">If filled, overrides the selected preset.</div>
+                </div>
+                <div>
+                  <label>Delivery</label>
+                  <select id="deliveryMethod" aria-label="Delivery method">
+                    <option value="email" selected>Email (E-Gift)</option>
+                  </select>
+                  <div class="hint">We'll email the gift card code + QR.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="serviceMode" class="hidden">
+              <label>Choose Service</label>
+              <select id="serviceSelect" aria-label="Service list">
+                <option value="">Loading services…</option>
+              </select>
+              <div class="hint">Service gift cards use the service's default price.</div>
+            </div>
+
+            <hr class="divider-line"/>
+
+            <div class="row">
+              <div>
+                <label>Your Email (Receipt)</label>
+                <input id="buyerEmail" type="email" placeholder="you@email.com" autocomplete="email"/>
+              </div>
+              <div>
+                <label>Recipient Name</label>
+                <input id="recipientName" type="text" placeholder="e.g. Jenny" autocomplete="name"/>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label>Recipient Email</label>
+                <input id="recipientEmail" type="email" placeholder="recipient@email.com" autocomplete="email"/>
+              </div>
+              <div>
+                <label>Personal Message (optional)</label>
+                <input id="message" type="text" maxlength="140" placeholder="Happy Birthday! Enjoy a little self-care…"/>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn btn-primary" id="purchaseZotaBtn" type="button">Purchase with Zota POS</button>
+              <button class="btn btn-ghost" id="previewBtn" type="button">Preview Card</button>
+              <button class="btn btn-ghost" id="purchaseBtn" type="button" style="display:none;">Purchase &amp; Send (SG)</button>
+              <a class="btn btn-ghost btn-sm" id="bookLinkBuy" href="https://salongenie.com/book/victoria-nails" target="_blank" rel="noopener">Book Appointment</a>
+            </div>
+
+            <div class="status-msg" id="buyStatus">Preview generates a sample for testing. Purchase with Zota POS opens secure checkout in a popup window.</div>
+
+            <div class="result hidden" id="previewBox" aria-label="Preview output">
+              <strong>Card Preview</strong>
+              <div class="small">This is what the recipient receives after purchase.</div>
+              <div class="codebox">
+                <div>
+                  <div class="small">Gift Card Code</div>
+                  <div class="code" id="previewCode">VN-XXXX-XXXX-XXXX</div>
+                </div>
+                <button class="btn btn-ghost btn-mini" id="copyPreviewCode" type="button">Copy</button>
+              </div>
+              <div class="qrwrap">
+                <div class="qrbox"><div class="small">QR Code</div><div id="qrcode"></div></div>
+                <div class="barbox"><div class="small">Barcode</div><svg id="barcode"></svg></div>
+              </div>
+              <div class="small" style="margin-top:12px;">
+                Amount: <strong id="previewValue">$25</strong> · Delivery: <strong>Email</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Check Balance Panel -->
+          <div class="panel reveal" id="balance" style="transition-delay:.08s">
+            <div class="panel-head">
+              <h2>Check Balance</h2>
+              <p>Enter your gift card code to view remaining balance. No login required.</p>
+            </div>
+
+            <label>Gift Card Code</label>
+            <input id="balanceCode" type="text" placeholder="VN-9F3K-72QP-AX4M" autocomplete="off"/>
+
+            <div class="actions">
+              <button class="btn btn-primary" id="checkBtn" type="button">Check Balance</button>
+              <button class="btn btn-ghost" id="clearBtn" type="button">Clear</button>
+              <a class="btn btn-ghost btn-sm" href="#buy">Buy a Card</a>
+            </div>
+
+            <div class="status-msg" id="balanceStatus">We'll show status, remaining balance, and expiration date if applicable.</div>
+
+            <div class="result hidden" id="balanceResult" aria-label="Balance result">
+              <strong>Gift Card Status</strong>
+              <div class="small" id="balanceSummary" style="margin-top:6px;">—</div>
+              <div class="codebox" style="margin-top:12px;">
+                <div>
+                  <div class="small">Code</div>
+                  <div class="code" id="resultCode">—</div>
+                </div>
+                <button class="btn btn-ghost btn-mini" id="copyResultCode" type="button">Copy</button>
+              </div>
+              <div class="qrwrap">
+                <div class="qrbox"><div class="small">QR Code</div><div id="qrcode2"></div></div>
+                <div class="barbox"><div class="small">Barcode</div><svg id="barcode2"></svg></div>
+              </div>
+              <div class="actions" style="margin-top:16px;">
+                <a class="btn btn-primary" id="bookLinkBalance" href="https://salongenie.com/book/victoria-nails" target="_blank" rel="noopener">Book with this Gift Card</a>
+                <a class="btn btn-ghost" href="#buy">Buy Another</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CTA Banner -->
+  <div class="cta-banner">
+    <div class="container">
+      <div class="section-label" style="justify-content:center;color:var(--gold-light);margin-bottom:20px;">Ready to Gift the Experience?</div>
+      <h2>Perfect for Any Occasion</h2>
+      <p>Birthdays, holidays, celebrations, or just because — a Victoria Nails gift card is always the perfect choice.</p>
+      <div class="cta-banner-actions">
+        <a class="btn btn-primary" href="#buy">Buy Gift Card</a>
+        <a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.2);" href="services.html">View Services</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">Victoria Nails</div>
+          <p>A luxury nail salon dedicated to impeccable craft, genuine care, and a serene experience every visit.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="services.html#manicure">Manicure</a>
+          <a href="services.html#pedicure">Pedicure</a>
+          <a href="services.html#enhancements">Enhancements</a>
+          <a href="services.html#waxing">Waxing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Info</h4>
+          <a href="gallery.html">Gallery</a>
+          <a href="reviews.html">Reviews</a>
+          <a href="gift-cards.html?business_id=__BID__">Gift Cards</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Book</h4>
+          <a id="bookLinkFooter" href="https://salongenie.com/book/victoria-nails" rel="noopener" target="_blank">Book Online</a>
+          <a href="https://www.instagram.com/victorianailssouthelgin" rel="noopener" target="_blank">Instagram</a>
+          <a href="https://www.facebook.com/victorianailssalon" rel="noopener" target="_blank">Facebook</a>
+          <a href="https://www.tiktok.com/@victorianailssouthelgin" rel="noopener" target="_blank">TikTok</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Victoria Nails. All rights reserved.</span>
+        <span>Made with care ✦</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile floatbar -->
+  <div class="floatbar" aria-label="Quick actions">
+    <div class="inner">
+      <a class="btn btn-primary btn-block" href="#buy">Buy Gift Card</a>
+    </div>
+  </div>
+
+  <!-- Zota POS Integration Modal -->
+  <div class="zota-modal hidden" id="zotaModal">
+    <div class="zota-modal-overlay"></div>
+    <div class="zota-modal-content">
+      <div class="zota-modal-header">
+        <h3>Complete Your Gift Card Purchase</h3>
+        <button class="zota-modal-close" id="closeZotaModal" aria-label="Close">✕</button>
+      </div>
+      <div class="zota-modal-body">
+        <div class="purchase-summary" id="purchaseSummary">
+          <div class="summary-item">
+            <span class="summary-label">Gift Card Type:</span>
+            <span class="summary-value" id="summaryType">By Amount</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Amount:</span>
+            <span class="summary-value" id="summaryAmount">$25</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Recipient:</span>
+            <span class="summary-value" id="summaryRecipient">Not specified</span>
+          </div>
+        </div>
+        <div class="zota-iframe-container">
+          <iframe 
+            id="zotaIframe" 
+            src="" 
+            frameborder="0" 
+            scrolling="no"
+            title="Zota POS Gift Card Purchase">
+          </iframe>
+          <div class="zota-fallback">
+            <div class="zota-fallback-content">
+              <h4>Secure Checkout</h4>
+              <p>Click below to complete your gift card purchase through our secure payment system.</p>
+              <a class="btn btn-primary" id="zotaFallbackLink" href="#" target="_blank" rel="noopener">
+                Open Zota POS Checkout →
+              </a>
+              <div class="zota-fallback-note">
+                <small>A new window will open. After completing your purchase, you can close this window and return to Victoria Nails.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const DEFAULT_BUSINESS_ID = "0af9e368-f488-449b-8013-7f44361be462";
+      const params = new URLSearchParams(window.location.search);
+      const BUSINESS_ID = params.get("business_id") || DEFAULT_BUSINESS_ID;
+
+      // Replace placeholder business IDs
+      document.querySelectorAll('a[href*="__BID__"]').forEach(a => {
+        a.href = a.href.replaceAll("__BID__", encodeURIComponent(BUSINESS_ID));
+      });
+
+      // Sticky header
+      const hdr = document.getElementById('site-header');
+      window.addEventListener('scroll', () => hdr.classList.toggle('scrolled', window.scrollY > 30), {passive:true});
+
+      // Mobile menu
+      const menuBtn = document.getElementById('menuBtn');
+      const panel = document.getElementById('mobilePanel');
+      if(menuBtn && panel){
+        menuBtn.addEventListener('click', () => {
+          const open = panel.classList.contains('is-open');
+          panel.classList.toggle('is-open', !open);
+          menuBtn.setAttribute('aria-expanded', String(!open));
+        });
+        panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+          panel.classList.remove('is-open'); menuBtn.setAttribute('aria-expanded','false');
+        }));
+      }
+
+      // Scroll reveal
+      const reveals = document.querySelectorAll('.reveal');
+      const obs = new IntersectionObserver(entries => entries.forEach(e => {
+        if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+      }), {threshold:.1});
+      reveals.forEach(el => obs.observe(el));
+      setTimeout(() => document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible')), 1500);
+
+      // Supabase setup
+      const SG_URL = "https://pbuqkxntqlhfjkiqdqjm.supabase.co";
+      const SG_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBidXFreG50cWxoZmpraXFkcWptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA4MzM2NzEsImV4cCI6MjA0NjQwOTY3MX0.vC_kQVqO9AIfZSiGLZaJ6NwdT_lL_iZ2z4Y4aMq5Mig";
+      const PURCHASE_FUNCTION = "create_gift_card_purchase";
+      const BOOK_URL = "https://salongenie.com/book/victoria-nails";
+
+      let sg = null;
+      function looksConfigured() { return SG_URL && SG_ANON_KEY && BUSINESS_ID; }
+      if (looksConfigured()) sg = supabase.createClient(SG_URL, SG_ANON_KEY);
+
+      // UI references
+      const $ = id => document.getElementById(id);
+      const tabAmount = $("tabAmount"), tabService = $("tabService");
+      const amountMode = $("amountMode"), serviceMode = $("serviceMode");
+      let selectedAmt = 25;
+
+      // Setup check
+      if (!looksConfigured()) {
+        $("setupNotice")?.classList.remove("hidden");
+      }
+
+      // Tab switching
+      [tabAmount, tabService].forEach(tab => tab?.addEventListener("click", () => {
+        [tabAmount, tabService].forEach(t => t?.classList.remove("active"));
+        tab.classList.add("active");
+        if (tab === tabAmount) {
+          amountMode?.classList.remove("hidden");
+          serviceMode?.classList.add("hidden");
+        } else {
+          amountMode?.classList.add("hidden");
+          serviceMode?.classList.remove("hidden");
+        }
+      }));
+
+      // Amount chips
+      $("amountChips")?.addEventListener("click", e => {
+        if (e.target.classList.contains("chip")) {
+          document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+          e.target.classList.add("active");
+          selectedAmt = Number(e.target.dataset.amt) || 25;
+        }
+      });
+
+      const fmtMoney = n => { const num=Number(n); if(!Number.isFinite(num)) return "$0.00"; return new Intl.NumberFormat(undefined,{style:"currency",currency:"USD"}).format(num); };
+      const esc = str => String(str??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+
+      async function loadServices(){
+        const sel=$("serviceSelect"); if(!sel) return;
+        if(!looksConfigured()){ sel.innerHTML='<option value="">Configure SG_URL / SG_ANON_KEY first</option>'; return; }
+        const { data, error } = await sg.from("service_catalog")
+          .select("id,name,default_price,default_minutes,is_active,sort_order,business_id")
+          .eq("business_id",BUSINESS_ID).eq("is_active",true)
+          .order("sort_order",{ascending:true}).order("name",{ascending:true});
+        if(error){ sel.innerHTML='<option value="">Unable to load services</option>'; return; }
+        const list=Array.isArray(data)?data:[];
+        if(!list.length){ sel.innerHTML='<option value="">No active services found</option>'; return; }
+        sel.innerHTML='<option value="">Select a service…</option>'+list.map(s=>{
+          const price=fmtMoney(s.default_price), mins=s.default_minutes?`${s.default_minutes} min`:"";
+          return `<option value="${s.id}" data-price="${s.default_price}" data-name="${esc(s.name)}">${esc(s.name)} · ${price}${mins?" · "+mins:""}</option>`;
+        }).join("");
+      }
+
+      function makePreviewCode(){ const c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",ch=()=>Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join(""); return `VN-${ch()}-${ch()}-${ch()}`; }
+
+      function getBuyPayload(){
+        const isAmount=tabAmount.classList.contains("active");
+        let amount=null, service_id=null, service_name=null;
+        if(isAmount){ const custom=Number($("customAmount").value); amount=Number.isFinite(custom)&&custom>0?custom:selectedAmt; }
+        else{ const opt=$("serviceSelect").selectedOptions[0]; service_id=$("serviceSelect").value||null; if(opt){ service_name=opt.dataset.name||null; const p=Number(opt.dataset.price); amount=Number.isFinite(p)&&p>0?p:null; } }
+        return { business_id:BUSINESS_ID, value_type:isAmount?"amount":"service", amount, service_id, service_name,
+          delivery_method:$("deliveryMethod").value||"email", purchased_by_email:($("buyerEmail").value||"").trim(),
+          recipient_name:($("recipientName").value||"").trim(), recipient_email:($("recipientEmail").value||"").trim(),
+          message:($("message").value||"").trim() };
+      }
+
+      function validateBuyPayload(p){
+        if(!looksConfigured()) return "Configure SG_URL / SG_ANON_KEY / business_id first.";
+        if(!p.amount||p.amount<=0) return "Please select a valid amount or service.";
+        if(!p.recipient_email) return "Please enter a recipient email address.";
+        return null;
+      }
+
+      function renderPreview(code,valueLabel){
+        $("previewBox").classList.remove("hidden"); $("previewCode").textContent=code; $("previewValue").textContent=valueLabel;
+        $("qrcode").innerHTML=""; new QRCode(document.getElementById("qrcode"),{text:code,width:150,height:150});
+        JsBarcode("#barcode",code,{format:"CODE128",displayValue:false,height:70,margin:6});
+      }
+
+      $("previewBtn").addEventListener("click",()=>{
+        const p=getBuyPayload(), err=validateBuyPayload(p);
+        if(err){ $("buyStatus").innerHTML=`<strong>Fix:</strong> ${esc(err)}`; return; }
+        const code=makePreviewCode(), label=p.value_type==="service"?(p.service_name||fmtMoney(p.amount)):fmtMoney(p.amount);
+        renderPreview(code,label);
+        $("buyStatus").textContent="Preview generated. The real code is created securely on the server after payment.";
+      });
+
+      $("copyPreviewCode").addEventListener("click",async()=>{
+        try{ await navigator.clipboard.writeText($("previewCode").textContent||""); $("buyStatus").textContent="Copied preview code."; }
+        catch(e){ $("buyStatus").textContent="Unable to copy — please copy manually."; }
+      });
+
+      $("purchaseBtn").addEventListener("click",async()=>{
+        const p=getBuyPayload(), err=validateBuyPayload(p);
+        if(err){ $("buyStatus").innerHTML=`<strong>Fix:</strong> ${esc(err)}`; return; }
+        $("buyStatus").textContent="Starting secure checkout…";
+        try{
+          const { data, error } = await sg.functions.invoke(PURCHASE_FUNCTION,{body:{...p,booking_url:BOOK_URL,success_url:location.origin+location.pathname+location.search,cancel_url:location.href}});
+          if(error) throw error;
+          if(data&&data.checkout_url){ location.href=data.checkout_url; return; }
+          $("buyStatus").innerHTML=`<strong>Next step:</strong> Edge Function should return <span class="mono">checkout_url</span>.`;
+        }catch(e){
+          $("buyStatus").innerHTML=`<strong>Purchase not connected yet.</strong> Configure Edge Function <span class="mono">${esc(PURCHASE_FUNCTION)}</span>.<br><span class="small">${esc(e.message||String(e))}</span>`;
+        }
+      });
+
+      function renderBalanceResult(code,row){
+        $("balanceResult").classList.remove("hidden"); $("resultCode").textContent=code;
+        const bal=fmtMoney(row.balance), status=row.status||"unknown", exp=row.expires_at?new Date(row.expires_at).toLocaleDateString():"—";
+        $("balanceSummary").innerHTML=`Status: <strong>${esc(status)}</strong><br>Balance: <strong>${esc(bal)}</strong><br>Expires: <strong>${esc(exp)}</strong>`;
+        $("qrcode2").innerHTML=""; new QRCode(document.getElementById("qrcode2"),{text:code,width:150,height:150});
+        JsBarcode("#barcode2",code,{format:"CODE128",displayValue:false,height:70,margin:6});
+      }
+
+      $("copyResultCode").addEventListener("click",async()=>{
+        try{ await navigator.clipboard.writeText($("resultCode").textContent||""); $("balanceStatus").textContent="Copied code."; }
+        catch(e){ $("balanceStatus").textContent="Unable to copy — please copy manually."; }
+      });
+
+      $("checkBtn").addEventListener("click",async()=>{
+        const code=($("balanceCode").value||"").trim();
+        if(!code){ $("balanceStatus").innerHTML="<strong>Please enter a gift card code.</strong>"; return; }
+        if(!looksConfigured()){ $("balanceStatus").innerHTML="<strong>Fix:</strong> Configure SG_URL / SG_ANON_KEY / business_id first."; return; }
+        $("balanceStatus").textContent="Checking…";
+        try{
+          const { data, error } = await sg.rpc("check_gift_card_balance",{p_business_id:BUSINESS_ID,p_code:code});
+          if(error) throw error;
+          if(!data){ $("balanceStatus").innerHTML="<strong>Not found.</strong> Please verify the code."; $("balanceResult").classList.add("hidden"); return; }
+          $("balanceStatus").textContent="Found."; renderBalanceResult(code,data);
+        }catch(e){ $("balanceStatus").innerHTML=`<strong>Error:</strong> ${esc(e.message||String(e))}`; $("balanceResult").classList.add("hidden"); }
+      });
+
+      $("clearBtn").addEventListener("click",()=>{
+        $("balanceCode").value=""; $("balanceResult").classList.add("hidden");
+        $("balanceStatus").textContent="We'll show status, remaining balance, and expiration date if applicable.";
+      });
+
+      // ===== ZOTA POS INTEGRATION =====
+      
+      const ZOTA_BASE_URL = "https://zota-pos-salon.com/gift-cards"; // Replace with actual Zota POS URL
+      
+      function updatePurchaseSummary() {
+        const isAmount = tabAmount.classList.contains("active");
+        let amount = null, service = "By Amount", recipient = "Not specified";
+        
+        if (isAmount) {
+          const custom = Number($("customAmount").value);
+          amount = Number.isFinite(custom) && custom > 0 ? custom : selectedAmt;
+        } else {
+          const sel = $("serviceSelect");
+          const opt = sel.selectedOptions[0];
+          if (opt && opt.dataset.price) {
+            service = opt.dataset.name || "Selected Service";
+            amount = Number(opt.dataset.price);
+          }
+        }
+        
+        const recipientName = ($("recipientName").value || "").trim();
+        const recipientEmail = ($("recipientEmail").value || "").trim();
+        if (recipientName || recipientEmail) {
+          recipient = recipientName || recipientEmail;
+        }
+        
+        $("summaryType").textContent = isAmount ? "By Amount" : "By Service";
+        $("summaryAmount").textContent = fmtMoney(amount || 0);
+        $("summaryRecipient").textContent = recipient;
+        
+        return { amount, service, recipient, isAmount };
+      }
+      
+      function buildZotaURL(summary) {
+        const params = new URLSearchParams({
+          business_id: "victoria-nails",
+          amount: summary.amount || 0,
+          type: summary.isAmount ? "amount" : "service",
+          service: summary.service,
+          recipient_name: ($("recipientName").value || "").trim(),
+          recipient_email: ($("recipientEmail").value || "").trim(),
+          buyer_email: ($("buyerEmail").value || "").trim(),
+          message: ($("message").value || "").trim(),
+          return_url: window.location.href
+        });
+        return `${ZOTA_BASE_URL}?${params.toString()}`;
+      }
+      
+      function openZotaModal() {
+        const summary = updatePurchaseSummary();
+        const zotaURL = buildZotaURL(summary);
+        
+        // Show modal
+        $("zotaModal").classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        
+        // Try iframe first, fallback to new window
+        const iframe = $("zotaIframe");
+        const fallback = document.querySelector(".zota-fallback");
+        
+        iframe.src = zotaURL;
+        $("zotaFallbackLink").href = zotaURL;
+        
+        // Show fallback if iframe fails to load
+        setTimeout(() => {
+          if (!iframe.contentDocument) {
+            iframe.style.display = "none";
+            fallback.classList.add("active");
+          }
+        }, 3000);
+        
+        $("buyStatus").textContent = "Opening Zota POS checkout...";
+      }
+      
+      function closeZotaModal() {
+        $("zotaModal").classList.add("hidden");
+        document.body.style.overflow = "";
+        $("zotaIframe").src = "";
+        document.querySelector(".zota-fallback").classList.remove("active");
+        $("buyStatus").textContent = "Zota POS checkout closed. You can try again or preview the card.";
+      }
+      
+      // Event Listeners
+      $("purchaseZotaBtn").addEventListener("click", () => {
+        const payload = getBuyPayload();
+        const error = validateBuyPayload(payload);
+        if (error) {
+          $("buyStatus").innerHTML = `<strong>Fix:</strong> ${esc(error)}`;
+          return;
+        }
+        openZotaModal();
+      });
+      
+      $("closeZotaModal").addEventListener("click", closeZotaModal);
+      
+      // Close modal when clicking overlay
+      document.querySelector(".zota-modal-overlay").addEventListener("click", closeZotaModal);
+      
+      // Listen for messages from Zota iframe (if they support postMessage)
+      window.addEventListener("message", (event) => {
+        if (event.origin.includes("zota-pos")) { // Adjust based on Zota's domain
+          if (event.data.type === "purchase_complete") {
+            closeZotaModal();
+            $("buyStatus").innerHTML = "<strong>Success!</strong> Gift card purchased successfully. Check your email for confirmation.";
+          } else if (event.data.type === "purchase_cancelled") {
+            closeZotaModal();
+            $("buyStatus").textContent = "Purchase cancelled. You can try again anytime.";
+          }
+        }
+      });
+      
+      // Escape key closes modal
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !$("zotaModal").classList.contains("hidden")) {
+          closeZotaModal();
+        }
+      });
+
+      loadServices();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Victoria booking test</title>
+<!-- Victoria booking, phase 3: a hidden page for the supervised test.
+     Not linked from the site. Uses the same booking function the chat will use. -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<style>
+  :root { --bg:#faf7f2; --card:#fff; --ink:#1a1a1a; --muted:#6b645c; --line:#e6ded3; --accent:#b8946a; --ok:#2e7d4f; --bad:#b3261e; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+  main { max-width:560px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { font-size:1.4rem; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 20px; font-size:.95rem; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:14px; }
+  label { display:block; font-weight:600; font-size:.9rem; margin:10px 0 4px; }
+  select, input { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font:inherit; background:#fff; }
+  button { font:inherit; border:none; border-radius:999px; padding:10px 18px; cursor:pointer; }
+  .primary { background:var(--accent); color:#fff; font-weight:600; }
+  .primary:disabled { opacity:.5; cursor:default; }
+  .slots { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+  .slot { background:#f3ede4; color:var(--ink); padding:8px 12px; border-radius:999px; font-size:.9rem; }
+  .slot.on { background:var(--accent); color:#fff; }
+  .muted { color:var(--muted); font-size:.9rem; }
+  .result { white-space:pre-wrap; font-family:ui-monospace, Menlo, monospace; font-size:.85rem; background:#f6f3ee; border-radius:10px; padding:12px; margin-top:10px; }
+  .ok { color:var(--ok); font-weight:600; } .bad { color:var(--bad); font-weight:600; }
+  .row { display:flex; gap:10px; } .row > div { flex:1; }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+(function () {
+  var FN = 'https://pbojacnagutipfhcxltj.supabase.co/functions/v1/victoria-book';
+  var BIZ = '0af9e368-f488-449b-8013-7f44361be462';
+  var SITE_KEY = '0x4AAAAAAFWHTVtszh0YkqvD';
+
+  var state = { services: [], service: null, slot: null, token: '' };
+
+  function el(tag, props, kids) {
+    var n = document.createElement(tag);
+    if (props) Object.keys(props).forEach(function (k) {
+      if (k === 'text') n.textContent = props[k];
+      else if (k === 'on') Object.keys(props.on).forEach(function (e) { n.addEventListener(e, props.on[e]); });
+      else n.setAttribute(k, props[k]);
+    });
+    (kids || []).forEach(function (c) { if (c) n.appendChild(c); });
+    return n;
+  }
+  function call(body) {
+    body.business_id = BIZ;
+    return fetch(FN, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status }; }); })
+      .catch(function (e) { return { ok: false, error: 'network: ' + e.message }; });
+  }
+  function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function to12(t) { var h = +t.slice(0, 2), m = t.slice(3, 5); return ((h + 11) % 12 + 1) + ':' + m + (h < 12 ? ' AM' : ' PM'); }
+
+  var app = document.getElementById('app');
+  var svcSel = el('select', { id: 'svc' });
+  var dateIn = el('input', { id: 'date', type: 'date' });
+  var nextWeek = new Date(); nextWeek.setDate(nextWeek.getDate() + 7); dateIn.value = ymd(nextWeek);
+  var slotsBox = el('div', { 'class': 'slots' });
+  var slotsNote = el('p', { 'class': 'muted', text: 'Pick a service and a day, then "Show times".' });
+  var phoneIn = el('input', { id: 'phone', type: 'tel', autocomplete: 'tel', placeholder: '(847) 555-0100' });
+  var firstIn = el('input', { id: 'first', type: 'text', autocomplete: 'given-name', placeholder: 'First name as Galaxy has it' });
+  var tsBox = el('div', { id: 'ts' });
+  var bookBtn = el('button', { 'class': 'primary', type: 'button', disabled: 'disabled', text: 'Book' });
+  var out = el('div');
+
+  function refreshBook() {
+    var ready = state.slot && state.token && phoneIn.value.trim() && firstIn.value.trim();
+    if (ready) bookBtn.removeAttribute('disabled'); else bookBtn.setAttribute('disabled', 'disabled');
+  }
+  phoneIn.addEventListener('input', refreshBook);
+  firstIn.addEventListener('input', refreshBook);
+
+  function showResult(r) {
+    out.textContent = '';
+    var head = r.ok
+      ? el('p', { 'class': 'ok', text: r.practice ? 'Practice run passed: everything checked, nothing sent to Galaxy.' : 'Booked in Galaxy.' })
+      : el('p', { 'class': 'bad', text: 'Not booked: ' + r.error + (r.retry_at ? ' (try again at ' + new Date(r.retry_at).toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' }) + ')' : '') });
+    out.appendChild(head);
+    out.appendChild(el('div', { 'class': 'result', text: JSON.stringify(r, null, 2) }));
+  }
+
+  function loadSlots() {
+    state.slot = null; refreshBook();
+    slotsBox.textContent = '';
+    if (!state.service) return;
+    slotsNote.textContent = 'Loading…';
+    call({ action: 'slots', service_id: state.service.id, date: dateIn.value }).then(function (r) {
+      if (!r.ok) { slotsNote.textContent = 'No times: ' + r.error; return; }
+      slotsNote.textContent = r.slots.length ? r.slots.length + ' open start times' : 'No open times that day.';
+      r.slots.forEach(function (s) {
+        var b = el('button', { type: 'button', 'class': 'slot', text: to12(s.time) + ' · ' + s.tech });
+        b.addEventListener('click', function () {
+          Array.prototype.forEach.call(slotsBox.children, function (c) { c.classList.remove('on'); });
+          b.classList.add('on'); state.slot = s; refreshBook();
+        });
+        slotsBox.appendChild(b);
+      });
+    });
+  }
+
+  bookBtn.addEventListener('click', function () {
+    bookBtn.setAttribute('disabled', 'disabled'); bookBtn.textContent = 'Booking…';
+    call({ action: 'book', service_id: state.service.id, tech_id: state.slot.tech_id, date: dateIn.value, time: state.slot.time,
+           phone: phoneIn.value.trim(), first_name: firstIn.value.trim(), turnstile_token: state.token })
+      .then(function (r) {
+        showResult(r);
+        bookBtn.textContent = 'Book';
+        state.token = '';
+        if (window.turnstile) window.turnstile.reset('#ts');   // a token works once
+        refreshBook();
+      });
+  });
+
+  app.appendChild(el('h1', { text: 'Victoria booking test' }));
+  app.appendChild(el('p', { 'class': 'sub', text: 'Hidden test page for the supervised booking. Not linked from the site.' }));
+  app.appendChild(el('div', { 'class': 'card' }, [
+    el('label', { 'for': 'svc', text: 'Service' }), svcSel,
+    el('label', { 'for': 'date', text: 'Day' }), dateIn,
+    el('div', { style: 'margin-top:12px' }, [el('button', { type: 'button', 'class': 'primary', text: 'Show times', on: { click: loadSlots } })]),
+    slotsNote, slotsBox,
+  ]));
+  app.appendChild(el('div', { 'class': 'card' }, [
+    el('div', { 'class': 'row' }, [
+      el('div', null, [el('label', { 'for': 'phone', text: 'Cell phone' }), phoneIn]),
+      el('div', null, [el('label', { 'for': 'first', text: 'First name' }), firstIn]),
+    ]),
+    el('div', { style: 'margin-top:12px' }, [tsBox]),
+    el('div', { style: 'margin-top:12px' }, [bookBtn]),
+    out,
+  ]));
+
+  svcSel.addEventListener('change', function () {
+    state.service = state.services.find(function (s) { return s.id === svcSel.value; }) || null; loadSlots();
+  });
+  dateIn.addEventListener('change', loadSlots);
+
+  call({ action: 'services' }).then(function (r) {
+    if (!r.ok) { svcSel.appendChild(el('option', { text: 'Booking is off (' + r.error + ')' })); return; }
+    r.services.forEach(function (s) {
+      svcSel.appendChild(el('option', { value: s.id, text: s.name + ' · ' + s.minutes + ' min' + (s.price != null ? ' · $' + s.price : '') }));
+    });
+    state.services = r.services; state.service = r.services[0] || null;
+  });
+
+  // Turnstile renders once its script has loaded
+  (function waitTs() {
+    if (!window.turnstile) return setTimeout(waitTs, 200);
+    window.turnstile.render('#ts', {
+      sitekey: SITE_KEY,
+      callback: function (t) { state.token = t; refreshBook(); },
+      'expired-callback': function () { state.token = ''; refreshBook(); },
+    });
+  })();
+})();
+</script>
+</body>
+</html>

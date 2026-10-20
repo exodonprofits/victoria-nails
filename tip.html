@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Leave a Tip</title>
+<link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💅</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<meta name="gs-config" content="/shared/config.json"/>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   SALON GENIE — PUBLIC TIP PAGE
+   Customer-facing. Mobile-first. No auth required.
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg:        #FDFAF6;
+  --s1:        #FFFFFF;
+  --s2:        #F5F0E8;
+  --s3:        #EDE6D8;
+  --border:    rgba(0,0,0,0.07);
+  --border2:   rgba(0,0,0,0.11);
+  --ink:       #1C1814;
+  --mid:       #6A6058;
+  --muted:     #A89A8E;
+  --blush:     #C4856A;
+  --amber:     #C4993A;
+  --teal:      #3D7A72;
+  --violet:    #7A4EA8;
+  --rose:      #C45A4A;
+
+  /* Brand colors for payment apps */
+  --venmo:   #008CFF;
+  --cashapp: #00D632;
+  --zelle:   #6D1ED4;
+  --paypal:  #003087;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.5;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* ── CONTAINER ── */
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 28px 20px 48px;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ── HEADER ── */
+.salon-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.salon-logo {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--blush), var(--amber));
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  color: var(--s1);
+  margin-bottom: 14px;
+  box-shadow: 0 4px 16px rgba(196,133,106,0.3);
+}
+.salon-logo-link {
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  border-radius: 14px;
+}
+.salon-logo-link:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+.salon-logo-link:active {
+  transform: translateY(0) scale(0.98);
+}
+.salon-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+  line-height: 1.15;
+}
+.salon-tagline {
+  font-size: 14px;
+  color: var(--mid);
+  margin-top: 6px;
+}
+
+/* ── PROMPT ── */
+.prompt {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--mid);
+  font-size: 14.5px;
+}
+
+/* ── TEAM LIST (canonical view) ── */
+.team-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── TEAM ROW
+   On mobile: stacked card (avatar + name on top, payment buttons below)
+   On desktop: wide row (avatar + name on left, payment chips on right)
+*/
+.team-row {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.team-row:hover { box-shadow: 0 4px 14px rgba(28,24,20,0.06); }
+.team-row.is-direct { border-color: var(--blush); box-shadow: 0 4px 18px rgba(196,133,106,0.18); }
+
+.team-row-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.team-avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blush), var(--amber));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--s1);
+  font-weight: 600;
+  font-size: 20px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.team-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.team-info {
+  display: flex; flex-direction: column; gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.team-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 19px;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.team-role {
+  font-size: 13px;
+  color: var(--muted);
+}
+.team-msg {
+  font-size: 13px;
+  color: var(--mid);
+  font-style: italic;
+  margin-top: 4px;
+  padding: 8px 12px;
+  background: var(--s2);
+  border-radius: 8px;
+  display: inline-block;
+}
+
+/* Payment chips inside a row */
+.pay-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pay-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.15s ease, background 0.15s ease;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.pay-chip:active { transform: scale(0.97); }
+.pay-chip:hover { border-color: var(--border2); background: var(--s3); }
+
+.pay-chip-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--s1);
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.pay-chip-icon.venmo   { background: var(--venmo);   }
+.pay-chip-icon.cashapp { background: var(--cashapp); }
+.pay-chip-icon.zelle   { background: var(--zelle);   }
+.pay-chip-icon.paypal  { background: var(--paypal);  }
+
+.pay-chip-label {
+  display: flex; flex-direction: column; gap: 1px;
+  text-align: left;
+  min-width: 0;
+}
+.pay-chip-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.pay-chip-handle {
+  font-size: 11px;
+  color: var(--mid);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+/* ── STATES ── */
+.state-card {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--mid);
+}
+.state-card h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.skeleton-row {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  height: 90px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+}
+.footer a { color: var(--mid); text-decoration: none; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--s1);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 100;
+}
+.toast.show { opacity: 1; }
+
+/* ── RESPONSIVE: side-by-side row layout on desktop ── */
+@media (min-width: 640px) {
+  .team-row {
+    flex-direction: row;
+    align-items: center;
+    padding: 18px 22px;
+    gap: 24px;
+  }
+  .team-row-head {
+    flex: 0 0 auto;
+    min-width: 220px;
+  }
+  .pay-chips {
+    flex: 1 1 auto;
+    justify-content: flex-end;
+  }
+  .team-msg {
+    margin-top: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ── SALON HEADER ── -->
+  <div class="salon-header">
+    <a href="index.html" class="salon-logo-link">
+      <div class="salon-logo" id="salonLogo">💅</div>
+    </a>
+    <div class="salon-name" id="salonName">Loading…</div>
+    <div class="salon-tagline">Thank you for visiting — leave a tip below</div>
+  </div>
+
+  <!-- ── TEAM LIST (rows on desktop, cards on mobile) ── -->
+  <div id="teamView" class="team-view">
+    <div class="prompt" id="teamPrompt">Who took care of you today?</div>
+    <div class="team-list" id="teamList">
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+    </div>
+  </div>
+
+  <!-- ── ERROR / EMPTY STATES ── -->
+  <div id="errorState" class="state-card" style="display:none">
+    <h2>Tips not set up yet</h2>
+    <p>Ask your technician or the front desk — they'll get you sorted.</p>
+  </div>
+
+  <div class="footer">
+    Powered by <a href="https://salongenie.ai" target="_blank">Salon Genie</a>
+  </div>
+</div>
+
+<div class="toast" id="toast">Opening app…</div>
+
+<script>
+(async () => {
+  // ══════════════════════════════════════════════════════════
+  // Config resolution (URL param → SG_CONFIG → localStorage → fallback)
+  // ══════════════════════════════════════════════════════════
+  const params = new URLSearchParams(location.search);
+
+  const SB_URL = (() => {
+    const p = params.get('supabase_url');
+    if (p) return p;
+    try { if (window.SG_CONFIG?.supabaseUrl) return window.SG_CONFIG.supabaseUrl; } catch(_){}
+    try {
+      const s = localStorage.getItem('sg.supabase_url') || localStorage.getItem('gs.supabase_url');
+      if (s) return s;
+    } catch(_){}
+    return 'https://pbojacnagutipfhcxltj.supabase.co';
+  })();
+
+  const SB_KEY = (() => {
+    try { if (window.SG_CONFIG?.supabaseKey) return window.SG_CONFIG.supabaseKey; } catch(_){}
+    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBib2phY25hZ3V0aXBmaGN4bHRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMDkwODAsImV4cCI6MjA2MzU4NTA4MH0.ZLCcAzTYljoZycpBGwMtthP5VyAJ4schuIvt4HibGc0';
+  })();
+
+  // business_id can come from ?business=UUID or ?b=UUID, else hardcoded (Victoria Nails default)
+  const BUSINESS_ID =
+    params.get('business') ||
+    params.get('b') ||
+    '0af9e368-f488-449b-8013-7f44361be462';
+
+  // Optional direct tech (?tech=<employee_id>)
+  const DIRECT_TECH = params.get('tech');
+
+  // ══════════════════════════════════════════════════════════
+  // Thin REST helper (salon schema)
+  // ══════════════════════════════════════════════════════════
+  async function salonGet(path, qs = {}) {
+    const url = new URL(`${SB_URL}/rest/v1/${path}`);
+    Object.entries(qs).forEach(([k, v]) => url.searchParams.set(k, v));
+    const res = await fetch(url.toString(), {
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+        'Accept-Profile': 'salon',
+      }
+    });
+    if (!res.ok) return null;
+    return res.json();
+  }
+  async function publicGet(path, qs = {}) {
+    const url = new URL(`${SB_URL}/rest/v1/${path}`);
+    Object.entries(qs).forEach(([k, v]) => url.searchParams.set(k, v));
+    const res = await fetch(url.toString(), {
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+      }
+    });
+    if (!res.ok) return null;
+    return res.json();
+  }
+  async function logTipView(employeeId, paymentApp) {
+    try {
+      await fetch(`${SB_URL}/rest/v1/tip_page_views`, {
+        method: 'POST',
+        headers: {
+          'apikey': SB_KEY,
+          'Authorization': `Bearer ${SB_KEY}`,
+          'Content-Profile': 'salon',
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({
+          business_id: BUSINESS_ID,
+          employee_id: employeeId,
+          payment_app: paymentApp || null,
+          user_agent: navigator.userAgent?.slice(0, 500) || null,
+          referrer: document.referrer?.slice(0, 500) || null,
+        }),
+      });
+    } catch (_) { /* silent — analytics is best-effort */ }
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // State
+  // ══════════════════════════════════════════════════════════
+  const state = {
+    settings: null,
+    employees: [],        // active with at least one payment handle
+    handles: {},          // keyed by employee_id
+  };
+
+  // ══════════════════════════════════════════════════════════
+  // Load data
+  // ══════════════════════════════════════════════════════════
+  // 1. Business profile (for name + logo)
+  const bizRows = await publicGet('business_profiles', {
+    select: 'business_name,logo_url',
+    id: `eq.${BUSINESS_ID}`,
+  });
+  const biz = Array.isArray(bizRows) && bizRows[0] ? bizRows[0] : null;
+  console.log('Business data:', biz); // Debug log
+  
+  document.getElementById('salonName').textContent = biz?.business_name || 'Our Salon';
+  
+  // Handle logo with fallback to default Victoria Nails logo
+  const logoEl = document.getElementById('salonLogo');
+  let logoUrl = biz?.logo_url;
+  
+  // If no logo in database, use the default Victoria Nails logo
+  if (!logoUrl) {
+    logoUrl = '/images/victoria-logo.png';
+    console.log('No logo in database, using default:', logoUrl);
+  }
+  
+  console.log('Logo URL to load:', logoUrl); // Debug log
+  
+  if (logoUrl) {
+    // Validate URL to prevent localhost and ensure HTTPS
+    const isValidUrl = logoUrl && 
+                       !logoUrl.includes('localhost') && 
+                       !logoUrl.includes('127.0.0.1') &&
+                       !logoUrl.includes(':8080') &&
+                       !logoUrl.includes(':3000') &&
+                       (logoUrl.startsWith('https://') || logoUrl.startsWith('/') || logoUrl.startsWith('./'));
+    
+    console.log('Is valid URL:', isValidUrl); // Debug log
+    
+    if (isValidUrl) {
+      logoEl.textContent = '';
+      logoEl.style.background = 'transparent';
+      logoEl.style.boxShadow = 'none';
+      const img = document.createElement('img');
+      img.src = logoUrl;
+      img.alt = biz?.business_name || 'Victoria Nails';
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.borderRadius = '14px';
+      img.style.objectFit = 'cover';
+      img.style.display = 'block'; // Ensure proper display
+      img.onerror = function() {
+        console.log('Logo image failed to load:', logoUrl);
+        // If image fails to load, fallback to initials
+        logoEl.textContent = (biz?.business_name || 'VN').slice(0, 2).toUpperCase();
+        logoEl.style.background = 'linear-gradient(135deg, #C4993A 0%, #B8956A 100%)';
+        logoEl.style.color = '#fff';
+        logoEl.style.display = 'flex';
+        logoEl.style.alignItems = 'center';
+        logoEl.style.justifyContent = 'center';
+        logoEl.style.fontWeight = '600';
+        logoEl.style.boxShadow = '0 4px 16px rgba(196,133,106,0.3)';
+      };
+      img.onload = function() {
+        console.log('Logo image loaded successfully:', logoUrl);
+      };
+      logoEl.appendChild(img);
+    } else {
+      console.warn('Invalid logo URL detected:', logoUrl);
+      // Fallback to initials
+      logoEl.textContent = (biz?.business_name || 'VN').slice(0, 2).toUpperCase();
+      logoEl.style.background = 'linear-gradient(135deg, #C4993A 0%, #B8956A 100%)';
+      logoEl.style.color = '#fff';
+      logoEl.style.display = 'flex';
+      logoEl.style.alignItems = 'center';
+      logoEl.style.justifyContent = 'center';
+      logoEl.style.fontWeight = '600';
+    }
+  }
+
+  // 2. Tip settings — must be enabled
+  const settingsRows = await salonGet('tip_settings', {
+    select: '*',
+    business_id: `eq.${BUSINESS_ID}`,
+  });
+  state.settings = Array.isArray(settingsRows) && settingsRows[0] ? settingsRows[0] : null;
+
+  if (!state.settings || !state.settings.tips_enabled) {
+    showError();
+    return;
+  }
+
+  // 3. Payment handles for this business
+  const handleRows = await salonGet('employee_payment_handles', {
+    select: '*',
+    business_id: `eq.${BUSINESS_ID}`,
+    is_active: 'eq.true',
+  });
+
+  if (!handleRows || handleRows.length === 0) {
+    showError();
+    return;
+  }
+
+  const empIdList = handleRows.map(h => h.employee_id);
+  handleRows.forEach(h => { state.handles[h.employee_id] = h; });
+
+  // 4. Employees (only active + only those with handles)
+  const empRows = await salonGet('employees', {
+    select: 'id,display_name,work_role,photo_url,status',
+    business_id: `eq.${BUSINESS_ID}`,
+    id: `in.(${empIdList.join(',')})`,
+    status: 'eq.active',
+  });
+
+  if (!empRows || empRows.length === 0) {
+    showError();
+    return;
+  }
+
+  // Only those with at least one handle that's allowed by settings
+  state.employees = empRows
+    .filter(e => {
+      const h = state.handles[e.id];
+      if (!h) return false;
+      return hasAnyAllowedHandle(h);
+    })
+    .sort((a, b) => String(a.display_name || '').localeCompare(String(b.display_name || '')));
+
+  if (state.employees.length === 0) {
+    showError();
+    return;
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // Render
+  // ══════════════════════════════════════════════════════════
+  if (DIRECT_TECH && state.handles[DIRECT_TECH]) {
+    // Direct link: scroll/highlight that tech but keep full team visible
+    renderTeam(DIRECT_TECH);
+  } else {
+    renderTeam();
+  }
+
+  // Browser back button: re-render. With single-page layout this is mostly a no-op,
+  // but kept for resilience if URL changes from elsewhere.
+  window.addEventListener('popstate', () => {
+    const tp = new URLSearchParams(location.search).get('tech');
+    if (tp && state.employees.find(e => e.id === tp)) {
+      renderTeam(tp);
+    } else {
+      renderTeam();
+    }
+  });
+
+  // ══════════════════════════════════════════════════════════
+  // Functions
+  // ══════════════════════════════════════════════════════════
+  function renderTeam(directTechId = null) {
+    document.getElementById('teamView').classList.remove('hidden');
+
+    const $list = document.getElementById('teamList');
+    $list.innerHTML = '';
+
+    state.employees.forEach(emp => {
+      const displayName = emp.display_name || 'Staff';
+      const initials = getInitials(displayName);
+      const h = state.handles[emp.id];
+      const isDirect = directTechId && emp.id === directTechId;
+
+      // Build payment chips (salon-allowed AND tech-configured only)
+      const apps = [
+        { key: 'venmo',   allow: 'allow_venmo',   handle: h.venmo_username,  label: 'Venmo',    icon: 'V', display: (v)=>`@${v}` },
+        { key: 'cashapp', allow: 'allow_cashapp', handle: h.cashapp_cashtag, label: 'Cash App', icon: '$', display: (v)=>`$${String(v).replace(/^\$/,'')}` },
+        { key: 'zelle',   allow: 'allow_zelle',   handle: h.zelle_contact,   label: 'Zelle',    icon: 'Z', display: (v)=>v },
+        { key: 'paypal',  allow: 'allow_paypal',  handle: h.paypal_me_slug,  label: 'PayPal',   icon: 'P', display: (v)=>`paypal.me/${v}` },
+      ].filter(app => state.settings[app.allow] && app.handle);
+
+      // Skip techs with no usable payment apps (defensive — already filtered earlier)
+      if (apps.length === 0) return;
+
+      const row = document.createElement('div');
+      row.className = 'team-row' + (isDirect ? ' is-direct' : '');
+      row.dataset.empId = emp.id;
+      row.innerHTML = `
+        <div class="team-row-head">
+          <div class="team-avatar">${
+            (emp.photo_url && isValidImageUrl(emp.photo_url))
+              ? `<img src="${escapeAttr(emp.photo_url)}" alt="" onerror="this.parentElement.textContent='${escapeAttr(initials)}'"/>`
+              : escapeHtml(initials)
+          }</div>
+          <div class="team-info">
+            <div class="team-name">${escapeHtml(displayName)}</div>
+            ${emp.work_role ? `<div class="team-role">${escapeHtml(emp.work_role)}</div>` : ''}
+            ${h.custom_message ? `<div class="team-msg">${escapeHtml(h.custom_message)}</div>` : ''}
+          </div>
+        </div>
+        <div class="pay-chips"></div>
+      `;
+
+      const $chips = row.querySelector('.pay-chips');
+      apps.forEach(app => {
+        const chip = document.createElement('button');
+        chip.className = 'pay-chip';
+        chip.innerHTML = `
+          <span class="pay-chip-icon ${app.key}">${app.icon}</span>
+          <span class="pay-chip-label">
+            <span class="pay-chip-name">${app.label}</span>
+            <span class="pay-chip-handle">${escapeHtml(app.display(app.handle))}</span>
+          </span>
+        `;
+        chip.addEventListener('click', () => {
+          openPayment(app.key, app.handle, emp.id);
+        });
+        $chips.appendChild(chip);
+      });
+
+      $list.appendChild(row);
+    });
+
+    // If a direct tech was specified, scroll it into view smoothly
+    if (directTechId) {
+      requestAnimationFrame(() => {
+        const target = $list.querySelector(`[data-emp-id="${directTechId}"]`);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Log the targeted view (matches old "renderDetail with logTipView" semantics)
+          logTipView(directTechId, null);
+        }
+      });
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // Payment deep-link handler
+  //
+  // Strategy:
+  //   - On mobile: open web URL (cash.app, paypal.me, venmo.com) — these
+  //     URLs auto-trigger the native app via Universal Links / App Links
+  //     when the app is installed, and gracefully fall back to web in-browser
+  //     when it isn't. This is the modern recommendation from each app maker.
+  //   - On desktop: the same web URLs render the app's web profile/payment page.
+  //   - For Zelle (no universal URL): copy the contact to clipboard, show a
+  //     prominent toast, and try the zelle:// scheme (works on phones with
+  //     Zelle-supporting banking apps).
+  // ══════════════════════════════════════════════════════════
+  function openPayment(app, handle, employeeId) {
+    logTipView(employeeId, app);
+
+    const clean = (s) => String(s || '').trim();
+    let webUrl = null;
+
+    switch (app) {
+      case 'venmo': {
+        const user = clean(handle).replace(/^@/, '');
+        // venmo.com/u/<username> opens the app on iOS/Android via Universal Links,
+        // and shows the user's profile on desktop.
+        webUrl = `https://venmo.com/u/${encodeURIComponent(user)}`;
+        showToast('Opening Venmo…');
+        break;
+      }
+      case 'cashapp': {
+        const tag = clean(handle).replace(/^\$/, '');
+        webUrl = `https://cash.app/$${encodeURIComponent(tag)}`;
+        showToast('Opening Cash App…');
+        break;
+      }
+      case 'paypal': {
+        const slug = clean(handle).replace(/^paypal\.me\//i, '').replace(/^@/, '');
+        webUrl = `https://paypal.me/${encodeURIComponent(slug)}`;
+        showToast('Opening PayPal…');
+        break;
+      }
+      case 'zelle': {
+        // Zelle has no universal web URL. Copy contact, show clear toast, try app scheme.
+        const contact = clean(handle);
+        copyToClipboard(contact);
+        showToast('📋 Zelle contact copied: ' + contact);
+        // Try opening the Zelle app on phones (silently fails on desktop)
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if (isMobile) {
+          // Use a hidden iframe to avoid the "scheme has no handler" console error
+          // that location.href causes on devices without the app
+          setTimeout(() => {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = 'zelle://';
+            document.body.appendChild(iframe);
+            setTimeout(() => iframe.remove(), 1500);
+          }, 800);
+        }
+        return;
+      }
+    }
+
+    if (!webUrl) return;
+    // Open in the same tab — on mobile, the OS routes to the app (Universal Links);
+    // on desktop, it renders the app's web page.
+    location.href = webUrl;
+  }
+
+  function copyToClipboard(text) {
+    try {
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+    } catch(_){}
+  }
+
+  function capitalizeApp(k) {
+    return { venmo: 'Venmo', cashapp: 'Cash App', zelle: 'Zelle', paypal: 'PayPal' }[k] || k;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  function showError() {
+    const tv = document.getElementById('teamView');
+    if (tv) tv.style.display = 'none';
+    document.getElementById('errorState').style.display = 'block';
+  }
+
+  function hasAnyAllowedHandle(h) {
+    const s = state.settings;
+    return (
+      (s.allow_venmo   && h.venmo_username) ||
+      (s.allow_cashapp && h.cashapp_cashtag) ||
+      (s.allow_zelle   && h.zelle_contact) ||
+      (s.allow_paypal  && h.paypal_me_slug)
+    );
+  }
+
+  function getInitials(name) {
+    const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return '?';
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+  function escapeAttr(s) { return escapeHtml(s); }
+  
+  // Validate URL to prevent localhost and ensure HTTPS
+  function isValidImageUrl(url) {
+    if (!url) return false;
+    return !url.includes('localhost') && 
+           !url.includes('127.0.0.1') &&
+           !url.includes(':8080') &&
+           !url.includes(':3000') &&
+           (url.startsWith('https://') || url.startsWith('/'));
+  }
+})();
+</script>
+
+</body>
+</html>

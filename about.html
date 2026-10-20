@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Meet the talented team at Victoria Nails Salon in South Elgin, IL. Skilled nail technicians dedicated to exceptional service." name="description"/>
+  <title>About Us | Victoria Nails Salon</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --gold:#b8956a; --gold-light:#d4b896; --gold-pale:#f5ede4;
+      --blush:#e8cfc3; --cream:#faf7f4; --ivory:#f2ede8;
+      --charcoal:#1a1714; --ink:#2c2520; --warm-gray:#7a6e68;
+      --border:rgba(184,149,106,.18); --border-soft:rgba(184,149,106,.10);
+      --shadow-soft:0 4px 24px rgba(26,23,20,.06);
+      --shadow-med:0 8px 40px rgba(26,23,20,.10);
+      --shadow-lg:0 20px 60px rgba(26,23,20,.14);
+      --shadow-gold:0 8px 32px rgba(184,149,106,.22);
+      --radius:12px; --radius-lg:20px;
+      --ring:0 0 0 3px rgba(184,149,106,.22);
+      --transition:.3s cubic-bezier(.4,0,.2,1);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Jost',sans-serif;color:var(--ink);background:var(--cream);line-height:1.65;-webkit-font-smoothing:antialiased;}
+    h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.1;color:var(--charcoal);}
+    h1{font-size:clamp(2.4rem,4.5vw,3.8rem);letter-spacing:-.01em;}
+    h2{font-size:clamp(1.8rem,2.8vw,2.7rem);letter-spacing:-.01em;}
+    h3{font-size:clamp(1.2rem,1.8vw,1.55rem);}
+    p{color:var(--warm-gray);}
+    a{text-decoration:none;color:inherit;}
+    img{width:100%;display:block;height:auto;}
+    ::selection{background:rgba(184,149,106,.22);}
+    :focus{outline:none;}
+    :focus-visible{box-shadow:var(--ring);border-radius:var(--radius);}
+    .container{max-width:1220px;margin:0 auto;padding:0 28px;}
+
+    /* Topbar */
+    .topbar{background:var(--charcoal);color:rgba(255,255,255,.6);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;}
+    .topbar a{color:var(--gold-light);transition:color .2s;}
+    .topbar a:hover{color:#fff;}
+    .topbar-dot{color:var(--gold);margin:0 6px;}
+
+    /* Header */
+    header{background:rgba(250,247,244,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000;transition:box-shadow var(--transition);}
+    header.scrolled{box-shadow:var(--shadow-soft);}
+    .nav{display:flex;justify-content:space-between;align-items:center;height:80px;gap:20px;}
+    .brand{display:flex;align-items:center;gap:14px;text-decoration:none;border-radius:var(--radius);padding:6px 10px;transition:background var(--transition);}
+    .brand:hover{background:rgba(184,149,106,.08);}
+    .brand-text{display:flex;flex-direction:column;gap:2px;}
+    .brand-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--charcoal);letter-spacing:.02em;white-space:nowrap;line-height:1;}
+    .brand-tagline{font-size:.73rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+    .nav-links{display:flex;align-items:center;gap:2px;}
+    .nav-links a{padding:9px 14px;border-radius:8px;font-size:.88rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);transition:background var(--transition),color var(--transition);}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(184,149,106,.08);}
+    .nav-cta{display:flex;align-items:center;gap:10px;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:999px;font-family:'Jost',sans-serif;font-size:.88rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;cursor:pointer;border:1.5px solid transparent;transition:background var(--transition),transform var(--transition),box-shadow var(--transition),color var(--transition),border-color var(--transition);user-select:none;}
+    .btn-primary{background:var(--gold);color:#fff;border-color:var(--gold);box-shadow:var(--shadow-gold);}
+    .btn-primary:hover{background:#a07d55;border-color:#a07d55;transform:translateY(-2px);box-shadow:0 12px 36px rgba(184,149,106,.35);}
+    .btn-ghost{background:transparent;color:var(--ink);border-color:var(--border);}
+    .btn-ghost:hover{background:rgba(184,149,106,.08);border-color:var(--gold-light);}
+    .btn-dark{background:var(--charcoal);color:#fff;border-color:var(--charcoal);}
+    .btn-dark:hover{background:#2c2520;transform:translateY(-2px);box-shadow:var(--shadow-med);}
+    .btn-sm{padding:10px 20px;font-size:.82rem;}
+    .btn-block{width:100%;}
+
+    .hamburger{display:none;width:44px;height:44px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;transition:background var(--transition);}
+    .hamburger:hover{background:var(--ivory);}
+    .hamburger span{display:block;width:20px;height:1.5px;background:var(--charcoal);}
+    .mobile-panel{display:none;padding:14px 0 20px;border-top:1px solid var(--border);}
+    .mobile-panel a{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:var(--radius);background:var(--ivory);margin:8px 0;font-size:.9rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--border-soft);transition:background var(--transition),transform var(--transition);}
+    .mobile-panel a:hover{background:rgba(184,149,106,.12);transform:translateX(4px);}
+    .mobile-panel.is-open{display:block;animation:slideDown .2s ease-out;}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Page hero */
+    .page-hero{
+      position:relative;
+      padding:clamp(72px,9vw,120px) 0;
+      overflow:hidden;
+      background:
+        linear-gradient(135deg, rgba(26,23,20,.78) 0%, rgba(44,37,32,.58) 50%, rgba(184,149,106,.15) 100%),
+        url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=2200&q=80') center/cover no-repeat;
+    }
+    .page-hero::after{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse 70% 80% at 65% 50%, rgba(184,149,106,.10) 0%, transparent 70%);
+    }
+    .page-hero-inner{
+      position:relative;z-index:2;
+      display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;
+    }
+    .page-hero-content{color:#fff;}
+    .eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-light);display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+    .eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--gold-light);}
+    .page-hero h1{color:#fff;text-shadow:0 4px 24px rgba(0,0,0,.22);margin-bottom:18px;}
+    .page-hero .lead{font-size:1rem;color:rgba(255,255,255,.72);max-width:46ch;margin-bottom:32px;line-height:1.7;}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+    .btn-white{background:#fff;color:var(--charcoal);border-color:rgba(255,255,255,.3);}
+    .btn-white:hover{background:rgba(255,255,255,.9);transform:translateY(-2px);}
+    .hero-stats{display:flex;gap:32px;margin-top:36px;}
+    .hero-stat{display:flex;flex-direction:column;gap:4px;}
+    .hero-stat-num{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:500;color:#fff;line-height:1;}
+    .hero-stat-label{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);}
+    .page-hero-photo{
+      border-radius:var(--radius-lg);
+      aspect-ratio:4/3;
+      background:url('https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+      box-shadow:0 24px 60px rgba(0,0,0,.3);
+      border:1px solid rgba(255,255,255,.12);
+      animation:heroFadeUp .9s .3s ease-out both;
+    }
+    @keyframes heroFadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Sections */
+    section{padding:clamp(60px,7vw,100px) 0;}
+    .section-label{display:inline-flex;align-items:center;gap:10px;font-size:.73rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+    .section-label::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+    .section-title{text-align:center;max-width:640px;margin:0 auto clamp(40px,5vw,64px);}
+    .section-title h2{margin-bottom:14px;}
+    .divider{width:48px;height:1px;background:var(--gold);margin:18px auto;}
+
+    /* About intro */
+    #about-intro{background:#fff;}
+    .about-split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+    .about-image-wrap{position:relative;}
+    .about-main-img{border-radius:var(--radius-lg);aspect-ratio:4/5;object-fit:cover;box-shadow:var(--shadow-lg);}
+    .about-accent-img{position:absolute;bottom:-28px;right:-28px;width:55%;border-radius:var(--radius);border:4px solid var(--cream);box-shadow:var(--shadow-med);aspect-ratio:1;object-fit:cover;}
+    .about-text .section-label{display:flex;}
+    .about-text h2{margin-bottom:22px;}
+    .about-text p{margin-bottom:18px;line-height:1.8;}
+    .about-values{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px;}
+    .about-value{background:var(--cream);border:1px solid var(--border-soft);border-radius:var(--radius);padding:18px 20px;}
+    .about-value-icon{font-size:1.3rem;margin-bottom:8px;}
+    .about-value-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--charcoal);margin-bottom:4px;}
+    .about-value-desc{font-size:.82rem;color:var(--warm-gray);line-height:1.5;}
+
+    /* Team */
+    #team{background:var(--ivory);}
+    .team-intro{text-align:center;max-width:560px;margin:0 auto 16px;}
+    .team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+
+    .team-card{
+      background:#fff;
+      border:1px solid var(--border-soft);
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      box-shadow:var(--shadow-soft);
+      transition:transform var(--transition),box-shadow var(--transition);
+      display:flex;flex-direction:column;
+    }
+    .team-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);}
+
+    .team-card-img{
+      position:relative;
+      aspect-ratio:3/4;
+      overflow:hidden;
+      background:var(--ivory);
+    }
+    .team-card-img img{
+      width:100%;height:100%;object-fit:cover;object-position:center top;
+      transition:transform .6s ease;
+    }
+    .team-card:hover .team-card-img img{transform:scale(1.06);}
+    .team-card-img::after{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(to top, rgba(26,23,20,.6) 0%, transparent 55%);
+    }
+    .team-card-name-overlay{
+      position:absolute;bottom:14px;left:16px;z-index:2;
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.45rem;color:#fff;font-weight:500;
+      text-shadow:0 2px 12px rgba(0,0,0,.3);
+      line-height:1.1;
+    }
+
+    .team-card-body{
+      padding:16px 18px 18px;
+      flex:1;display:flex;flex-direction:column;gap:10px;
+    }
+    .team-card-fullname{font-size:.85rem;font-weight:500;color:var(--warm-gray);letter-spacing:.03em;}
+    .team-card-actions{display:flex;gap:8px;margin-top:auto;}
+
+    .btn-phone{
+      flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+      padding:9px 10px;border-radius:8px;
+      font-size:.78rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+      background:var(--cream);border:1px solid var(--border);color:var(--ink);
+      cursor:pointer;font-family:'Jost',sans-serif;
+      transition:background var(--transition),border-color var(--transition),transform var(--transition);
+    }
+    .btn-phone:hover{background:var(--gold-pale);border-color:var(--gold);transform:translateY(-1px);}
+    .btn-phone svg{width:14px;height:14px;flex-shrink:0;stroke:var(--gold);}
+
+    .btn-venmo{
+      display:flex;align-items:center;justify-content:center;gap:6px;
+      padding:9px 14px;border-radius:8px;
+      font-size:.78rem;font-weight:600;letter-spacing:.05em;
+      background:#3d95ce;color:#fff;border:1px solid #3d95ce;
+      text-decoration:none;
+      transition:background var(--transition),transform var(--transition);
+    }
+    .btn-venmo:hover{background:#2c7eb8;transform:translateY(-1px);}
+    .btn-venmo svg{width:14px;height:14px;fill:#fff;flex-shrink:0;}
+
+    /* Phone toast */
+    .phone-toast{
+      position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(10px);
+      background:var(--charcoal);color:#fff;
+      padding:12px 22px;border-radius:999px;
+      font-size:.85rem;font-weight:500;letter-spacing:.04em;
+      box-shadow:var(--shadow-lg);
+      opacity:0;pointer-events:none;
+      transition:opacity .25s ease, transform .25s ease;
+      z-index:2000;white-space:nowrap;
+    }
+    .phone-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    .phone-toast span{color:var(--gold-light);}
+
+    /* Contact / Get in touch */
+    #contact{background:var(--charcoal);}
+    .contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
+    .contact-heading .section-label::before{background:var(--gold-light);}
+    .contact-heading .section-label{color:var(--gold-light);}
+    .contact-heading h2{color:#fff;margin-bottom:18px;}
+    .contact-heading p{color:rgba(255,255,255,.55);line-height:1.8;margin-bottom:28px;}
+    .contact-detail{display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;}
+    .contact-detail-icon{
+      width:38px;height:38px;border-radius:10px;
+      background:rgba(184,149,106,.18);border:1px solid rgba(184,149,106,.28);
+      display:flex;align-items:center;justify-content:center;font-size:.9rem;
+      flex-shrink:0;
+    }
+    .contact-detail-text strong{display:block;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:3px;}
+    .contact-detail-text{font-size:.92rem;color:rgba(255,255,255,.82);}
+    .contact-detail-text a{color:var(--gold-light);transition:color .2s;}
+    .contact-detail-text a:hover{color:#fff;}
+    .hours-table{display:flex;flex-direction:column;gap:0;margin-top:6px;}
+    .hours-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:.88rem;}
+    .hours-row:last-child{border-bottom:none;}
+    .hours-day{font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);min-width:80px;}
+    .hours-time{color:rgba(255,255,255,.82);}
+    .social-links{display:flex;gap:10px;margin-top:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);}
+    .social-btn{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;font-size:1rem;transition:background var(--transition),transform var(--transition);}
+    .social-btn:hover{background:rgba(184,149,106,.2);transform:translateY(-2px);}
+
+    /* Contact form */
+    .contact-form-wrap{
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(184,149,106,.2);
+      border-radius:var(--radius-lg);
+      padding:36px;
+    }
+    .contact-form-wrap h3{color:#fff;margin-bottom:22px;font-size:1.4rem;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+    .form-field label{font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);}
+    .form-field input,.form-field textarea,.form-field select{
+      width:100%;padding:13px 16px;border-radius:var(--radius);
+      background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+      color:#fff;font-family:'Jost',sans-serif;font-size:.92rem;
+      transition:border-color var(--transition),background var(--transition);
+    }
+    .form-field input::placeholder,.form-field textarea::placeholder{color:rgba(255,255,255,.3);}
+    .form-field input:focus,.form-field textarea:focus{border-color:rgba(184,149,106,.5);background:rgba(255,255,255,.1);outline:none;}
+    .form-field textarea{min-height:110px;resize:vertical;}
+    .form-success{display:none;padding:14px 18px;border-radius:var(--radius);background:rgba(184,149,106,.15);border:1px solid rgba(184,149,106,.3);color:var(--gold-light);font-size:.88rem;margin-top:12px;text-align:center;}
+
+    /* Footer */
+    footer{background:var(--charcoal);color:rgba(255,255,255,.6);padding:clamp(48px,6vw,80px) 0 32px;border-top:1px solid rgba(255,255,255,.06);}
+    .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px;margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08);}
+    .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;color:#fff;margin-bottom:12px;}
+    .footer-brand p{font-size:.88rem;color:rgba(255,255,255,.45);max-width:32ch;line-height:1.7;}
+    .footer-col h4{font-family:'Jost',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:18px;}
+    .footer-col a{display:block;font-size:.88rem;color:rgba(255,255,255,.55);margin-bottom:10px;transition:color .2s;}
+    .footer-col a:hover{color:var(--gold-light);}
+    .footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.78rem;color:rgba(255,255,255,.3);}
+
+    /* Float */
+    .floatbar{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:999;display:none;width:min(500px,calc(100% - 24px));padding:10px;border-radius:18px;background:rgba(250,247,244,.96);border:1px solid var(--border);box-shadow:var(--shadow-lg);backdrop-filter:blur(12px);}
+    .floatbar .inner{display:flex;gap:10px;}
+    .floatbar .inner a{flex:1;text-align:center;}
+
+    /* Reveal */
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+
+    /* Responsive */
+    @media (max-width:1024px){
+      .team-grid{grid-template-columns:repeat(3,1fr);}
+      .footer-grid{grid-template-columns:1fr 1fr;}
+      .about-split{gap:40px;}
+    }
+    @media (max-width:860px){
+      .nav-links{display:none;}
+      .hamburger{display:inline-flex;}
+      .page-hero-inner{grid-template-columns:1fr;}
+      .page-hero-photo{display:none;}
+      .floatbar{display:block;}
+      .about-split{grid-template-columns:1fr;}
+      .about-accent-img{display:none;}
+      .contact-layout{grid-template-columns:1fr;}
+      .team-grid{grid-template-columns:repeat(2,1fr);}
+    }
+    @media (max-width:620px){
+      .container{padding:0 18px;}
+      .footer-grid{grid-template-columns:1fr;}
+      .team-grid{grid-template-columns:repeat(2,1fr);gap:14px;}
+      .form-row{grid-template-columns:1fr;}
+      .topbar .inner{flex-direction:column;align-items:flex-start;gap:6px;}
+      .about-values{grid-template-columns:1fr;}
+      .contact-form-wrap{padding:24px 20px;}
+    }
+    @media (max-width:420px){
+      .team-grid{grid-template-columns:1fr;}
+    }
+    @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+  </style>
+</head>
+
+<body>
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container inner">
+      <div>✦ Walk-ins welcome<span class="topbar-dot">·</span>South Elgin, IL</div>
+      <div>
+        <a href="tel:+18479319359">847.931.9359</a>
+        <span class="topbar-dot">·</span>
+        <a href="contact.html">Hours &amp; Location</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header id="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Victoria Nails home">
+        <img class="brand-logo" src="victoria-logo.png" alt="Victoria Nails"/>
+        <div class="brand-text">
+          <span class="brand-name">Victoria Nails</span>
+          <span class="brand-tagline">Luxury Nail Care</span>
+        </div>
+      </a>
+      <nav aria-label="Primary navigation" class="nav-links">
+        <a href="services.html">Services</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="reviews.html">Reviews</a>
+        <a href="contact.html">Contact</a>
+        <a class="active" href="about.html">About Us</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-primary btn-sm" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Now</a>
+        <button aria-controls="mobilePanel" aria-expanded="false" aria-label="Open navigation" class="hamburger" id="menuBtn" type="button">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="container">
+      <div class="mobile-panel" id="mobilePanel">
+        <a href="services.html">Services <span>→</span></a>
+        <a href="gallery.html">Gallery <span>→</span></a>
+        <a href="reviews.html">Reviews <span>→</span></a>
+        <a href="contact.html">Contact <span>→</span></a>
+        <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment <span>→</span></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="page-hero" aria-label="About hero">
+    <div class="container">
+      <div class="page-hero-inner">
+        <div class="page-hero-content">
+          <div class="eyebrow">About Us</div>
+          <h1>The Faces Behind Every Perfect Finish</h1>
+          <p class="lead">Meet the talented team at Victoria Nails — skilled technicians who bring creativity, precision, and genuine warmth to every single visit.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book an Appointment</a>
+            <a class="btn btn-white" href="#team">Meet the Team</a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <span class="hero-stat-num">16</span>
+              <span class="hero-stat-label">Technicians</span>
+            </div>
+            <div class="hero-stat">
+              <span class="hero-stat-num">10+</span>
+              <span class="hero-stat-label">Years Experience</span>
+            </div>
+            <div class="hero-stat">
+              <span class="hero-stat-num">5★</span>
+              <span class="hero-stat-label">Rated Salon</span>
+            </div>
+          </div>
+        </div>
+        <div class="page-hero-photo" role="img" aria-label="Victoria Nails salon"></div>
+      </div>
+    </div>
+  </section>
+
+  <main id="main">
+
+    <!-- About Intro -->
+    <section id="about-intro">
+      <div class="container">
+        <div class="about-split">
+          <div class="about-image-wrap reveal">
+            <img class="about-main-img"
+              src="https://images.unsplash.com/photo-1519415943484-c2f11b5e3f4a?auto=format&fit=crop&w=900&q=80"
+              alt="Victoria Nails salon interior"/>
+            <img class="about-accent-img"
+              src="https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=600&q=80"
+              alt="Nail work close-up"/>
+          </div>
+          <div class="about-text reveal" style="transition-delay:.1s">
+            <div class="section-label">Our Story</div>
+            <h2>Beauty Crafted With Intention</h2>
+            <p>At Victoria Nails, we believe every visit should feel like a personal retreat. With over a decade of experience serving the South Elgin community, our team has built a reputation for impeccable nail care, warmth, and professionalism.</p>
+            <p>From a classic manicure to a bold set of enhancements, every service is performed with genuine care and attention to detail. We take pride in a clean, welcoming environment where you always feel at home.</p>
+            <div class="about-values">
+              <div class="about-value">
+                <div class="about-value-icon">✦</div>
+                <div class="about-value-title">Precision</div>
+                <div class="about-value-desc">Every detail matters — we don't rush perfection.</div>
+              </div>
+              <div class="about-value">
+                <div class="about-value-icon">🌿</div>
+                <div class="about-value-title">Hygiene</div>
+                <div class="about-value-desc">Sterilized tools and clean station, every time.</div>
+              </div>
+              <div class="about-value">
+                <div class="about-value-icon">💛</div>
+                <div class="about-value-title">Warmth</div>
+                <div class="about-value-desc">A team that greets you like family.</div>
+              </div>
+              <div class="about-value">
+                <div class="about-value-icon">🎨</div>
+                <div class="about-value-title">Creativity</div>
+                <div class="about-value-desc">Endless styles, from timeless to trendsetting.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team -->
+    <section id="team">
+      <div class="container">
+        <div class="section-title reveal">
+          <div class="section-label">Our People</div>
+          <h2>Meet Our Team</h2>
+          <div class="divider"></div>
+          <p>Each of our technicians brings unique skill and personality. Tap the phone icon to copy their number, or visit their Venmo to leave a tip.</p>
+        </div>
+
+        <div class="team-grid">
+
+          <!-- Annie -->
+          <article class="team-card reveal" style="transition-delay:.05s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_ebf1db0143a34d609d8223aba3be33ac~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Annie"/>
+              <div class="team-card-name-overlay">Annie</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Anh Le</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('331-276-1188')" title="Copy phone number">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <a class="btn-venmo" href="https://venmo.com/anh-le-477" target="_blank" rel="noopener noreferrer" title="Tip on Venmo">
+                  <svg viewBox="0 0 24 24"><path d="M19.1 1c.7 1.3 1 2.6 1 4.2 0 4.4-3.8 10.1-6.9 14.1H6.4L3.5 2.1l6.1-.6 1.5 12c1.4-2.4 3.1-6.1 3.1-8.6 0-1.4-.2-2.3-.6-3.1L19.1 1z"/></svg>
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Christina -->
+          <article class="team-card reveal" style="transition-delay:.08s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_adff17995e6046c0b88faa78f47cc809~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Christina"/>
+              <div class="team-card-name-overlay">Christina</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Christina Gessert</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('815-540-2899')" title="Copy phone number">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <a class="btn-venmo" href="https://venmo.com/cgessert" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="#fff"><path d="M19.1 1c.7 1.3 1 2.6 1 4.2 0 4.4-3.8 10.1-6.9 14.1H6.4L3.5 2.1l6.1-.6 1.5 12c1.4-2.4 3.1-6.1 3.1-8.6 0-1.4-.2-2.3-.6-3.1L19.1 1z"/></svg>
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Crystal -->
+          <article class="team-card reveal" style="transition-delay:.11s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_abc74a10b78d4e40bfadde3420e95194~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Crystal"/>
+              <div class="team-card-name-overlay">Crystal</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Thu Trieu</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('847-208-2117')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <a class="btn-venmo" href="https://venmo.com/danh-trieu-2" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="#fff"><path d="M19.1 1c.7 1.3 1 2.6 1 4.2 0 4.4-3.8 10.1-6.9 14.1H6.4L3.5 2.1l6.1-.6 1.5 12c1.4-2.4 3.1-6.1 3.1-8.6 0-1.4-.2-2.3-.6-3.1L19.1 1z"/></svg>
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Dan -->
+          <article class="team-card reveal" style="transition-delay:.14s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_5f5a6c24c3a04eb893c47dd6dcaa3fdd~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Dan"/>
+              <div class="team-card-name-overlay">Dan</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Danh Trieu</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('847-208-1041')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <a class="btn-venmo" href="https://venmo.com/danh-trieu-2" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="#fff"><path d="M19.1 1c.7 1.3 1 2.6 1 4.2 0 4.4-3.8 10.1-6.9 14.1H6.4L3.5 2.1l6.1-.6 1.5 12c1.4-2.4 3.1-6.1 3.1-8.6 0-1.4-.2-2.3-.6-3.1L19.1 1z"/></svg>
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Jenny -->
+          <article class="team-card reveal" style="transition-delay:.05s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_2569b43c43114d249f4c4ab871f9a4b0~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Jenny"/>
+              <div class="team-card-name-overlay">Jenny</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Jenny Nguyen</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('847-987-9821')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <a class="btn-venmo" href="https://venmo.com/jnguyen0312" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="#fff"><path d="M19.1 1c.7 1.3 1 2.6 1 4.2 0 4.4-3.8 10.1-6.9 14.1H6.4L3.5 2.1l6.1-.6 1.5 12c1.4-2.4 3.1-6.1 3.1-8.6 0-1.4-.2-2.3-.6-3.1L19.1 1z"/></svg>
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Jimmy -->
+          <article class="team-card reveal" style="transition-delay:.08s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_5791b86a25954b8db59b68eb9aaace85~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Jimmy"/>
+              <div class="team-card-name-overlay">Jimmy</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Jimmy Tran</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('847-429-8717')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <a class="btn-venmo" href="https://venmo.com/jtran112675" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="#fff"><path d="M19.1 1c.7 1.3 1 2.6 1 4.2 0 4.4-3.8 10.1-6.9 14.1H6.4L3.5 2.1l6.1-.6 1.5 12c1.4-2.4 3.1-6.1 3.1-8.6 0-1.4-.2-2.3-.6-3.1L19.1 1z"/></svg>
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Julie -->
+          <article class="team-card reveal" style="transition-delay:.11s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_32b3b0c8c53e49e98288c99be49c47bd~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Julie"/>
+              <div class="team-card-name-overlay">Julie</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Phung Pham</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('630-818-7830')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <a class="btn-venmo" href="https://venmo.com/phung-pham-24" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="#fff"><path d="M19.1 1c.7 1.3 1 2.6 1 4.2 0 4.4-3.8 10.1-6.9 14.1H6.4L3.5 2.1l6.1-.6 1.5 12c1.4-2.4 3.1-6.1 3.1-8.6 0-1.4-.2-2.3-.6-3.1L19.1 1z"/></svg>
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Karla -->
+          <article class="team-card reveal" style="transition-delay:.14s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_8c04bf319c7847059c697b20fa6984a5~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Karla"/>
+              <div class="team-card-name-overlay">Karla</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Chanthala Bouyang</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('331-588-8887')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <span style="flex:1;display:flex;align-items:center;justify-content:center;padding:9px 10px;border-radius:8px;font-size:.75rem;color:var(--warm-gray);background:var(--ivory);border:1px solid var(--border-soft);">No Venmo</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Kathy -->
+          <article class="team-card reveal" style="transition-delay:.05s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_475de93809f14fe09014120a3fc89eb7~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Kathy"/>
+              <div class="team-card-name-overlay">Kathy</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Layla Le</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('773-787-7015')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <a class="btn-venmo" href="https://venmo.com/kathyle1977" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="#fff"><path d="M19.1 1c.7 1.3 1 2.6 1 4.2 0 4.4-3.8 10.1-6.9 14.1H6.4L3.5 2.1l6.1-.6 1.5 12c1.4-2.4 3.1-6.1 3.1-8.6 0-1.4-.2-2.3-.6-3.1L19.1 1z"/></svg>
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Kelly -->
+          <article class="team-card reveal" style="transition-delay:.08s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_f910c2d131bf45e1932f4e8f8ae58eb4~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Kelly"/>
+              <div class="team-card-name-overlay">Kelly</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Mai Truong</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('847-312-7764')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <a class="btn-venmo" href="https://venmo.com/thuongvy" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="#fff"><path d="M19.1 1c.7 1.3 1 2.6 1 4.2 0 4.4-3.8 10.1-6.9 14.1H6.4L3.5 2.1l6.1-.6 1.5 12c1.4-2.4 3.1-6.1 3.1-8.6 0-1.4-.2-2.3-.6-3.1L19.1 1z"/></svg>
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Many -->
+          <article class="team-card reveal" style="transition-delay:.11s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_fd3cec05c5a64d0387d4c06fbb4b4c80~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Many"/>
+              <div class="team-card-name-overlay">Many</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Many</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('224-410-2669')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <span style="flex:1;display:flex;align-items:center;justify-content:center;padding:9px 10px;border-radius:8px;font-size:.75rem;color:var(--warm-gray);background:var(--ivory);border:1px solid var(--border-soft);">No Venmo</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Mina -->
+          <article class="team-card reveal" style="transition-delay:.14s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_eb05d8fac0c5444db918825c53f3bd5b~mv2.png/v1/fill/w_400,h_480,al_c,q_85,enc_avif,quality_auto/IMG_2698_edited.png" alt="Mina"/>
+              <div class="team-card-name-overlay">Mina</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Khanh Tran</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('224-600-3475')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <a class="btn-venmo" href="https://venmo.com/khanh-tran-257" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="#fff"><path d="M19.1 1c.7 1.3 1 2.6 1 4.2 0 4.4-3.8 10.1-6.9 14.1H6.4L3.5 2.1l6.1-.6 1.5 12c1.4-2.4 3.1-6.1 3.1-8.6 0-1.4-.2-2.3-.6-3.1L19.1 1z"/></svg>
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pearl -->
+          <article class="team-card reveal" style="transition-delay:.05s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_fd3cec05c5a64d0387d4c06fbb4b4c80~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Pearl"/>
+              <div class="team-card-name-overlay">Pearl</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Panomvanh Chanthalusy</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('224-622-6584')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <span style="flex:1;display:flex;align-items:center;justify-content:center;padding:9px 10px;border-radius:8px;font-size:.75rem;color:var(--warm-gray);background:var(--ivory);border:1px solid var(--border-soft);">No Venmo</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Sea -->
+          <article class="team-card reveal" style="transition-delay:.08s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_5ed9434317cc46c1af696094e15cfce1~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Sea"/>
+              <div class="team-card-name-overlay">Sea</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Jessica Nguyen</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('657-259-8084')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <span style="flex:1;display:flex;align-items:center;justify-content:center;padding:9px 10px;border-radius:8px;font-size:.75rem;color:var(--warm-gray);background:var(--ivory);border:1px solid var(--border-soft);">No Venmo</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Tim -->
+          <article class="team-card reveal" style="transition-delay:.11s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_20347522df2249eab531ac44b7cf8ae2~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Tim"/>
+              <div class="team-card-name-overlay">Tim</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Toan Ho</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('630-881-4278')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <a class="btn-venmo" href="https://venmo.com/tho5219" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="#fff"><path d="M19.1 1c.7 1.3 1 2.6 1 4.2 0 4.4-3.8 10.1-6.9 14.1H6.4L3.5 2.1l6.1-.6 1.5 12c1.4-2.4 3.1-6.1 3.1-8.6 0-1.4-.2-2.3-.6-3.1L19.1 1z"/></svg>
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Vivivan -->
+          <article class="team-card reveal" style="transition-delay:.14s">
+            <div class="team-card-img">
+              <img src="https://static.wixstatic.com/media/570976_e0476ef7544d4547b1240f97069330d8~mv2.jpg/v1/fill/w_400,h_480,al_c,q_80,enc_avif,quality_auto/IMG_2698_edited.jpg" alt="Vivivan"/>
+              <div class="team-card-name-overlay">Vivivan</div>
+            </div>
+            <div class="team-card-body">
+              <div class="team-card-fullname">Tuyen Pham</div>
+              <div class="team-card-actions">
+                <button class="btn-phone" onclick="copyPhone('707-941-1276')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-.52a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Copy #
+                </button>
+                <a class="btn-venmo" href="https://venmo.com/tuyen-pham-55" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="#fff"><path d="M19.1 1c.7 1.3 1 2.6 1 4.2 0 4.4-3.8 10.1-6.9 14.1H6.4L3.5 2.1l6.1-.6 1.5 12c1.4-2.4 3.1-6.1 3.1-8.6 0-1.4-.2-2.3-.6-3.1L19.1 1z"/></svg>
+                  Venmo
+                </a>
+              </div>
+            </div>
+          </article>
+
+        </div><!-- end team-grid -->
+      </div>
+    </section>
+
+    <!-- Contact / Get in Touch -->
+    <section id="contact">
+      <div class="container">
+        <div class="contact-layout">
+          <div class="contact-heading reveal">
+            <div class="section-label" style="color:var(--gold-light);">
+              <span style="display:block;width:28px;height:1px;background:var(--gold-light);"></span>
+              Get In Touch
+            </div>
+            <h2 style="color:#fff;margin-bottom:18px;">We'd Love to Hear From You</h2>
+            <p style="color:rgba(255,255,255,.55);line-height:1.8;margin-bottom:28px;">Have a question or want to book a special appointment? Reach us by phone, email, or drop us a message.</p>
+
+            <div class="contact-detail">
+              <div class="contact-detail-icon">📍</div>
+              <div class="contact-detail-text">
+                <strong>Address</strong>
+                349 Randall Road, South Elgin, IL 60177
+              </div>
+            </div>
+
+            <div class="contact-detail">
+              <div class="contact-detail-icon">📞</div>
+              <div class="contact-detail-text">
+                <strong>Phone</strong>
+                <a href="tel:+18479319359">847.931.9359</a>
+              </div>
+            </div>
+
+            <div class="contact-detail">
+              <div class="contact-detail-icon">✉️</div>
+              <div class="contact-detail-text">
+                <strong>Email</strong>
+                <a href="/cdn-cgi/l/email-protection#fc8a959f88938e959d929d95908fcfc8c5bc9b919d9590d29f9391"><span class="__cf_email__" data-cfemail="186e717b6c776a7179767971746b2b2c21587f75797174367b7775">[email&#160;protected]</span></a>
+              </div>
+            </div>
+
+            <div class="contact-detail">
+              <div class="contact-detail-icon">🕒</div>
+              <div class="contact-detail-text">
+                <strong>Hours</strong>
+                <div class="hours-table">
+                  <div class="hours-row">
+                    <span class="hours-day">Mon – Fri</span>
+                    <span class="hours-time">10am – 8pm</span>
+                  </div>
+                  <div class="hours-row">
+                    <span class="hours-day">Saturday</span>
+                    <span class="hours-time">9am – 6pm</span>
+                  </div>
+                  <div class="hours-row">
+                    <span class="hours-day">Sunday</span>
+                    <span class="hours-time">11am – 4pm</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="social-links">
+              <a class="social-btn" href="https://www.facebook.com/victorianailssalon" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
+              <a class="social-btn" href="https://www.instagram.com/victorianailssouthelgin" target="_blank" rel="noopener noreferrer" aria-label="Instagram">ig</a>
+            </div>
+          </div>
+
+          <div class="reveal" style="transition-delay:.1s">
+            <div class="contact-form-wrap">
+              <h3>Send Us a Message</h3>
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="contact-name">Name</label>
+                  <input type="text" id="contact-name" placeholder="Your name" autocomplete="name"/>
+                </div>
+                <div class="form-field">
+                  <label for="contact-email">Email</label>
+                  <input type="email" id="contact-email" placeholder="your@email.com" autocomplete="email"/>
+                </div>
+              </div>
+              <div class="form-field">
+                <label for="contact-subject">Subject</label>
+                <input type="text" id="contact-subject" placeholder="How can we help?"/>
+              </div>
+              <div class="form-field">
+                <label for="contact-msg">Message</label>
+                <textarea id="contact-msg" placeholder="Type your message here..."></textarea>
+              </div>
+              <button class="btn btn-primary btn-block" type="button" onclick="submitForm()">Send Message</button>
+              <div class="form-success" id="formSuccess">✦ Message sent! We'll be in touch shortly.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">Victoria Nails</div>
+          <p>A luxury nail salon dedicated to impeccable craft, genuine care, and a serene experience every visit.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="services.html#manicure">Manicure</a>
+          <a href="services.html#pedicure">Pedicure</a>
+          <a href="services.html#enhancements">Enhancements</a>
+          <a href="services.html#waxing-menu">Waxing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Info</h4>
+          <a href="gallery.html">Gallery</a>
+          <a href="reviews.html">Reviews</a>
+          <a href="contact.html">Contact</a>
+          <a href="careers.html">Careers</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Online</a>
+          <a href="https://www.instagram.com/victorianailssouthelgin" rel="noopener" target="_blank">Instagram</a>
+          <a href="https://www.facebook.com/victorianailssalon" rel="noopener" target="_blank">Facebook</a>
+          <a href="about.html">Our Team</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 by Victoria Nails. All rights reserved.</span>
+        <span>349 Randall Road, South Elgin, IL</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Phone copy toast -->
+  <div class="phone-toast" id="phoneToast" role="status" aria-live="polite">
+    Copied: <span id="toastNum"></span>
+  </div>
+
+  <!-- Mobile floatbar -->
+  <div class="floatbar" aria-label="Quick actions">
+    <div class="inner">
+      <a class="btn btn-primary btn-block" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment</a>
+    </div>
+  </div>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    (function(){
+      // Header scroll
+      const hdr = document.getElementById('site-header');
+      window.addEventListener('scroll', () => hdr.classList.toggle('scrolled', window.scrollY > 30), {passive:true});
+
+      // Mobile menu
+      const menuBtn = document.getElementById('menuBtn');
+      const panel = document.getElementById('mobilePanel');
+      if(menuBtn && panel){
+        menuBtn.addEventListener('click', () => {
+          const open = panel.classList.contains('is-open');
+          panel.classList.toggle('is-open', !open);
+          menuBtn.setAttribute('aria-expanded', String(!open));
+        });
+        panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+          panel.classList.remove('is-open'); menuBtn.setAttribute('aria-expanded','false');
+        }));
+      }
+
+      // Reveal on scroll
+      const reveals = document.querySelectorAll('.reveal');
+      const obs = new IntersectionObserver(entries => entries.forEach(e => {
+        if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+      }), {threshold:.10});
+      reveals.forEach(el => obs.observe(el));
+    })();
+
+    // Copy phone
+    let toastTimer;
+    function copyPhone(num){
+      navigator.clipboard.writeText(num).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = num; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      });
+      const toast = document.getElementById('phoneToast');
+      const span = document.getElementById('toastNum');
+      span.textContent = num;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // Contact form
+    function submitForm(){
+      const name

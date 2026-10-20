@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta http-equiv="refresh" content="30"/> <!-- auto-reload every 30s as hard fallback -->
+  <title>Queue Display • Salon Genie</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+  <meta name="gs-config" content="/shared/config.json"/>
+  <script src="/shared/js/app-config.js"></script>
+  <script src="/shared/js/sb-client.js"></script>
+
+  <style>
+  :root {
+    --bg:       #FDFAF6;
+    --s1:       #FFFFFF;
+    --s2:       #F5F0E8;
+    --s3:       #EDE6D8;
+    --border:   rgba(0,0,0,0.08);
+    --ink:      #1C1814;
+    --mid:      #6A6058;
+    --muted:    #A89A8E;
+    --blush:    #C4856A;
+    --amber:    #C4993A;
+    --teal:     #3D7A72;
+    --rose:     #C45A4A;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--s2);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .brand-gem {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--blush), var(--amber));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: white; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .brand-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px; color: var(--ink);
+  }
+  .brand-name span { color: var(--blush); }
+  .brand-salon {
+    font-size: 13px; color: var(--muted); margin-top: 1px;
+  }
+  .topbar-right {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .clock {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px; color: var(--ink); letter-spacing: 1px;
+  }
+  .live-badge {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: var(--teal);
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .live-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal);
+    animation: blink 1.5s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  /* ── PANELS ── */
+  .panel {
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+  }
+  .panel-left { border-right: 1px solid var(--border); }
+
+  .panel-heading {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--border);
+    flex-shrink: 0;
+  }
+  .panel-heading-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .panel-heading-icon.serving { background: rgba(61,122,114,0.15); }
+  .panel-heading-icon.waiting { background: rgba(196,153,58,0.12); }
+  .panel-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; color: var(--ink);
+  }
+  .panel-count {
+    margin-left: auto;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    background: var(--s3); border-radius: 20px;
+    padding: 3px 12px;
+  }
+
+  /* ── CLIENT CARDS ── */
+  .client-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex; align-items: center; gap: 16px;
+    box-shadow: 0 1px 8px rgba(28,24,20,0.05);
+    animation: slideIn 0.3s ease both;
+    flex-shrink: 0;
+  }
+  @keyframes slideIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  .client-card.serving {
+    border-color: rgba(61,122,114,0.3);
+    background: linear-gradient(135deg, #fff 85%, rgba(61,122,114,0.04));
+  }
+  .client-card.waiting {
+    border-color: rgba(196,153,58,0.2);
+  }
+
+  .position-badge {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; font-weight: 400;
+    flex-shrink: 0;
+  }
+  .position-badge.serving { background: var(--teal); color: white; }
+  .position-badge.waiting { background: var(--s3); color: var(--mid); }
+
+  .client-info { flex: 1; min-width: 0; }
+  .client-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; color: var(--ink); line-height: 1.2;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .client-service {
+    font-size: 13px; color: var(--mid); margin-top: 3px;
+  }
+  .client-wait {
+    font-size: 11px; color: var(--muted); margin-top: 2px;
+  }
+
+  .tech-badge {
+    display: flex; flex-direction: column; align-items: flex-end;
+    gap: 3px; flex-shrink: 0;
+  }
+  .tech-name {
+    font-size: 13px; font-weight: 600; color: var(--teal);
+  }
+  .tech-label {
+    font-size: 10px; color: var(--muted); letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .empty-state-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+
+  /* ── BOTTOM BAR ── */
+  .bottombar {
+    background: var(--s2);
+    border-top: 1px solid var(--border);
+    padding: 12px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .bottombar-msg {
+    font-size: 13px; color: var(--mid);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .bottombar-sub {
+    font-size: 12px; color: var(--muted);
+  }
+  .refresh-indicator {
+    font-size: 11px; color: var(--muted);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .refresh-bar {
+    width: 80px; height: 3px; border-radius: 2px;
+    background: var(--s3); overflow: hidden;
+  }
+  .refresh-fill {
+    height: 100%; background: var(--blush); border-radius: 2px;
+    animation: refill 30s linear infinite;
+    transform-origin: left;
+  }
+  @keyframes refill { from{width:100%} to{width:0%} }
+
+  /* ── RESPONSIVE — tablet/website embed ── */
+  @media (max-width: 768px) {
+    .main { grid-template-columns: 1fr; }
+    .panel-left { border-right: none; border-bottom: 1px solid var(--border); }
+    .topbar { padding: 12px 16px; }
+    .clock { font-size: 20px; }
+    .panel { padding: 16px; }
+    .client-name { font-size: 16px; }
+    .bottombar { padding: 10px 16px; }
+  }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-gem">✦</div>
+      <div>
+        <div class="brand-name">Salon <span>Genie</span></div>
+        <div class="brand-salon" id="salonName">Loading…</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="live-badge">
+        <span class="live-dot"></span> Live Queue
+      </div>
+      <div class="clock" id="clock">--:--</div>
+    </div>
+  </header>
+
+  <!-- MAIN PANELS -->
+  <div class="main">
+
+    <!-- NOW SERVING -->
+    <div class="panel panel-left">
+      <div class="panel-heading">
+        <div class="panel-heading-icon serving">💅</div>
+        <div class="panel-title">Now Serving</div>
+        <span class="panel-count" id="servingCount">0</span>
+      </div>
+      <div id="servingList">
+        <div class="empty-state">
+          <div class="empty-state-icon">💅</div>
+          No clients in service yet
+        </div>
+      </div>
+    </div>
+
+    <!-- WAITING -->
+    <div class="panel panel-right">
+      <div class="panel-heading">
+        <div class="panel-heading-icon waiting">⏳</div>
+        <div class="panel-title">Waiting</div>
+        <span class="panel-count" id="waitingCount">0</span>
+      </div>
+      <div id="waitingList">
+        <div class="empty-state">
+          <div class="empty-state-icon">🎉</div>
+          No one waiting right now
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <footer class="bottombar">
+    <div class="bottombar-msg">
+      💬 <span>Please check in at the front desk when you arrive.</span>
+    </div>
+    <div class="refresh-indicator">
+      <span class="bottombar-sub">Auto-refreshes</span>
+      <div class="refresh-bar"><div class="refresh-fill"></div></div>
+    </div>
+  </footer>
+
+<script>
+// ── Clock ──
+function tick() {
+  const now = new Date();
+  const h = String(now.getHours() % 12 || 12).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const ap = now.getHours() >= 12 ? 'PM' : 'AM';
+  const el = document.getElementById('clock');
+  if (el) el.textContent = `${h}:${m} ${ap}`;
+}
+tick(); setInterval(tick, 1000);
+
+// ── Wait-for-client helper ──
+async function waitForClient(ms = 6000) {
+  const start = Date.now();
+  while (Date.now() - start < ms) {
+    if (window.GSClient?.getAsync) return window.GSClient.getAsync();
+    await new Promise(r => setTimeout(r, 200));
+  }
+  return null;
+}
+
+// ── Helpers ──
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function waitTime(createdAt) {
+  if (!createdAt) return '';
+  const mins = Math.round((Date.now() - new Date(createdAt)) / 60000);
+  if (mins < 1) return 'Just arrived';
+  if (mins === 1) return '1 min waiting';
+  return `${mins} min waiting`;
+}
+function firstNameOnly(name) {
+  if (!name) return '—';
+  return String(name).trim().split(' ')[0];
+}
+
+// ── Render ──
+function renderServing(rows) {
+  const el = document.getElementById('servingList');
+  const count = document.getElementById('servingCount');
+  if (!rows.length) {
+    count.textContent = '0';
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">💅</div>No clients in service yet</div>`;
+    return;
+  }
+  count.textContent = rows.length;
+  el.innerHTML = rows.map((r, i) => `
+    <div class="client-card serving">
+      <div class="position-badge serving">${i + 1}</div>
+      <div class="client-info">
+        <div class="client-name">${esc(firstNameOnly(r.client_name))}</div>
+        <div class="client-service">${esc(r.service || 'Service')}</div>
+      </div>
+      ${r.assigned_technician ? `
+        <div class="tech-badge">
+          <div class="tech-name">${esc(firstNameOnly(r.assigned_technician))}</div>
+          <div class="tech-label">Tech</div>
+        </div>` : ''}
+    </div>`).join('');
+}
+
+function renderWaiting(rows) {
+  const el = document.getElementById('waitingList');
+  const count = document.getElementById('waitingCount');
+  if (!rows.length) {
+    count.textContent = '0';
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎉</div>No one waiting right now</div>`;
+    return;
+  }
+  count.textContent = rows.length;
+  el.innerHTML = rows.map((r, i) => `
+    <div class="client-card waiting">
+      <div class="position-badge waiting">${i + 1}</div>
+      <div class="client-info">
+        <div class="client-name">${esc(firstNameOnly(r.client_name))}</div>
+        <div class="client-service">${esc(r.service || 'Service')}</div>
+        <div class="client-wait">${waitTime(r.created_at)}</div>
+      </div>
+      ${r.assigned_technician ? `
+        <div class="tech-badge">
+          <div class="tech-name">${esc(firstNameOnly(r.assigned_technician))}</div>
+          <div class="tech-label">Assigned</div>
+        </div>` : ''}
+    </div>`).join('');
+}
+
+// ── Main ──
+(async () => {
+  const sg = await waitForClient();
+  if (!sg) {
+    document.getElementById('salonName').textContent = 'Queue Display';
+    return;
+  }
+
+  // Get business ID
+  let businessId = new URLSearchParams(location.search).get('business_id');
+  if (!businessId) {
+    try {
+      const { data: auth } = await sg.auth.getUser();
+      if (auth?.user) {
+        const { data: prefs } = await sg.from('user_preferences')
+          .select('selected_business_id').eq('user_id', auth.user.id).maybeSingle();
+        businessId = prefs?.selected_business_id || null;
+      }
+    } catch(_) {}
+  }
+  if (!businessId) {
+    try { businessId = localStorage.getItem('gs.active_business_id') || null; } catch(_) {}
+  }
+
+  // Load salon name
+  if (businessId) {
+    try {
+      const { data: biz } = await sg.from('business_profiles')
+        .select('business_name').eq('id', businessId).maybeSingle();
+      if (biz?.business_name) {
+        document.getElementById('salonName').textContent = biz.business_name;
+        document.title = `${biz.business_name} — Queue`;
+      }
+    } catch(_) {}
+  }
+
+  // ── Fetch and render queue ──
+  async function loadQueue() {
+    if (!businessId) return;
+    try {
+      const start = new Date(); start.setHours(0,0,0,0);
+      const end   = new Date(); end.setHours(23,59,59,999);
+
+      const { data, error } = await sg.schema('salon')
+        .from('check_ins')
+        .select('id,client_name,service,status,assigned_technician,checkin_time,created_at')
+        .eq('business_id', businessId)
+        .gte('created_at', start.toISOString())
+        .lte('created_at', end.toISOString())
+        .neq('status', 'done')
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+      const rows = data || [];
+
+      const serving = rows.filter(r => ['in_service','in-service','in service','service'].includes(String(r.status).toLowerCase()));
+      const waiting = rows.filter(r => ['waiting','wait',''].includes(String(r.status || 'waiting').toLowerCase()));
+
+      renderServing(serving);
+      renderWaiting(waiting);
+    } catch(e) {
+      console.error('[queue-display]', e);
+    }
+  }
+
+  await loadQueue();
+
+  // ── Realtime subscription ──
+  try {
+    sg.schema('salon')
+      .from('check_ins')
+      .on('*', () => loadQueue())
+      .subscribe();
+  } catch(_) {
+    // Fallback: poll every 30s if realtime fails
+    setInterval(loadQueue, 30000);
+  }
+
+})();
+</script>
+</body>
+</html>

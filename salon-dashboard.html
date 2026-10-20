@@ -1,0 +1,2710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Salon Genie — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<meta name="gs-config" content="/shared/config.json"/>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   SALON GENIE — DASHBOARD
+   Design language: warm cream · DM Serif Display · DM Sans
+   Matches agents: inventory, booking, reception, marketing, analytics
+═══════════════════════════════════════════════════════════════ */
+
+/* ── TOKENS ── */
+:root {
+  --bg:        #FDFAF6;
+  --s1:        #FFFFFF;
+  --s2:        #F5F0E8;
+  --s3:        #EDE6D8;
+  --border:    rgba(0,0,0,0.07);
+  --border2:   rgba(0,0,0,0.11);
+  --ink:       #1C1814;
+  --mid:       #6A6058;
+  --muted:     #A89A8E;
+  --blush:     #C4856A;
+  --blush-dim: rgba(196,133,106,0.12);
+  --amber:     #C4993A;
+  --amber-dim: rgba(196,153,58,0.12);
+  --teal:      #3D7A72;
+  --teal-dim:  rgba(61,122,114,0.12);
+  --rose:      #C45A4A;
+  --rose-dim:  rgba(196,90,74,0.1);
+  --violet:    #7A4EA8;
+  --radius:    12px;
+  --shadow:    0 2px 14px rgba(28,24,20,0.07);
+  --header-h:  58px;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.5;
+  font-weight: 400;
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+
+/* ── TOPBAR ── */
+header {
+  position: sticky; top: 0; z-index: 100;
+  height: var(--header-h);
+  background: var(--s2);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 8px rgba(28,24,20,0.06);
+}
+.ap-header {
+  max-width: 1280px; margin: 0 auto;
+  display: flex; align-items: center;
+  height: 100%; padding: 0 28px; gap: 16px;
+}
+
+/* Logo */
+.ap-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.ap-logo-gem {
+  width: 30px; height: 30px;
+  background: linear-gradient(135deg, var(--blush), var(--amber));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.ap-brandname {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px; color: var(--ink); letter-spacing: 0.3px;
+}
+.ap-brandname span { color: var(--blush); }
+.ap-brandtag { font-size: 10px; color: var(--muted); margin-top: 1px; letter-spacing: 0.5px; }
+
+/* Nav */
+.ap-nav { display: flex; margin-left: 8px; }
+.nav-item {
+  padding: 0 16px; height: var(--header-h);
+  display: flex; align-items: center;
+  font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s; white-space: nowrap;
+}
+.nav-item.active { color: var(--blush); border-bottom-color: var(--blush); font-weight: 600; }
+.nav-item:hover:not(.active) { color: var(--mid); }
+
+/* ── GREETING BAR (below header) ── */
+.greeting-bar {
+  background: var(--s2);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+}
+.greeting-bar-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}
+.greeting-bar-left {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.greet-text  { font-size: 13px; font-weight: 500; color: var(--ink); white-space: nowrap; }
+.greet-clock {
+  font-size: 13px; font-weight: 600; font-family: monospace;
+  letter-spacing: 1px; color: var(--mid); white-space: nowrap;
+}
+.greet-date  {
+  font-size: 11px; padding: 3px 10px; border-radius: 20px;
+  border: 1px solid var(--border2); color: var(--muted); white-space: nowrap;
+}
+.greet-sub   { font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+/* Right actions */
+.ap-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: auto; }
+.ap-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px; border-radius: 8px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.3px;
+  cursor: pointer; border: none; transition: all 0.2s;
+}
+.ap-btn-ghost {
+  background: rgba(255,255,255,0.6); border: 1px solid var(--border2); color: var(--mid);
+}
+.ap-btn-ghost:hover { border-color: var(--blush); color: var(--blush); }
+.ap-btn-primary {
+  background: var(--blush); color: white;
+  box-shadow: 0 2px 12px rgba(196,133,106,0.3);
+}
+.ap-btn-primary:hover { background: #B5745A; transform: translateY(-1px); }
+
+/* ── MAIN ── */
+main { max-width: 1280px; margin: 0 auto; padding: 28px 28px 80px; }
+
+/* ── SECTION TITLE ── */
+.sec-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px; color: var(--ink); margin-bottom: 14px; margin-top: 28px;
+}
+.sec-title:first-child { margin-top: 0; }
+.sec-sub { font-size: 11px; color: var(--muted); font-weight: 400; margin-left: 6px; }
+
+
+
+/* ── KPI STRIP ── */
+.kpis {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 12px; margin-bottom: 24px;
+}
+.kcard {
+  background: var(--s1); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 18px 20px;
+  box-shadow: var(--shadow); cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  position: relative; overflow: hidden;
+}
+.kcard::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+}
+.kcard.blush::after { background: var(--blush); }
+.kcard.amber::after { background: var(--amber); }
+.kcard.teal::after  { background: var(--teal); }
+.kcard.rose::after  { background: var(--rose); }
+.kcard.violet::after { background: var(--violet); }
+.kcard:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(28,24,20,0.1); }
+.kcard.warn { border-color: rgba(196,153,58,0.35); }
+.kcard.bad  { border-color: rgba(196,90,74,0.3); }
+.khead { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.kmain { font-family: 'DM Serif Display', serif; font-size: 34px; color: var(--ink); line-height: 1; }
+.ksub  { font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+/* ── QUICK PEEK ── */
+.qp-shell {
+  background: var(--s1); border-radius: 16px;
+  border: 1px solid var(--border);
+  margin-bottom: 24px; overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.qp-top {
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.qp-top-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px; color: var(--ink); margin-bottom: 3px;
+}
+.qp-top-sub { font-size: 12px; color: var(--muted); }
+
+.qp-split {
+  display: grid; grid-template-columns: 1fr 300px;
+}
+.qp-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border);
+}
+.qp-card {
+  background: var(--s1); padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.qp-card h4 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px; color: var(--ink); margin-bottom: 2px;
+}
+.qp-metric { font-size: 12px; font-weight: 600; color: var(--blush); }
+.qp-tip { font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+.qp-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 10px; }
+.qp-btn {
+  padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600;
+  border: 1px solid var(--border2); background: var(--bg); color: var(--mid);
+  cursor: pointer; text-decoration: none; display: inline-block;
+  transition: all 0.15s;
+}
+.qp-btn:hover { border-color: var(--blush); color: var(--blush); background: var(--blush-dim); }
+.qp-btn.primary { background: var(--blush); color: white; border-color: var(--blush); }
+.qp-btn.primary:hover { background: #B5745A; }
+.qp-btn.amber { background: var(--amber-dim); color: var(--amber); border-color: rgba(196,153,58,0.25); }
+.qp-btn.teal  { background: var(--teal-dim); color: var(--teal); border-color: rgba(61,122,114,0.25); }
+
+/* Tasks sidebar */
+.qp-tasks {
+  border-left: 1px solid var(--border);
+  padding: 18px; background: #FDFAF6;
+  display: flex; flex-direction: column; gap: 12px;
+  overflow-y: auto;
+}
+.qp-tasks-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px; color: var(--ink); margin-bottom: 4px;
+}
+.task-filters { display: flex; gap: 5px; flex-wrap: wrap; }
+.t-pill {
+  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500;
+  border: 1px solid var(--border2); background: var(--s1); color: var(--muted);
+  cursor: pointer; transition: all 0.15s;
+}
+.t-pill.active { background: var(--blush); color: white; border-color: var(--blush); }
+.t-pill:hover:not(.active) { border-color: var(--blush); color: var(--blush); }
+#taskList { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+
+/* ── AI AGENTS BLOCK ── */
+.agents-shell {
+  background: var(--s1); border-radius: 16px;
+  border: 1px solid var(--border);
+  margin-bottom: 24px; overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.agents-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 22px 12px; border-bottom: 1px solid var(--border);
+}
+.agents-head-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px; color: var(--ink);
+}
+.agents-head-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.agents-new-badge {
+  padding: 3px 12px; border-radius: 20px; font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  background: linear-gradient(135deg, var(--blush), var(--amber));
+  color: white;
+}
+.agents-grid {
+  display: grid; grid-template-columns: repeat(5,1fr);
+  gap: 1px; background: var(--border);
+}
+.agent-card {
+  background: var(--s1);
+  padding: 22px 18px;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 8px;
+  text-decoration: none; color: var(--ink);
+  transition: background 0.18s, transform 0.18s;
+  position: relative; overflow: hidden;
+}
+.agent-card:hover { background: var(--s2); }
+.agent-card:hover .agent-icon { transform: scale(1.1) translateY(-2px); }
+.agent-ai-tag {
+  position: absolute; top: 8px; right: 8px;
+  font-size: 9px; font-weight: 700; letter-spacing: 1px;
+  padding: 2px 6px; border-radius: 5px;
+  background: var(--amber-dim); color: var(--amber);
+  border: 1px solid rgba(196,153,58,0.2);
+}
+.agent-icon { font-size: 30px; line-height: 1; transition: all 0.2s; }
+.agent-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 14px; color: var(--ink);
+}
+.agent-sub { font-size: 10px; color: var(--muted); line-height: 1.4; }
+
+/* ── TOOLS SHELL — ACCORDION ── */
+.tools-shell { margin-bottom: 24px; }
+.tools-accordion {
+  border: 1px solid var(--border2); border-radius: 16px;
+  overflow: hidden; box-shadow: var(--shadow);
+}
+.acc-row { border-bottom: 1px solid var(--border); }
+.acc-row:last-child { border-bottom: none; }
+.acc-trigger {
+  width: 100%; display: flex; align-items: center; gap: 12px;
+  padding: 15px 20px; background: var(--s1);
+  cursor: pointer; border: none; text-align: left;
+  transition: background 0.15s; font-family: 'DM Sans', sans-serif;
+}
+.acc-trigger:hover { background: var(--s2); }
+.acc-trigger.open { background: var(--s2); }
+.acc-trigger-icon { font-size: 18px; width: 24px; flex-shrink: 0; }
+.acc-trigger-text { flex: 1; }
+.acc-trigger-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px; color: var(--ink); line-height: 1.2;
+}
+.acc-trigger-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.acc-trigger-meta { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.acc-count {
+  font-size: 10px; font-weight: 600; padding: 3px 10px;
+  border-radius: 20px; background: var(--s2);
+  border: 1px solid var(--border2); color: var(--muted);
+  white-space: nowrap;
+}
+.acc-freq {
+  font-size: 10px; font-weight: 600; padding: 3px 10px;
+  border-radius: 20px; white-space: nowrap; letter-spacing: 0.3px;
+}
+.acc-freq.daily  { background: var(--blush-dim); color: var(--blush); border: 1px solid rgba(196,133,106,0.3); }
+.acc-freq.weekly { background: rgba(55,138,221,0.1); color: #1A5FA8; border: 1px solid rgba(55,138,221,0.25); }
+.acc-freq.monthly{ background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(61,122,114,0.25); }
+.acc-chevron {
+  font-size: 11px; color: var(--muted);
+  transition: transform 0.22s ease; flex-shrink: 0;
+}
+.acc-trigger.open .acc-chevron { transform: rotate(180deg); }
+.acc-body {
+  display: none; padding: 12px 16px 16px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+.acc-body.open { display: block; animation: sgFadeUp 0.18s ease both; }
+
+
+/* ── CUSTOMIZE MODE ── */
+.tools-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 12px; gap: 12px;
+}
+.btn-customize {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  font-size: 18px;
+  border: 1px solid var(--border2); background: var(--s1); color: var(--mid);
+  cursor: pointer; transition: all 0.15s; flex-shrink: 0;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-customize:hover { border-color: var(--blush); background: var(--blush-dim); transform: rotate(20deg); }
+.btn-customize.active { background: var(--blush); border-color: var(--blush); transform: rotate(90deg); }
+
+.customize-bar {
+  display: none; align-items: center; justify-content: space-between;
+  padding: 10px 16px; border-radius: 12px; margin-bottom: 12px;
+  background: var(--blush-dim); border: 1px solid rgba(196,133,106,0.3);
+  font-size: 12px; color: var(--blush); gap: 12px; flex-wrap: wrap;
+}
+.customize-bar.show { display: flex; }
+.customize-bar-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.btn-cust {
+  padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: all 0.15s;
+}
+.btn-cust-save { background: var(--blush); color: white; }
+.btn-cust-save:hover { background: #B5745A; }
+.btn-cust-cancel { background: var(--s1); color: var(--mid); border: 1px solid var(--border2); }
+
+/* tool grid (card style) */
+.tool-list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+.tool-item {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
+  gap: 6px; padding: 14px 8px 12px;
+  border-radius: 12px;
+  background: var(--s1); border: 1px solid var(--border);
+  transition: border-color 0.15s, opacity 0.2s, box-shadow 0.15s;
+  text-decoration: none; color: var(--ink);
+  box-shadow: var(--shadow); cursor: pointer;
+  position: relative;
+}
+.tool-item:hover:not(.hidden-tool) { border-color: var(--blush); box-shadow: 0 4px 14px rgba(196,133,106,0.15); }
+.tool-item.hidden-tool { opacity: 0.38; }
+.tool-item.dragging { opacity: 0.35; border-color: var(--blush); border-style: dashed; }
+.tool-item.drag-over { border-color: var(--blush); background: var(--blush-dim); box-shadow: 0 0 0 2px rgba(196,133,106,0.2); }
+.tool-item-icon { font-size: 26px; line-height: 1; flex-shrink: 0; }
+.tool-item-label { font-size: 11px; font-weight: 500; color: var(--mid); line-height: 1.3; }
+
+/* drag handle — top-left corner in customize mode */
+.drag-handle {
+  display: none; position: absolute; top: 6px; left: 7px;
+  color: var(--muted); font-size: 12px; cursor: grab; line-height: 1;
+  touch-action: none;
+}
+.drag-handle:active { cursor: grabbing; }
+.customize-mode .drag-handle { display: block; }
+
+/* move + hide buttons overlay in customize mode */
+.move-btn, .hide-toggle {
+  display: none; align-items: center; justify-content: center;
+  border-radius: 6px; cursor: pointer; flex-shrink: 0;
+  font-family: 'DM Sans', sans-serif; transition: all 0.15s;
+}
+.move-btn {
+  padding: 3px 8px; font-size: 9px; font-weight: 600;
+  background: var(--s2); border: 1px solid var(--border2); color: var(--mid);
+}
+.move-btn:hover { border-color: var(--blush); color: var(--blush); background: var(--blush-dim); }
+.hide-toggle {
+  position: absolute; top: 5px; right: 5px;
+  width: 20px; height: 20px; font-size: 10px;
+  background: var(--s2); border: 1px solid var(--border2); color: var(--muted);
+  border-radius: 50%;
+}
+.hide-toggle:hover { border-color: var(--rose); color: var(--rose); background: var(--rose-dim); }
+.tool-item.hidden-tool .hide-toggle { border-color: var(--teal); color: var(--teal); }
+.tool-item.hidden-tool .hide-toggle:hover { background: var(--teal-dim); }
+.customize-mode .move-btn,
+.customize-mode .hide-toggle { display: flex; }
+
+/* move button row below icon+label */
+.tool-item-actions {
+  display: none; width: 100%;
+}
+.customize-mode .tool-item-actions { display: flex; justify-content: center; }
+
+@media (max-width: 900px)  { .tool-list { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 600px)  { .tool-list { grid-template-columns: repeat(3, 1fr); gap: 7px; } }
+@media (max-width: 400px)  { .tool-list { grid-template-columns: repeat(2, 1fr); gap: 6px; } }
+@media (hover: none) {
+  .tool-item:active:not(.hidden-tool) { border-color: var(--blush); background: var(--blush-dim); }
+}
+
+/* hidden section drawer */
+.hidden-section {
+  display: none; margin-top: 10px; padding: 12px 14px;
+  border: 1px dashed var(--border2); border-radius: 12px;
+  background: var(--s1);
+}
+.hidden-section.show { display: block; }
+.hidden-section-title {
+  font-size: 11px; font-weight: 600; color: var(--muted);
+  letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px;
+}
+
+/* move modal */
+.sg-modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(28,24,20,0.35); align-items: center; justify-content: center;
+  padding: 20px;
+}
+.sg-modal-overlay.open { display: flex; }
+.sg-modal {
+  background: var(--s1); border-radius: 16px; padding: 20px;
+  width: 100%; max-width: 300px;
+  border: 1px solid var(--border2); box-shadow: 0 12px 40px rgba(28,24,20,0.18);
+  animation: sgFadeUp 0.18s ease both;
+}
+.sg-modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 16px; color: var(--ink); margin-bottom: 14px;
+}
+.move-option {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--bg);
+  cursor: pointer; margin-bottom: 7px; transition: all 0.15s;
+}
+.move-option:last-of-type { margin-bottom: 0; }
+.move-option:hover { border-color: var(--blush); background: var(--blush-dim); }
+.move-option-icon { font-size: 20px; }
+.move-option-label { font-size: 13px; font-weight: 600; color: var(--ink); }
+.move-option-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.sg-modal-cancel {
+  width: 100%; margin-top: 10px; padding: 9px;
+  border-radius: 10px; font-size: 12px; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--border2);
+  background: var(--s2); color: var(--mid);
+  font-family: 'DM Sans', sans-serif; transition: all 0.15s;
+}
+.sg-modal-cancel:hover { border-color: var(--blush); color: var(--blush); }
+
+/* ── TASK CARD ── */
+.task-card {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 14px;
+}
+.task-top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+.task-title-text { font-size: 12px; font-weight: 600; color: var(--ink); }
+.task-detail-text { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.task-badges { display: flex; gap: 4px; flex-wrap: wrap; flex-shrink: 0; }
+.t-badge {
+  padding: 2px 7px; border-radius: 8px; font-size: 10px; font-weight: 500;
+  background: var(--bg); border: 1px solid var(--border2); color: var(--muted);
+}
+.t-badge.urgent { background: var(--rose-dim); color: var(--rose); border-color: rgba(196,90,74,0.2); }
+.t-badge.completed { background: var(--teal-dim); color: var(--teal); border-color: rgba(61,122,114,0.2); }
+.t-badge.overdue { background: var(--rose-dim); color: var(--rose); border-color: rgba(196,90,74,0.2); }
+.task-meta-row { font-size: 10px; color: var(--muted); margin-top: 4px; }
+.task-action-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+.task-empty { font-size: 12px; color: var(--muted); text-align: center; padding: 20px 0; }
+
+/* ── GENIE CHAT BAR ── */
+.genie-chat-shell {
+  background: var(--s1); border-radius: 16px;
+  border: 1px solid var(--border2);
+  box-shadow: var(--shadow); margin-bottom: 20px;
+  overflow: hidden;
+}
+.genie-chat-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px;
+}
+.genie-gem {
+  width: 32px; height: 32px; border-radius: 10px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--blush), var(--amber));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: white; font-weight: 700;
+}
+.genie-input {
+  flex: 1; border: none; outline: none; background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; color: var(--ink);
+}
+.genie-input::placeholder { color: var(--muted); }
+.genie-send {
+  width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+  background: var(--blush); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: white; transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.genie-send:hover { background: #B5745A; }
+.genie-send:disabled { background: var(--s3); color: var(--muted); cursor: default; }
+.genie-suggestions {
+  display: flex; gap: 6px; padding: 0 16px 12px; flex-wrap: wrap;
+}
+.genie-sug {
+  font-size: 11px; font-weight: 500; padding: 4px 12px;
+  border-radius: 20px; background: var(--s2); color: var(--mid);
+  border: 1px solid var(--border2); cursor: pointer; transition: all 0.15s;
+  white-space: nowrap;
+}
+.genie-sug:hover { background: var(--blush-dim); border-color: var(--blush); color: var(--blush); }
+.genie-messages { max-height: 320px; overflow-y: auto; }
+.genie-messages:empty { display: none; }
+.genie-msg {
+  padding: 12px 16px; border-top: 1px solid var(--border);
+  display: flex; gap: 10px; align-items: flex-start;
+  animation: sgFadeUp 0.18s ease both;
+}
+.genie-msg.user { background: var(--s2); }
+.genie-msg.ai   { background: var(--s1); }
+.genie-avatar {
+  width: 24px; height: 24px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+}
+.genie-avatar.user { background: var(--s3); color: var(--mid); }
+.genie-avatar.ai {
+  background: linear-gradient(135deg, var(--blush), var(--amber));
+  color: white;
+}
+.genie-msg-body { flex: 1; font-size: 13px; color: var(--ink); line-height: 1.6; }
+.genie-msg-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.genie-action-btn {
+  padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 600;
+  border: 1px solid var(--border2); background: var(--s1); color: var(--mid);
+  cursor: pointer; text-decoration: none; transition: all 0.15s;
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: 'DM Sans', sans-serif;
+}
+.genie-action-btn:hover { border-color: var(--blush); color: var(--blush); background: var(--blush-dim); }
+[data-genie-action="copy"] { font-variant-numeric: tabular-nums; }
+.genie-typing span {
+  display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--blush); margin-right: 3px;
+  animation: sgPulse 1.2s infinite;
+}
+.genie-typing span:nth-child(2) { animation-delay: 0.2s; }
+.genie-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes sgPulse { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
+
+/* mobile */
+@media (max-width: 768px) {
+  .genie-suggestions { display: none; }
+  .genie-chat-bar { padding: 10px 12px; }
+}
+
+/* ── IMPORT NUDGE BANNER ── */
+.import-nudge {
+  display: none;
+  align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  padding: 10px 18px; border-radius: 12px;
+  margin-bottom: 20px;
+  background: var(--amber-dim);
+  border: 1px solid rgba(196,153,58,0.35);
+  animation: sgFadeUp 0.25s ease both;
+}
+.import-nudge.show { display: flex; }
+.import-nudge-text { font-size: 12px; color: var(--ink); line-height: 1.5; }
+.import-nudge-text strong { color: var(--amber); }
+.import-nudge-actions { display: flex; gap: 7px; flex-shrink: 0; flex-wrap: wrap; }
+.import-nudge-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 8px;
+  font-size: 12px; font-weight: 600;
+  border: none; cursor: pointer; text-decoration: none;
+  transition: all 0.15s; font-family: 'DM Sans', sans-serif;
+  white-space: nowrap;
+}
+.import-nudge-btn.primary { background: var(--amber); color: white; }
+.import-nudge-btn.primary:hover { background: #b38a2e; }
+.import-nudge-btn.ghost {
+  background: rgba(255,255,255,0.7); color: var(--mid);
+  border: 1px solid var(--border2);
+}
+.import-nudge-btn.ghost:hover { border-color: var(--amber); color: var(--amber); }
+.import-nudge-dismiss {
+  background: none; border: none; cursor: pointer;
+  color: var(--muted); font-size: 16px; padding: 0 2px;
+  line-height: 1; flex-shrink: 0;
+  font-family: 'DM Sans', sans-serif;
+}
+.import-nudge-dismiss:hover { color: var(--ink); }
+@media (max-width: 600px) {
+  .import-nudge { padding: 10px 14px; }
+  .import-nudge-actions { width: 100%; }
+  .import-nudge-btn { flex: 1; justify-content: center; }
+}
+
+/* ── FOOTER ── */
+.site-footer {
+  background: var(--s2);
+  border-top: 1px solid var(--border);
+  padding: 28px 0; margin-top: 32px;
+}
+.sf-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 28px;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px;
+}
+.sf-brand-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 16px; color: var(--ink); margin-bottom: 4px;
+}
+.sf-brand-name span { color: var(--blush); }
+.sf-sub { font-size: 12px; color: var(--muted); }
+.sf-copy { font-size: 11px; color: var(--muted); margin-top: 6px; }
+.sf-links { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 10px; }
+.sf-link { font-size: 12px; color: var(--mid); transition: color 0.15s; }
+.sf-link:hover { color: var(--blush); }
+.sf-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.sf-badge {
+  padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 500;
+  background: var(--s1); border: 1px solid var(--border2); color: var(--muted);
+}
+
+/* ── MOBILE NAV ── */
+.mobile-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: var(--s1); border-top: 1px solid var(--border);
+  box-shadow: 0 -2px 14px rgba(28,24,20,0.08);
+  display: none;
+}
+@media (max-width: 768px) { .mobile-nav { display: block; } }
+.mobile-nav-inner {
+  display: flex; justify-content: space-around;
+  padding: 7px 0 env(safe-area-inset-bottom,7px);
+  max-width: 520px; margin: 0 auto;
+}
+.mnav {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 4px 10px; text-decoration: none;
+  color: var(--muted); font-size: 10px; font-weight: 500;
+  transition: color 0.15s;
+}
+.mnav:hover, .mnav.active { color: var(--blush); }
+.mnav .ico { font-size: 20px; line-height: 1; }
+.mnav-ai { position: relative; }
+.mnav-ai-dot {
+  position: absolute; top: 3px; right: 4px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--blush); border: 2px solid white;
+  animation: pulse 2s infinite;
+}
+
+/* ── USER MENU ── */
+.ap-user-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--s1); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 7px 13px;
+  font-size: 12px; font-weight: 500; color: var(--ink);
+  cursor: pointer; transition: all .2s; position: relative;
+  font-family: 'DM Sans', sans-serif;
+}
+.ap-user-btn:hover { border-color: var(--blush); }
+.ap-user-avatar {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--blush), var(--amber));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: white; font-weight: 700; flex-shrink: 0;
+}
+.ap-user-name { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ap-user-chevron { color: var(--muted); font-size: 10px; }
+
+.ap-user-dropdown{display:none;position:absolute;top:calc(100% + 6px);right:0;background:var(--s1);border:1px solid var(--border2);border-radius:10px;width:220px;box-shadow:0 8px 24px rgba(28,24,20,0.12);z-index:200;overflow:hidden;padding:4px;animation:sgFadeUp .15s ease both;}
+.ap-user-dropdown.open { display: block; }
+.ap-dd-header {
+  padding: 10px 12px 8px; border-bottom: 1px solid var(--border);
+  background: var(--s2); margin: -4px -4px 4px; border-radius: 7px 7px 0 0;
+}
+.ap-dd-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.ap-dd-email { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.ap-dd-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 10px; font-size: 12px; font-weight: 500; color: var(--mid);
+  cursor: pointer; transition: background .15s; text-decoration: none;
+  border: none; background: none; width: 100%; text-align: left;
+  font-family: 'DM Sans', sans-serif;
+}
+.ap-dd-item:hover { background: var(--blush-dim); color: var(--blush); }
+.ap-dd-item.danger { color: var(--rose); }
+.ap-dd-item.danger:hover { background: rgba(196,90,74,0.08); color: var(--rose); }
+.ap-dd-divider { height: 1px; background: var(--border); margin: 3px 0; }
+.ap-dd-heading { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 6px 10px 2px; cursor: default; }
+.ap-dd-location { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 10px; font-size: 12px; font-weight: 500; color: var(--mid); background: none; border: none; width: 100%; border-radius: 7px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.ap-dd-location:hover { background: var(--blush-dim); color: var(--blush); }
+.ap-dd-location.is-active { color: var(--teal); font-weight: 600; }
+#bootError { display: none; padding: 12px 16px; margin: 12px 28px; border: 1px solid rgba(196,90,74,0.3); border-radius: 10px; background: rgba(196,90,74,0.06); color: var(--rose); font-size: 13px; }
+
+/* ── ANIMATIONS ── */
+@keyframes sgFadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+.kcard { animation: sgFadeUp 0.3s ease both; }
+.kcard:nth-child(1){animation-delay:.04s}
+.kcard:nth-child(2){animation-delay:.08s}
+.kcard:nth-child(3){animation-delay:.12s}
+.kcard:nth-child(4){animation-delay:.16s}
+.acc-row { animation: sgFadeUp 0.3s ease both; }
+.acc-row:nth-child(1){animation-delay:.06s}
+.acc-row:nth-child(2){animation-delay:.10s}
+.acc-row:nth-child(3){animation-delay:.14s}
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS — FULLY OPTIMIZED
+══════════════════════════════════════════════════ */
+
+/* ── 1100px — large tablet landscape ── */
+@media (max-width: 1100px) {
+  .agents-grid { grid-template-columns: repeat(5,1fr); }
+}
+
+/* ── 900px — tablet portrait ── */
+@media (max-width: 900px) {
+  main { padding: 20px 18px 80px; }
+  .ap-header { padding: 0 18px; }
+  .ap-nav { display: none; }
+  .qp-split { grid-template-columns: 1fr; }
+  .qp-tasks { border-left: none; border-top: 1px solid var(--border); }
+  .tools-grid { grid-template-columns: repeat(4,1fr); }
+  .agents-grid { grid-template-columns: repeat(4,1fr); }
+}
+
+/* ── 768px — large phone / small tablet ── */
+@media (max-width: 768px) {
+  :root { --header-h: 52px; }
+
+  /* Header — compact logo, hide tagline */
+  .ap-header { padding: 0 14px; gap: 10px; }
+  .ap-brandtag { display: none; }
+  .ap-brandname { font-size: 18px; }
+  .ap-logo-gem { width: 28px; height: 28px; }
+
+  /* "New Booking" button — icon only */
+  .ap-btn-primary .btn-label { display: none; }
+  .ap-btn-primary::before { content: '+'; font-size: 18px; font-weight: 700; }
+  .ap-btn-primary { padding: 8px 12px; min-width: 36px; justify-content: center; }
+
+  /* Greeting bar — single compact row */
+  .greeting-bar { padding: 6px 0; }
+  .greeting-bar-inner { padding: 0 14px; flex-wrap: nowrap; gap: 8px; }
+  .greet-sub { display: none; }
+  .greet-date { display: none; }
+  .greeting-bar-left { gap: 8px; flex-wrap: nowrap; }
+  .greet-text { font-size: 12px; }
+  .greet-clock { font-size: 12px; }
+
+  /* Main padding */
+  main { padding: 16px 14px 90px; }
+
+
+
+
+
+  /* KPI strip — 2 col, smaller numbers */
+  .kpis { gap: 8px; margin-bottom: 16px; }
+  .kcard { padding: 14px 14px; }
+  .khead { font-size: 9px; letter-spacing: 1.5px; margin-bottom: 6px; }
+  .kmain { font-size: 28px; }
+  .ksub { font-size: 10px; }
+
+  /* Section titles */
+  .sec-title { font-size: 14px; margin-top: 20px; margin-bottom: 10px; }
+
+  /* Quick Peek */
+  .qp-top { padding: 14px 16px 12px; }
+  .qp-top-title { font-size: 16px; }
+  .qp-card { padding: 14px 16px; }
+  .qp-card h4 { font-size: 14px; }
+
+  .qp-tasks { padding: 14px 16px; }
+  .qp-tasks-title { font-size: 14px; }
+
+  /* Agents — 3-col comfortable */
+  .agents-grid { grid-template-columns: repeat(3,1fr); }
+  .agent-card { padding: 16px 12px; gap: 6px; }
+  .agent-icon { font-size: 24px; }
+  .agent-name { font-size: 12px; }
+  .agent-sub { font-size: 9px; }
+  .agents-head { padding: 12px 16px 10px; flex-wrap: wrap; gap: 6px; }
+  .agents-head-title { font-size: 15px; }
+  .agents-head-sub { font-size: 10px; }
+
+  /* Accordion — compact trigger on mobile */
+  .acc-trigger { padding: 12px 14px; gap: 10px; }
+  .acc-trigger-title { font-size: 14px; }
+  .acc-trigger-note { display: none; }
+  .acc-freq { display: none; }
+  .acc-body { padding: 10px 12px 12px; }
+
+  /* Footer — compact */
+  .site-footer { padding: 20px 0; margin-top: 16px; }
+  .sf-inner { padding: 0 14px; gap: 16px; }
+  .sf-badges { display: none; }
+  .sf-brand-name { font-size: 14px; }
+
+  /* User button — avatar only on very small */
+  .ap-user-name { display: none; }
+  .ap-user-btn { padding: 6px 8px; gap: 0; }
+}
+
+/* ── 480px — small phones ── */
+@media (max-width: 480px) {
+  /* Header */
+  .ap-header { padding: 0 12px; }
+
+  /* KPIs — still 2-col but even more compact */
+  .kpis { grid-template-columns: repeat(2,1fr); gap: 7px; }
+  .kcard { padding: 12px 12px; }
+  .kmain { font-size: 26px; }
+
+  /* Agents — 2-col on smallest screens for readability */
+  .agents-grid { grid-template-columns: repeat(2,1fr); }
+  .agent-card { padding: 16px 10px; }
+  .agent-icon { font-size: 26px; }
+  .agent-name { font-size: 13px; }
+  .agent-sub { font-size: 10px; }
+
+  /* Tools accordion ultra-compact */
+
+  /* Quick Peek grid — single column */
+  .qp-grid { grid-template-columns: 1fr; }
+  .qp-card.full { grid-column: 1; }
+
+  /* Main padding */
+  main { padding: 14px 12px 90px; }
+
+  /* Mobile nav labels */
+  .mnav { font-size: 9px; padding: 4px 6px; }
+  .mnav .ico { font-size: 18px; }
+}
+
+/* ── Safe area for notched phones ── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  main { padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
+  .mobile-nav-inner {
+    padding-bottom: calc(7px + env(safe-area-inset-bottom));
+  }
+}
+
+/* ── Active state for touch (no hover flicker on mobile) ── */
+@media (hover: none) {
+  .kcard:hover { transform: none; box-shadow: var(--shadow); }
+
+  .kcard:active { transform: scale(0.97); opacity: 0.9; }
+  .agent-card:active { background: var(--s2); }
+}
+
+  /* ── DAILY CHORES WIDGET ── */
+  .chores-widget {
+    background: var(--s1); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow); margin-bottom: 24px;
+  }
+  .chores-widget-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px 12px; border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--blush-dim), var(--amber-dim));
+  }
+  .chores-widget-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 15px; color: var(--ink);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .chores-widget-meta { font-size: 11px; color: var(--mid); }
+  .chores-widget-link { font-size: 11px; color: var(--blush); font-weight: 600; text-decoration: none; }
+  .chores-widget-link:hover { text-decoration: underline; }
+  .chores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px; background: var(--border);
+  }
+  .chore-assign-cell {
+    background: var(--s1); padding: 12px 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .chore-assign-icon { font-size: 20px; flex-shrink: 0; width: 28px; text-align: center; }
+  .chore-assign-info { flex: 1; min-width: 0; }
+  .chore-assign-chore { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
+  .chore-assign-name  { font-size: 13px; font-weight: 600; color: var(--ink); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chores-empty {
+    padding: 20px 18px; display: flex; align-items: center; gap: 12px;
+    font-size: 13px; color: var(--muted);
+  }
+  .chores-empty a { color: var(--blush); font-weight: 600; text-decoration: none; }
+  .chores-empty a:hover { text-decoration: underline; }
+  /* Highlight MY chore on staff dashboard */
+  .chore-assign-cell.mine { background: var(--blush-dim); }
+  .chore-assign-cell.mine .chore-assign-name { color: var(--blush); }
+</style>
+
+<script type="module">
+// ── Role guard: redirect staff to their portal, keep owners/managers here ──
+import { requireAuth } from "/shared/js/core/auth.js";
+(async () => {
+  let client, user;
+  try { ({ client, user } = await requireAuth({ agent: 'salon' })); }
+  catch(_) { return; }
+
+  // ── Step 1: read user_preferences — fastest, has role column ──
+  try {
+    const { data: p } = await client.from('user_preferences')
+      .select('role, selected_business_id, active_business_id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (p?.role) {
+      const r = String(p.role).toLowerCase();
+      if (r === 'owner' || r === 'manager' || r === 'admin') return; // stay on dashboard
+      // Any other role (staff, receptionist, technician, stylist) → redirect
+      if (r === 'staff' || r === 'receptionist' || r === 'technician' || r === 'stylist' || r === 'nail_tech') {
+        location.replace('/staff-shift.html');
+        return;
+      }
+    }
+  } catch(_) {}
+
+  // ── Step 2: check business_profiles — are they an owner? ──
+  try {
+    const { data: biz } = await client.from('business_profiles')
+      .select('id').eq('owner_id', user.id).limit(1).maybeSingle();
+    if (biz) return; // they own a business → stay on dashboard
+  } catch(_) {}
+
+  // ── Step 3: check salon.employees role ──
+  try {
+    const db = client.schema ? client.schema('salon') : client;
+    const { data: emp } = await db.from('employees')
+      .select('role, business_id').eq('user_id', user.id).limit(1).maybeSingle();
+    if (emp?.role) {
+      const r = String(emp.role).toLowerCase();
+      if (r === 'owner' || r === 'manager' || r === 'admin') return; // stay
+      // All staff variants → redirect
+      location.replace('/staff-shift.html');
+      return;
+    }
+  } catch(_) {}
+
+  // ── If all lookups failed → stay on dashboard (fail open, not closed) ──
+  // Better to let an owner stay on dashboard than boot them to staff portal
+})();
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main" style="position:absolute;left:-9999px">Skip to main</a>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="ap-header">
+
+    <!-- Logo -->
+    <a class="ap-brand" href="salon-dashboard.html">
+      <div class="ap-logo-gem">✦</div>
+      <div>
+        <div class="ap-brandname">Salon <span>Genie</span></div>
+        <div class="ap-brandtag">Owner · Staff · AI Agents</div>
+      </div>
+    </a>
+
+    <!-- Nav -->
+    <nav class="ap-nav" aria-label="Primary">
+      <a class="nav-item active" href="salon-dashboard.html">Dashboard</a>
+      <a class="nav-item" href="salon-booking-agent.html">Bookings</a>
+      <a class="nav-item" href="salon-reception-agent.html">Reception</a>
+      <a class="nav-item" href="salon-payroll-agent.html">Payroll</a>
+      <a class="nav-item" href="salon-loyalty-agent.html">Loyalty</a>
+    </nav>
+
+    <!-- Actions -->
+    <div class="ap-right" id="apRight">
+      <a class="ap-btn ap-btn-primary" href="salon-booking-agent.html"><span class="btn-label">+ New Booking</span></a>
+      <a class="ap-btn ap-btn-ghost" href="login.html" id="apLoginBtn">Log in</a>
+      
+    </div>
+
+  </div>
+</header>
+
+<!-- ══ GREETING BAR ══ -->
+<div class="greeting-bar" id="greetingBar">
+  <div class="greeting-bar-inner">
+    <div class="greeting-bar-left">
+      <span class="greet-text" id="sgGreetText">Good morning 👋</span>
+      <span class="greet-clock" id="sgClock">--:--</span>
+      <span class="greet-date" id="sgClockDate">—</span>
+      <span class="greet-sub" id="sgGreetSub">· Your salon at a glance</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<main id="main">
+  <div id="bootError" style="display:none">⚠️ Dashboard failed to load. Please refresh or contact support.</div>
+
+  <!-- Genie AI Chat Bar -->
+  <div class="genie-chat-shell" id="genieChatShell">
+    <div class="genie-chat-bar">
+      <div class="genie-gem">✦</div>
+      <input class="genie-input" id="genieInput" type="text"
+        placeholder="Ask Genie anything about your salon…"
+        aria-label="Ask Genie"
+        onkeydown="if(event.key==='Enter')genieSend()"/>
+      <button class="genie-send" id="genieSendBtn" onclick="genieSend()" aria-label="Send">↑</button>
+    </div>
+    <div class="genie-suggestions" id="genieSuggestions"></div>
+    <div class="genie-messages" id="genieMessages"></div>
+  </div>
+
+
+
+  <!-- KPIs -->
+  <div class="sec-title">📅 Today — <span class="sec-sub" id="sgDate">—</span></div>
+  <div class="kpis">
+    <a class="kcard blush" href="pos.html">
+      <div class="khead">Appointments</div>
+      <div class="kmain" id="kAppt">8</div>
+      <div class="ksub">booked today</div>
+    </a>
+    <a class="kcard amber" href="check-in-queue.html">
+      <div class="khead">Walk-ins</div>
+      <div class="kmain" id="kWalk">3</div>
+      <div class="ksub">so far today</div>
+    </a>
+    <a class="kcard warn" href="customers.html">
+      <div class="khead">No-shows</div>
+      <div class="kmain" id="kNoShow">1</div>
+      <div class="ksub">needs outreach</div>
+    </a>
+    <a class="kcard bad" href="salon-inventory-agent.html">
+      <div class="khead">Low Inventory</div>
+      <div class="kmain" id="kLow">3</div>
+      <div class="ksub">below reorder</div>
+    </a>
+    <a class="kcard teal" href="payroll-dashboard.html?tab=revenue">
+      <div class="khead">Week Revenue</div>
+      <div class="kmain" id="kRevenue">—</div>
+      <div class="ksub" id="kRevenueSub">this week</div>
+    </a>
+    <a class="kcard violet" href="payroll-dashboard.html">
+      <div class="khead">Week Commission</div>
+      <div class="kmain" id="kCommission">—</div>
+      <div class="ksub" id="kCommissionSub">total payout</div>
+    </a>
+    <a class="kcard rose" href="expense-tracker.html">
+      <div class="khead">Month Expenses</div>
+      <div class="kmain" id="kExpenses">—</div>
+      <div class="ksub" id="kExpensesSub">this month</div>
+    </a>
+    <a class="kcard teal" href="income.html">
+      <div class="khead">Month Income</div>
+      <div class="kmain" id="kIncome">—</div>
+      <div class="ksub" id="kIncomeSub">net this month</div>
+    </a>
+  </div>
+
+  <!-- Import nudge banner — shown when no weekly data exists -->
+  <div class="import-nudge" id="importNudge" role="alert">
+    <div class="import-nudge-text">
+      <strong>📊 No revenue data for this week yet.</strong><br>
+      If you use an outside POS, import your weekly report to populate Revenue &amp; Commission.
+    </div>
+    <div class="import-nudge-actions">
+      <a class="import-nudge-btn primary" href="import-weekly-commissions.html">📥 Import Week</a>
+      <a class="import-nudge-btn ghost" href="salon-payroll-agent.html">💵 Payroll Agent</a>
+      <button class="import-nudge-dismiss" onclick="document.getElementById('importNudge').classList.remove('show');try{sessionStorage.setItem('sg.nudge.import.dismissed',Date.now())}catch(_){}" aria-label="Dismiss">✕</button>
+    </div>
+  </div>
+
+  <!-- Quick Peek -->
+  <div class="qp-shell" aria-label="Quick Peek">
+    <div class="qp-top">
+      <div class="qp-top-title">⚡ Quick Peek</div>
+      <div class="qp-top-sub">No-brainer actions to run your day.</div>
+    </div>
+    <div class="qp-split">
+      <div class="qp-grid">
+
+        <!-- Best move -->
+        <div class="qp-card">
+          <h4>🎯 Today's best move</h4>
+          <div class="qp-metric">Fill open slots</div>
+          <p class="qp-tip">Post a same-day offer for your next 2–3 open appointment slots. Keep it limited and easy to book.</p>
+          <div class="qp-actions">
+            <a class="qp-btn amber" href="salon-dashboard.html">📣 Post Promo</a>
+            <a class="qp-btn" href="pos.html">🗓️ View Schedule</a>
+          </div>
+        </div>
+
+        <!-- Checkout safety -->
+        <div class="qp-card">
+          <h4>💳 Checkout safety</h4>
+          <div class="qp-metric">Verify ticket</div>
+          <p class="qp-tip">Before payment, confirm you're charging the right client and the correct service.</p>
+          <div class="qp-actions">
+            <a class="qp-btn" href="pos.html">💻 POS</a>
+            <a class="qp-btn" href="check-in-queue.html">🧾 Tickets</a>
+          </div>
+        </div>
+
+        <!-- Team snapshot -->
+        <div class="qp-card">
+          <h4>👥 Team snapshot</h4>
+          <div class="qp-metric">Shifts & coverage</div>
+          <p class="qp-tip">See who's on shift, who called out, and get instant AI coverage suggestions for any gaps.</p>
+          <div class="qp-actions">
+            <a class="qp-btn primary" href="salon-staff-agent.html">👥 Staff Agent</a>
+            <a class="qp-btn" href="salon-payroll-agent.html">💵 Payroll</a>
+          </div>
+        </div>
+
+        <!-- End of day -->
+        <div class="qp-card">
+          <h4>💰 End of Day</h4>
+          <div class="qp-metric">Close out strong</div>
+          <p class="qp-tip">Review today's revenue, confirm all tickets are closed, and check tomorrow's schedule before locking up.</p>
+          <div class="qp-actions">
+            <a class="qp-btn teal" href="reports.html">📊 Revenue</a>
+            <a class="qp-btn" href="pos.html">🧾 Close Tickets</a>
+            <a class="qp-btn" href="pos.html">📅 Tomorrow</a>
+          </div>
+        </div>
+
+        <!-- Finance -->
+        <div class="qp-card">
+          <h4>💸 Finance</h4>
+          <div class="qp-metric" id="qpFinanceMetric">Income vs Expenses</div>
+          <p class="qp-tip">Track what's coming in and going out. Log expenses, review monthly income, and keep your books clean.</p>
+          <div class="qp-actions">
+            <a class="qp-btn primary" href="income.html">📥 Income</a>
+            <a class="qp-btn amber" href="expense-tracker.html">🧾 Expenses</a>
+          </div>
+        </div>
+
+        <!-- Reviews & Reputation -->
+        <div class="qp-card">
+          <h4>⭐ Reviews & Reputation</h4>
+          <div class="qp-metric" id="qpReviewMetric">Loading…</div>
+          <p class="qp-tip">Monitor your Google reviews, respond to clients, and track sentiment trends — your reputation drives new bookings.</p>
+          <div class="qp-actions">
+            <a class="qp-btn primary" href="salon-reviews-agent.html">⭐ Reviews Agent</a>
+            <a class="qp-btn" href="sentiment.html">😊 Sentiment</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tasks -->
+      <div class="qp-tasks">
+        <div class="qp-tasks-title" style="display:flex;align-items:center;justify-content:space-between">
+          ✅ My Tasks
+          <a href="task-board.html" style="font-size:11px;font-weight:500;color:var(--blush);font-family:'DM Sans',sans-serif">Board →</a>
+        </div>
+        <div class="task-filters">
+          <button class="t-pill active" data-filter="all" type="button">All</button>
+          <button class="t-pill" data-filter="urgent" type="button">Urgent</button>
+          <button class="t-pill" data-filter="completed" type="button">Done</button>
+        </div>
+        <div id="taskList">
+          <div class="task-empty">Sign in and select a location to see your tasks.</div>
+        </div>
+        <div style="margin-top:auto;padding-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <a href="tasks.html" class="qp-btn" style="flex:1;justify-content:center">+ Assign Task</a>
+          <a href="task-board.html" class="qp-btn teal" style="flex:1;justify-content:center">📋 Full Board</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Agents Block -->
+  <div class="agents-shell" aria-label="AI Agents">
+    <div class="agents-head">
+      <div>
+        <div class="agents-head-title">✦ AI Agents</div>
+        <div class="agents-head-sub">9 intelligent agents running your salon 24/7 — powered by Genie AI.</div>
+      </div>
+      <div class="agents-new-badge">✦ 9 Active</div>
+    </div>
+    <div class="agents-grid">
+      <a class="agent-card" href="salon-briefing-agent.html" data-keywords="ai briefing morning daily summary alerts actions">
+        <div class="agent-ai-tag">AI</div>
+        <div class="agent-icon">🌅</div>
+        <div class="agent-name">Daily Briefing</div>
+        <div class="agent-sub">Morning · Alerts · Actions</div>
+      </a>
+      <a class="agent-card" href="salon-inventory-agent.html" data-keywords="ai inventory supply stock reorder agent">
+        <div class="agent-ai-tag">AI</div>
+        <div class="agent-icon">📦</div>
+        <div class="agent-name">Inventory</div>
+        <div class="agent-sub">Stock · Reorder · Alerts</div>
+      </a>
+      <a class="agent-card" href="salon-booking-agent.html" data-keywords="ai booking appointment schedule calendar">
+        <div class="agent-ai-tag">AI</div>
+        <div class="agent-icon">📅</div>
+        <div class="agent-name">Booking</div>
+        <div class="agent-sub">Schedule · Gaps · Reminders</div>
+      </a>
+      <a class="agent-card" href="salon-reception-agent.html" data-keywords="ai reception chat front desk client messages">
+        <div class="agent-ai-tag">AI</div>
+        <div class="agent-icon">💬</div>
+        <div class="agent-name">Reception</div>
+        <div class="agent-sub">Chat · Queue · Clients</div>
+      </a>
+      <a class="agent-card" href="salon-marketing-agent.html" data-keywords="ai marketing social media caption campaign instagram">
+        <div class="agent-ai-tag">AI</div>
+        <div class="agent-icon">📣</div>
+        <div class="agent-name">Marketing</div>
+        <div class="agent-sub">Captions · Campaigns · SMS</div>
+      </a>
+      <a class="agent-card" href="salon-analytics-agent.html" data-keywords="ai analytics reports revenue kpi performance insights">
+        <div class="agent-ai-tag">AI</div>
+        <div class="agent-icon">📊</div>
+        <div class="agent-name">Analytics</div>
+        <div class="agent-sub">Revenue · KPIs · Forecast</div>
+      </a>
+      <a class="agent-card" href="salon-payroll-agent.html" data-keywords="ai payroll commission pay w2 1099 salary wages">
+        <div class="agent-ai-tag">AI</div>
+        <div class="agent-icon">💵</div>
+        <div class="agent-name">Payroll</div>
+        <div class="agent-sub">Commission · Pay Stubs · W-2</div>
+      </a>
+      <a class="agent-card" href="salon-staff-agent.html" data-keywords="ai staff shifts schedule coverage callout attendance">
+        <div class="agent-ai-tag">AI</div>
+        <div class="agent-icon">👥</div>
+        <div class="agent-name">Staff & Shifts</div>
+        <div class="agent-sub">Scheduling · Coverage · Attendance</div>
+      </a>
+      <a class="agent-card" href="salon-reviews-agent.html" data-keywords="ai reviews google yelp respond reputation rating">
+        <div class="agent-ai-tag">AI</div>
+        <div class="agent-icon">⭐</div>
+        <div class="agent-name">Reviews</div>
+        <div class="agent-sub">Respond · Track · Reputation</div>
+      </a>
+      <a class="agent-card" href="salon-loyalty-agent.html" data-keywords="ai loyalty rewards points membership retention client">
+        <div class="agent-ai-tag">AI</div>
+        <div class="agent-icon">🎁</div>
+        <div class="agent-name">Loyalty</div>
+        <div class="agent-sub">Rewards · Points · Retention</div>
+      </a>
+    </div>
+  </div>
+
+
+  <!-- Daily Chores Widget -->
+  <div class="chores-widget" id="choreWidget" style="display:none">
+    <div class="chores-widget-head">
+      <div class="chores-widget-title">🧹 Today's Chore Assignments</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="chores-widget-meta" id="choreSavedBy"></span>
+        <a class="chores-widget-link" href="daily-chores-spinner.html">Reassign →</a>
+      </div>
+    </div>
+    <div id="choreWidgetBody">
+      <div class="chores-empty">Loading chores…</div>
+    </div>
+  </div>
+
+  <!-- Tools -->
+  <div class="tools-shell" id="toolsShell">
+
+    <div class="tools-header">
+      <div>
+        <div class="sec-title" style="margin:0 0 2px">🧭 Tools</div>
+        <div style="font-size:11px;color:var(--muted)">Tap to open · press "/" to search</div>
+      </div>
+      <button class="btn-customize" id="btnCustomize" onclick="sgCustomizeToggle()" title="Customize Tools">⚙️</button>
+    </div>
+
+    <div class="customize-bar" id="customizeBar">
+      <span>✏️ Drag to reorder · Move ▾ to change group · ✕ to hide</span>
+      <div class="customize-bar-actions">
+        <button class="btn-cust btn-cust-cancel" onclick="sgCustomizeCancel()">Cancel</button>
+        <button class="btn-cust btn-cust-save" onclick="sgCustomizeSave()">Save changes</button>
+      </div>
+    </div>
+
+    <div class="tools-accordion" id="toolsAccordion">
+
+      <!-- DAILY auto-open -->
+      <div class="acc-row" data-group="daily">
+        <button class="acc-trigger open" onclick="sgAccToggle(this)" aria-expanded="true">
+          <span class="acc-trigger-icon">🔥</span>
+          <div class="acc-trigger-text">
+            <div class="acc-trigger-title">Daily</div>
+            <div class="acc-trigger-note">Open every shift — your core workflow tools</div>
+          </div>
+          <div class="acc-trigger-meta">
+            <span class="acc-freq daily">Daily</span>
+            <span class="acc-count" id="count-daily">11 tools</span>
+            <span class="acc-chevron">▼</span>
+          </div>
+        </button>
+        <div class="acc-body open">
+          <div class="tool-list" id="list-daily" data-group="daily" ondragover="sgDragOver(event)" ondrop="sgDrop(event,this)">
+            <a class="tool-item" href="pos.html" draggable="false" data-id="appointments" data-group="daily" data-keywords="appointments booking schedule calendar"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">🗓️</span><span class="tool-item-label">Appointments</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Appointments','daily')">Move ▾</button></div></a>
+            <a class="tool-item" href="check-in-queue.html" draggable="false" data-id="checkin" data-group="daily" data-keywords="check in walk in queue front desk"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">✅</span><span class="tool-item-label">Check-In Queue</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Check-In Queue','daily')">Move ▾</button></div></a>
+            <a class="tool-item" href="pos.html" draggable="false" data-id="pos" data-group="daily" data-keywords="pos point of sale checkout ticket cash register"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">💻</span><span class="tool-item-label">POS</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'POS','daily')">Move ▾</button></div></a>
+            <a class="tool-item" href="check-in-queue.html" draggable="false" data-id="frontdesk" data-group="daily" data-keywords="front desk bell ticket service queue"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">🔔</span><span class="tool-item-label">Front Desk</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Front Desk','daily')">Move ▾</button></div></a>
+            <a class="tool-item" href="checkin-kiosk.html" draggable="false" data-id="kiosk" data-group="daily" data-keywords="check in kiosk walk in self serve tablet"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">📲</span><span class="tool-item-label">Check-In Kiosk</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Check-In Kiosk','daily')">Move ▾</button></div></a>
+            <a class="tool-item" href="salon-notes.html" draggable="false" data-id="notes" data-group="daily" data-keywords="salon notes team floor log shift handoff"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">📝</span><span class="tool-item-label">Salon Notes</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Salon Notes','daily')">Move ▾</button></div></a>
+            <a class="tool-item" href="social-media.html" draggable="false" data-id="social" data-group="daily" data-keywords="social media instagram facebook tiktok post caption content calendar"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">#️⃣</span><span class="tool-item-label">Social Media</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Social Media','daily')">Move ▾</button></div></a>
+            <a class="tool-item" href="reports.html" draggable="false" data-id="reports" data-group="daily" data-keywords="reports analytics sales stats performance revenue daily"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">📈</span><span class="tool-item-label">Reports</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Reports','daily')">Move ▾</button></div></a>
+            <a class="tool-item" href="supply-orders.html" draggable="false" data-id="supplyorders" data-group="daily" data-keywords="supply orders low stock ran out acetone gloves product manual"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">🛒</span><span class="tool-item-label">Supply Orders</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Supply Orders','daily')">Move ▾</button></div></a>
+            <a class="tool-item" href="cash-reconciliation.html" draggable="false" data-id="cash" data-group="daily" data-keywords="cash reconciliation register end of day close out"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">🏧</span><span class="tool-item-label">Cash Reconciliation</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Cash Reconciliation','daily')">Move ▾</button></div></a>
+            <a class="tool-item" href="daily-chores-spinner.html" draggable="false" data-id="chores" data-group="daily" data-keywords="chores spinner daily cleaning sweep garbage laundry assign rotate technician"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">🧹</span><span class="tool-item-label">Chores Spinner</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Chores Spinner','daily')">Move ▾</button></div></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEEKLY expanded -->
+      <div class="acc-row" data-group="weekly">
+        <button class="acc-trigger open" onclick="sgAccToggle(this)" aria-expanded="true">
+          <span class="acc-trigger-icon">📆</span>
+          <div class="acc-trigger-text">
+            <div class="acc-trigger-title">Weekly</div>
+            <div class="acc-trigger-note">Check in a few times a week</div>
+          </div>
+          <div class="acc-trigger-meta">
+            <span class="acc-freq weekly">Weekly</span>
+            <span class="acc-count" id="count-weekly">9 tools</span>
+            <span class="acc-chevron">▼</span>
+          </div>
+        </button>
+        <div class="acc-body open">
+          <div class="tool-list" id="list-weekly" data-group="weekly" ondragover="sgDragOver(event)" ondrop="sgDrop(event,this)">
+            <a class="tool-item" href="customers.html" draggable="false" data-id="clients" data-group="weekly" data-keywords="customers clients profiles history visit"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">👥</span><span class="tool-item-label">Clients</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Clients','weekly')">Move ▾</button></div></a>
+            <a class="tool-item" href="income.html" draggable="false" data-id="income" data-group="weekly" data-keywords="income revenue monthly earnings sales finance profit"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">📥</span><span class="tool-item-label">Income</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Income','weekly')">Move ▾</button></div></a>
+            <a class="tool-item" href="expense-tracker.html" draggable="false" data-id="expense" data-group="weekly" data-keywords="expense tracker budget spending monthly finance cost overhead"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">🧾</span><span class="tool-item-label">Expenses</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Expenses','weekly')">Move ▾</button></div></a>
+            <a class="tool-item" href="customer-review-tracker.html" draggable="false" data-id="reviews" data-group="weekly" data-keywords="reviews google yelp rating customer feedback tracker log"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">⭐</span><span class="tool-item-label">Review Log</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Review Log','weekly')">Move ▾</button></div></a>
+            <a class="tool-item" href="staff-shift.html" draggable="false" data-id="shifthub" data-group="weekly" data-keywords="shift hub staff portal schedule"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">📅</span><span class="tool-item-label">Shift Hub</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Shift Hub','weekly')">Move ▾</button></div></a>
+
+
+            <a class="tool-item" href="inventory.html" draggable="false" data-id="supplyinv" data-group="weekly" data-keywords="inventory supplies reorder stock acetone files gloves backbar"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">📦</span><span class="tool-item-label">Supply Inventory</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Supply Inventory','weekly')">Move ▾</button></div></a>
+            <a class="tool-item" href="import-weekly-commissions.html" draggable="false" data-id="commission" data-group="weekly" data-keywords="weekly commission import excel payroll w2 1099 tips revenue"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">📥</span><span class="tool-item-label">Import Revenue & Pay</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Import Revenue &amp; Pay','weekly')">Move ▾</button></div></a>
+            <a class="tool-item" href="no-show-analysis.html" draggable="false" data-id="noshow" data-group="weekly" data-keywords="no show noshow cancellation analysis rate patterns"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">🚫</span><span class="tool-item-label">No-Show Analysis</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'No-Show Analysis','weekly')">Move ▾</button></div></a>
+            <a class="tool-item" href="sentiment.html" draggable="false" data-id="sentiment" data-group="weekly" data-keywords="sentiment mood feedback analysis client satisfaction"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">😊</span><span class="tool-item-label">Sentiment</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Sentiment','weekly')">Move ▾</button></div></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- MONTHLY expanded -->
+      <div class="acc-row" data-group="monthly">
+        <button class="acc-trigger open" onclick="sgAccToggle(this)" aria-expanded="true">
+          <span class="acc-trigger-icon">📋</span>
+          <div class="acc-trigger-text">
+            <div class="acc-trigger-title">Monthly</div>
+            <div class="acc-trigger-note">Setup, configuration, and strategic reviews</div>
+          </div>
+          <div class="acc-trigger-meta">
+            <span class="acc-freq monthly">Monthly</span>
+            <span class="acc-count" id="count-monthly">8 tools</span>
+            <span class="acc-chevron">▼</span>
+          </div>
+        </button>
+        <div class="acc-body open">
+          <div class="tool-list" id="list-monthly" data-group="monthly" ondragover="sgDragOver(event)" ondrop="sgDrop(event,this)">
+            <a class="tool-item" href="manage-employees.html" draggable="false" data-id="employees" data-group="monthly" data-keywords="employees staff team profiles permissions roles"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">👤</span><span class="tool-item-label">Manage Employees</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Manage Employees','monthly')">Move ▾</button></div></a>
+            <a class="tool-item" href="manage-tips.html" draggable="false" data-id="tips" data-group="monthly" data-keywords="tips gratuity venmo cashapp zelle paypal payment handles manage tip qr"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">💸</span><span class="tool-item-label">Manage Tips</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Manage Tips','monthly')">Move ▾</button></div></a>
+            <a class="tool-item" href="service-categories.html" draggable="false" data-id="categories" data-group="monthly" data-keywords="service categories nail manicure pedicure groups menu sections"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">🗂️</span><span class="tool-item-label">Categories</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Categories','monthly')">Move ▾</button></div></a>
+            <a class="tool-item" href="services.html" draggable="false" data-id="services" data-group="monthly" data-keywords="services menu items prices duration turn credit nail gel dip pedicure manicure"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">💅</span><span class="tool-item-label">Services &amp; Pricing</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Services &amp; Pricing','monthly')">Move ▾</button></div></a>
+            <a class="tool-item" href="color-inventory.html" draggable="false" data-id="colorinv" data-group="monthly" data-keywords="color inventory nail polish dip gel no chip shades brand collection opi dnd"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">🎨</span><span class="tool-item-label">Color Inventory</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Color Inventory','monthly')">Move ▾</button></div></a>
+            <a class="tool-item" href="tasks.html" draggable="false" data-id="tasks" data-group="monthly" data-keywords="task manager to do templates catalog assign create daily operations"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">📋</span><span class="tool-item-label">Assign Tasks</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Assign Tasks','monthly')">Move ▾</button></div></a>
+            <a class="tool-item" href="task-board.html" draggable="false" data-id="taskboard" data-group="monthly" data-keywords="task board assigned kanban status overdue progress all tasks"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">🗂️</span><span class="tool-item-label">Task Board</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Task Board','monthly')">Move ▾</button></div></a>
+            <a class="tool-item" href="hiring.html" draggable="false" data-id="hiring" data-group="monthly" data-keywords="hiring applicants resumes interview job posting"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">📄</span><span class="tool-item-label">Hiring</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Hiring','monthly')">Move ▾</button></div></a>
+            <a class="tool-item" href="competitor-watch.html" draggable="false" data-id="competitor" data-group="monthly" data-keywords="competitor watch prices nearby area market"><span class="drag-handle">⠿</span><button class="hide-toggle" onclick="sgToggleHide(event,this)" title="Hide">✕</button><span class="tool-item-icon">🔭</span><span class="tool-item-label">Competitor Watch</span><div class="tool-item-actions"><button class="move-btn" onclick="sgOpenMove(event,this,'Competitor Watch','monthly')">Move ▾</button></div></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Hidden tools drawer -->
+    <div class="hidden-section" id="hiddenSection">
+      <div class="hidden-section-title">👁 Hidden tools — click ✕ to restore</div>
+      <div class="tool-list" id="list-hidden"></div>
+    </div>
+
+  </div>
+  <!-- /Tools -->
+
+  <!-- Move modal -->
+  <div class="sg-modal-overlay" id="sgMoveModal">
+    <div class="sg-modal">
+      <div class="sg-modal-title" id="sgMoveTitle">Move to...</div>
+      <div id="sgMoveOptions"></div>
+      <button class="sg-modal-cancel" onclick="sgCloseMove()">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+  function sgAccToggle(btn){const body=btn.nextElementSibling;const o=btn.classList.contains('open');btn.classList.toggle('open',!o);btn.setAttribute('aria-expanded',!o);body.classList.toggle('open',!o);}
+
+  let sgCustMode=false,sgDragSrc=null,sgPendingMove=null;
+  const SG_KEY='sg.tools.layout.v1';
+  const SG_GROUPS={daily:{label:'Daily',icon:'🔥',note:'Open every shift'},weekly:{label:'Weekly',icon:'📆',note:'A few times a week'},monthly:{label:'Monthly',icon:'📋',note:'Setup and reviews'}};
+
+  function sgCustomizeToggle(){
+    sgCustMode=!sgCustMode;
+    document.getElementById('toolsShell').classList.toggle('customize-mode',sgCustMode);
+    document.getElementById('customizeBar').classList.toggle('show',sgCustMode);
+    const btn=document.getElementById('btnCustomize');
+    btn.classList.toggle('active',sgCustMode);
+    btn.textContent=sgCustMode?'✕':'⚙️';
+    document.querySelectorAll('.tool-item').forEach(i=>i.draggable=sgCustMode&&!i.classList.contains('hidden-tool'));
+    if(sgCustMode){
+      document.querySelectorAll('.acc-trigger').forEach(t=>t.classList.add('open'));
+      document.querySelectorAll('.acc-body').forEach(b=>b.classList.add('open'));
+    }
+  }
+
+  function sgCustomizeCancel(){
+    sgCustMode=false;
+    document.getElementById('toolsShell').classList.remove('customize-mode');
+    document.getElementById('customizeBar').classList.remove('show');
+    const btn=document.getElementById('btnCustomize');
+    btn.classList.remove('active');btn.textContent='⚙️';
+    document.querySelectorAll('.tool-item').forEach(i=>i.draggable=false);
+  }
+
+  function sgCustomizeSave(){
+    const layout={};
+    ['daily','weekly','monthly','hidden'].forEach(g=>{
+      const list=document.getElementById('list-'+g);
+      if(!list)return;
+      layout[g]=[...list.querySelectorAll('.tool-item')].map(i=>i.dataset.id);
+    });
+    try{localStorage.setItem(SG_KEY,JSON.stringify(layout));}catch(_){}
+    sgCustomizeCancel();sgUpdateCounts();
+    const btn=document.getElementById('btnCustomize');
+    btn.textContent='✓';
+    setTimeout(()=>{btn.textContent='⚙️';},1800);
+  }
+
+  (function sgRestoreLayout(){
+    try{
+      const saved=JSON.parse(localStorage.getItem(SG_KEY)||'null');
+      if(!saved)return;
+      ['daily','weekly','monthly'].forEach(g=>{
+        const list=document.getElementById('list-'+g);
+        if(!saved[g]||!list)return;
+        saved[g].forEach(id=>{const el=document.querySelector('[data-id="'+id+'"]');if(el)list.appendChild(el);});
+      });
+      if(saved.hidden){
+        const hl=document.getElementById('list-hidden');
+        saved.hidden.forEach(id=>{
+          const el=document.querySelector('[data-id="'+id+'"]');
+          if(el){el.classList.add('hidden-tool');const b=el.querySelector('.hide-toggle');if(b){b.textContent='↩';b.title='Restore';}hl.appendChild(el);}
+        });
+        if(hl.children.length>0)document.getElementById('hiddenSection').classList.add('show');
+      }
+      sgUpdateCounts();
+    }catch(_){}
+  })();
+
+  function sgToggleHide(e,btn){
+    e.preventDefault();e.stopPropagation();
+    const item=btn.closest('.tool-item');
+    const isHidden=item.classList.contains('hidden-tool');
+    const hl=document.getElementById('list-hidden');
+    if(isHidden){
+      const tl=document.getElementById('list-'+item.dataset.group);
+      item.classList.remove('hidden-tool');item.draggable=sgCustMode;
+      btn.textContent='✕';btn.title='Hide';tl.appendChild(item);
+    }else{
+      item.classList.add('hidden-tool');item.draggable=false;
+      btn.textContent='↩';btn.title='Restore';hl.appendChild(item);
+    }
+    document.getElementById('hiddenSection').classList.toggle('show',hl.children.length>0);
+    sgUpdateCounts();
+  }
+
+  document.addEventListener('dragstart',e=>{const item=e.target.closest('.tool-item');if(!item||!sgCustMode)return;sgDragSrc=item;e.dataTransfer.effectAllowed='move';setTimeout(()=>item.classList.add('dragging'),0);});
+  document.addEventListener('dragend',e=>{const item=e.target.closest('.tool-item');if(item)item.classList.remove('dragging');document.querySelectorAll('.tool-item.drag-over').forEach(i=>i.classList.remove('drag-over'));});
+  function sgDragOver(e){e.preventDefault();const t=e.target.closest('.tool-item');document.querySelectorAll('.tool-item.drag-over').forEach(i=>i.classList.remove('drag-over'));if(t&&t!==sgDragSrc)t.classList.add('drag-over');}
+  function sgDrop(e,list){
+    e.preventDefault();
+    document.querySelectorAll('.tool-item.drag-over').forEach(i=>i.classList.remove('drag-over'));
+    if(!sgDragSrc)return;
+    sgDragSrc.dataset.group=list.dataset.group;
+    const t=e.target.closest('.tool-item');
+    if(t&&t!==sgDragSrc&&list.contains(t)){
+      list.insertBefore(sgDragSrc,[...list.children].indexOf(sgDragSrc)>[...list.children].indexOf(t)?t:t.nextSibling);
+    }else{list.appendChild(sgDragSrc);}
+    sgDragSrc=null;sgUpdateCounts();
+  }
+
+  function sgOpenMove(e,btn,label,currentGroup){
+    e.preventDefault();e.stopPropagation();
+    sgPendingMove={item:btn.closest('.tool-item'),label};
+    document.getElementById('sgMoveTitle').textContent='Move "'+label+'" to...';
+    document.getElementById('sgMoveOptions').innerHTML=Object.entries(SG_GROUPS).filter(([k])=>k!==currentGroup).map(([k,v])=>`<div class="move-option" onclick="sgDoMove('${k}')"><span class="move-option-icon">${v.icon}</span><div><div class="move-option-label">${v.label}</div><div class="move-option-sub">${v.note}</div></div></div>`).join('');
+    document.getElementById('sgMoveModal').classList.add('open');
+  }
+  function sgDoMove(g){
+    if(!sgPendingMove)return;
+    const{item}=sgPendingMove;item.dataset.group=g;
+    const tl=document.getElementById('list-'+g);tl.appendChild(item);
+    const body=tl.closest('.acc-body');const trigger=body.previousElementSibling;
+    body.classList.add('open');trigger.classList.add('open');trigger.setAttribute('aria-expanded','true');
+    sgCloseMove();sgUpdateCounts();
+  }
+  function sgCloseMove(){document.getElementById('sgMoveModal').classList.remove('open');sgPendingMove=null;}
+  document.getElementById('sgMoveModal').addEventListener('click',e=>{if(e.target===document.getElementById('sgMoveModal'))sgCloseMove();});
+
+  function sgUpdateCounts(){
+    ['daily','weekly','monthly'].forEach(g=>{
+      const list=document.getElementById('list-'+g);
+      const el=document.getElementById('count-'+g);
+      if(!list||!el)return;
+      const n=[...list.querySelectorAll('.tool-item:not(.hidden-tool)')].length;
+      el.textContent=n+' tool'+(n!==1?'s':'');
+    });
+  }
+
+
+  </script>
+
+  <script>
+  function sgAccToggle(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+    if (isOpen) {
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      body.classList.remove('open');
+    } else {
+      btn.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      body.classList.add('open');
+    }
+  }
+
+  /* search wires up to genieInput for tool/agent filtering */
+  (function(){
+    const s = document.getElementById('genieInput');
+    if (!s) return;
+    s.addEventListener('input', () => {
+      const q = s.value.trim().toLowerCase();
+      document.querySelectorAll('.tool-item, .agent-card').forEach(c => {
+        const kw = (c.dataset.keywords || '') + ' ' + (c.textContent || '');
+        c.style.display = (!q || kw.toLowerCase().includes(q)) ? '' : 'none';
+      });
+      document.querySelectorAll('.acc-row').forEach(row => {
+        const body = row.querySelector('.acc-body');
+        const trigger = row.querySelector('.acc-trigger');
+        if (!q) { row.style.display = ''; return; }
+        const any = [...row.querySelectorAll('.tool-item')].some(c => c.style.display !== 'none');
+        row.style.display = any ? '' : 'none';
+        if (any && !body.classList.contains('open')) {
+          trigger.classList.add('open');
+          trigger.setAttribute('aria-expanded','true');
+          body.classList.add('open');
+        }
+      });
+    });
+  })();
+  </script>
+
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div>
+      <div class="sf-brand-name">Salon <span>Genie</span></div>
+      <div class="sf-sub">Built for real salon teams — simple, fast, and reliable.</div>
+      <div class="sf-copy">© 2026 Salon Genie. All rights reserved.</div>
+    </div>
+    <div>
+      <div class="sf-links">
+        <a class="sf-link" href="salon-dashboard.html">Help</a>
+        <a class="sf-link" href="status.html">Status</a>
+        <a class="sf-link" href="privacy.html">Privacy</a>
+        <a class="sf-link" href="terms.html">Terms</a>
+      </div>
+      <div class="sf-badges">
+        <span class="sf-badge">🔒 Secure login</span>
+        <span class="sf-badge">⚡ Fast workflow</span>
+        <span class="sf-badge">✦ 10 AI Agents</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ MOBILE NAV ══ -->
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <div class="mobile-nav-inner">
+    <a class="mnav active" href="salon-dashboard.html"><div class="ico">🏠</div><div>Home</div></a>
+    <a class="mnav" href="pos.html"><div class="ico">🗓️</div><div>Appts</div></a>
+    <a class="mnav" href="check-in-queue.html"><div class="ico">✅</div><div>Check-in</div></a>
+    <a class="mnav" href="customers.html"><div class="ico">👥</div><div>Clients</div></a>
+    <a class="mnav mnav-ai" href="salon-booking-agent.html">
+      <div class="ico">✦</div><div>AI</div>
+      <span class="mnav-ai-dot"></span>
+    </a>
+    <a class="mnav" href="reports.html"><div class="ico">📊</div><div>Reports</div></a>
+  </div>
+</nav>
+
+<!-- ══ SCRIPTS ══ -->
+<script type="module" src="/shared/js/salon-dashboard.js?v=0304d"></script>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── Live clock + greeting ── */
+  function tick(){
+    const now = new Date();
+    const h = now.getHours(), m = String(now.getMinutes()).padStart(2,'0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = String(h%12||12).padStart(2,'0');
+    const el = document.getElementById('sgClock');
+    if(el) el.textContent = h12+':'+m+' '+ampm;
+    const gEl = document.getElementById('sgGreetText');
+    if(gEl && !gEl.dataset.set){
+      gEl.textContent = (h<12?'Good morning':h<17?'Good afternoon':'Good evening')+' 👋';
+      gEl.dataset.set=1;
+    }
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ── Date pill ── */
+  const dp = document.getElementById('sgClockDate');
+  const sgD = document.getElementById('sgDate');
+  const dateStr = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  if(dp) dp.textContent = dateStr;
+  if(sgD) sgD.textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+
+  /* ── "/" focuses Genie chat, Escape clears ── */
+  document.addEventListener('keydown', e=>{
+    const s = document.getElementById('genieInput');
+    if(!s) return;
+    if(e.key==='/' && document.activeElement!==s){ e.preventDefault(); s.focus(); }
+    if(e.key==='Escape' && document.activeElement===s){ s.blur(); s.value=''; }
+  });
+
+  /* ── Live search across tool cards and agent cards ── */
+  /* search handled by accordion script below */
+
+
+
+  /* ── Task filter pills ── */
+  document.querySelectorAll('.t-pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.t-pill').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+})();
+</script>
+
+<!-- ── AUTH-AWARE HEADER ── -->
+<script type="module">
+(async () => {
+  async function waitForClient(ms = 4000) {
+    const start = Date.now();
+    while (Date.now() - start < ms) {
+      if (window.GSClient?.getAsync) return window.GSClient.getAsync();
+      if (typeof window.getSbClient === 'function') return window.getSbClient();
+      await new Promise(r => setTimeout(r, 100));
+    }
+    return null;
+  }
+
+  const loginBtn = document.getElementById('apLoginBtn');
+  const apRight  = document.getElementById('apRight');
+  if (!apRight) return;
+
+  try {
+    const sg = await waitForClient();
+    if (!sg) return;
+
+    const { data } = await sg.auth.getUser();
+    const user = data?.user;
+    if (!user) return;
+
+    const email    = user.email || '';
+    const meta     = user.user_metadata || {};
+    const fullName = meta.full_name || meta.name || email.split('@')[0] || 'Account';
+    const initials = fullName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+    if (loginBtn) loginBtn.style.display = 'none';
+
+    // ── Resolve active business and all businesses ──
+    let activeBusinessId = new URLSearchParams(location.search).get('business_id');
+    if (!activeBusinessId) {
+      try {
+        const { data: p } = await sg.from('user_preferences')
+          .select('selected_business_id, active_business_id')
+          .eq('user_id', user.id).maybeSingle();
+        activeBusinessId = p?.selected_business_id || p?.active_business_id || null;
+      } catch(_) {}
+    }
+    if (!activeBusinessId) {
+      try { activeBusinessId = localStorage.getItem('gs.active_business_id') || localStorage.getItem('sg.active_business_id'); } catch(_) {}
+    }
+
+    // ── Load businesses for location switcher ──
+    let businesses = [];
+    try {
+      const { data: biz } = await sg.from('business_profiles')
+        .select('id, business_name, logo_url').eq('owner_id', user.id).order('business_name');
+      businesses = biz || [];
+    } catch(_) {}
+    // Also check employee memberships
+    if (businesses.length === 0) {
+      try {
+        const db = sg.schema ? sg.schema('salon') : sg;
+        const { data: emps } = await db.from('employees').select('business_id').eq('user_id', user.id);
+        const ids = [...new Set((emps||[]).map(e => e.business_id).filter(Boolean))];
+        if (ids.length) {
+          const { data: bps } = await sg.from('business_profiles').select('id, business_name, logo_url').in('id', ids);
+          businesses = bps || [];
+        }
+      } catch(_) {}
+    }
+
+    const activeBiz   = businesses.find(b => b.id === activeBusinessId);
+    const bizName     = activeBiz?.business_name || 'My Salon';
+    const bizLogoUrl  = activeBiz?.logo_url || '';
+
+    // Avatar: salon logo if exists, else initials
+    const avatarHTML = bizLogoUrl
+      ? `<div class="ap-user-avatar" style="background:none;padding:0;overflow:hidden;">
+           <img src="${bizLogoUrl}" alt="${bizName}"
+                style="width:100%;height:100%;object-fit:cover;border-radius:8px;"
+                onerror="this.parentElement.innerHTML='${initials}';this.parentElement.style.background='';"/>
+         </div>`
+      : `<div class="ap-user-avatar">${initials}</div>`;
+
+    // ── Location switcher HTML ──
+    const locSection = businesses.length > 1 ? `
+      <div class="ap-dd-divider"></div>
+      <div class="ap-dd-heading">Locations</div>
+      ${businesses.map(b => `
+        <button class="ap-dd-location ${b.id === activeBusinessId ? 'is-active' : ''}"
+                data-biz-id="${b.id}">
+          <span>${b.id === activeBusinessId ? '✓ ' : ''}${b.business_name}</span>
+          <span>→</span>
+        </button>`).join('')}` : '';
+
+    // Settings link — only shown to business owners (businesses array is owner-only)
+    const settingsLink = businesses.length > 0
+      ? `<a class="ap-dd-item" href="settings.html">⚙️ Settings</a>`
+      : '';
+
+    // ── Build dropdown ──
+    const userWrap = document.createElement('div');
+    userWrap.style.cssText = 'position:relative;';
+    userWrap.innerHTML = `
+      <button class="ap-user-btn" id="apUserBtn" aria-haspopup="true" aria-expanded="false"
+              style="gap:10px;padding:6px 10px 6px 8px;">
+        ${avatarHTML}
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:1px;">
+          <div style="font-size:12px;font-weight:600;color:var(--ink);line-height:1.2;white-space:nowrap;">${fullName.split(' ')[0]}</div>
+          <div style="font-size:10px;color:var(--muted);white-space:nowrap;">📍 ${bizName}</div>
+        </div>
+        <span class="ap-user-chevron" style="font-size:10px;color:var(--muted);margin-left:2px;">▾</span>
+      </button>
+      <div class="ap-user-dropdown" id="apUserDropdown" role="menu">
+        <div class="ap-dd-header">
+          <div class="ap-dd-name">${fullName}</div>
+          <div class="ap-dd-email">${email}</div>
+        </div>
+        <a class="ap-dd-item" href="salon-dashboard.html">🏠 Dashboard</a>
+        <a class="ap-dd-item" href="salon-briefing-agent.html">🌅 Daily Briefing</a>
+        <a class="ap-dd-item" href="manage-employees.html">👥 Manage Employees</a>
+        <a class="ap-dd-item" href="salon-staff-agent.html">📅 Staff Agent</a>
+        <a class="ap-dd-item" href="salon-payroll-agent.html">💵 Payroll Agent</a>
+        <a class="ap-dd-item" href="manage-tips.html">💸 Manage Tips</a>
+        <div class="ap-dd-divider"></div>
+        <a class="ap-dd-item" href="account.html">👤 My Account</a>
+        <a class="ap-dd-item" href="settings.html">🏪 Business Profile</a>
+        ${settingsLink}
+        ${locSection}
+        <div class="ap-dd-divider"></div>
+        <button class="ap-dd-item danger" id="apSignOutBtn">🚪 Sign out</button>
+      </div>`;
+
+    apRight.appendChild(userWrap);
+
+    const greetSub = document.getElementById('sgGreetSub');
+    if (greetSub) greetSub.textContent = `Welcome back, ${fullName.split(' ')[0]} — your salon at a glance`;
+
+    // ── Toggle dropdown ──
+    const userBtn  = document.getElementById('apUserBtn');
+    const dropdown = document.getElementById('apUserDropdown');
+
+    userBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const open = dropdown.classList.toggle('open');
+      userBtn.setAttribute('aria-expanded', open);
+    });
+    document.addEventListener('click', () => {
+      dropdown.classList.remove('open');
+      userBtn?.setAttribute('aria-expanded', 'false');
+    });
+
+    // ── Location switching ──
+    dropdown.querySelectorAll('.ap-dd-location').forEach(btn => {
+      btn.addEventListener('click', async e => {
+        e.stopPropagation();
+        const bid = btn.getAttribute('data-biz-id');
+        if (!bid || bid === activeBusinessId) return;
+        try {
+          await sg.from('user_preferences').upsert(
+            { user_id: user.id, selected_business_id: bid },
+            { onConflict: 'user_id' }
+          );
+        } catch(_) {}
+        try {
+          localStorage.setItem('gs.active_business_id', bid);
+          localStorage.setItem('sg.active_business_id', bid);
+        } catch(_) {}
+        location.href = 'dashboard.html?business_id=' + encodeURIComponent(bid);
+      });
+    });
+
+    // ── Sign out ──
+    document.getElementById('apSignOutBtn').addEventListener('click', async () => {
+      try {
+        await sg.auth.signOut();
+        if (window.GSAuthHeader?.clearCachedUser) window.GSAuthHeader.clearCachedUser();
+      } catch(_) {}
+      window.location.href = '/login.html?agent=salon';
+    });
+
+  } catch (err) {
+    console.warn('[auth-header] could not resolve user:', err);
+  }
+})();
+</script>
+<script type="module">
+(async()=>{
+  const waitForClient = async () => {
+    for(let i=0;i<30;i++){
+      if(window.GSClient?.getAsync) return window.GSClient.getAsync();
+      await new Promise(r=>setTimeout(r,200));
+    }
+    return null;
+  };
+  const qs = (name) => new URL(location.href).searchParams.get(name);
+  const BUSINESS_ID = qs('business_id') || (()=>{ try{return localStorage.getItem('gs.active_business_id')||'';}catch(_){return '';} })();
+  const escHtml = (s) => String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
+  const fmtDate = (d) => { try{return new Date(d+'T12:00:00').toLocaleDateString();}catch(_){return d||'';} };
+  let sg=null, currentUser=null, currentEmployee=null, taskRows=[], taskFilter='all';
+  const list = document.getElementById('taskList');
+  if(!list) return;
+  list.innerHTML = '<div class="task-empty">Loading tasks…</div>';
+
+  function renderCard(t){
+    const status = String(t.status_live||t.status||'pending').toLowerCase();
+    const priority = String(t.priority||'normal').toLowerCase();
+    const dueLabel = t.due_date ? `Due: ${fmtDate(t.due_date)}` : 'No due date';
+    const canAct = !['completed','cancelled','skipped'].includes(status);
+    return `
+      <div class="task-card ${escHtml(status)}">
+        <div class="task-top">
+          <div>
+            <div class="task-title-text">${escHtml(t.title_snapshot||'Untitled task')}</div>
+            ${t.detail_snapshot?`<div class="task-detail-text">${escHtml(t.detail_snapshot)}</div>`:''}
+          </div>
+          <div class="task-badges">
+            <span class="t-badge">${escHtml(t.category_snapshot||'General')}</span>
+            <span class="t-badge ${priority==='urgent'?'urgent':''}">${escHtml(priority)}</span>
+            <span class="t-badge ${status==='completed'?'completed':status==='overdue'?'overdue':''}">${escHtml(status)}</span>
+          </div>
+        </div>
+        <div class="task-meta-row">${escHtml(dueLabel)}${t.note?` · ${escHtml(t.note)}`:''}</div>
+        <div class="task-action-row">
+          ${canAct?`<button class="qp-btn" data-task-start="${escHtml(t.id)}">▶ Start</button>`:''}
+          ${canAct?`<button class="qp-btn primary" data-task-complete="${escHtml(t.id)}">✅ Complete</button>`:''}
+          ${status!=='completed'?`<button class="qp-btn" data-task-help="${escHtml(t.id)}">🙋 Help</button>`:''}
+        </div>
+      </div>`;
+  }
+
+  function render(){
+    let rows=[...taskRows];
+    if(taskFilter==='urgent') rows=rows.filter(r=>String(r.priority||'').toLowerCase()==='urgent'||String(r.status_live||r.status||'').toLowerCase()==='overdue');
+    if(taskFilter==='completed') rows=rows.filter(r=>String(r.status_live||r.status||'').toLowerCase()==='completed');
+    if(!rows.length){list.innerHTML='<div class="task-empty">No tasks in this view.</div>';return;}
+    list.innerHTML=rows.map(renderCard).join('');
+    list.querySelectorAll('[data-task-start]').forEach(btn=>btn.addEventListener('click',()=>updateStatus(btn.dataset.taskStart,'in_progress')));
+    list.querySelectorAll('[data-task-complete]').forEach(btn=>btn.addEventListener('click',()=>updateStatus(btn.dataset.taskComplete,'completed')));
+    list.querySelectorAll('[data-task-help]').forEach(btn=>btn.addEventListener('click',()=>markHelp(btn.dataset.taskHelp)));
+  }
+
+  async function updateStatus(taskId,nextStatus){
+    if(!(sg&&BUSINESS_ID&&taskId)) return;
+    const patch={status:nextStatus};
+    if(nextStatus==='in_progress') patch.started_at=new Date().toISOString();
+    if(nextStatus==='completed') patch.completed_at=new Date().toISOString();
+    const res=await sg.from('salon.task_assignments').update(patch).eq('id',taskId).eq('business_id',BUSINESS_ID);
+    if(res?.error){alert('Could not update task.');return;}
+    taskRows=taskRows.map(r=>String(r.id)===String(taskId)?({...r,status:nextStatus,status_live:nextStatus,...patch}):r);
+    render();
+  }
+
+  async function markHelp(taskId){
+    const note=prompt('What help do you need?');
+    if(note==null||!note.trim()||!(sg&&BUSINESS_ID&&taskId)) return;
+    const res=await sg.from('salon.task_comments').insert({business_id:BUSINESS_ID,assignment_id:taskId,author_id:currentUser?.id||null,comment_text:note.trim()});
+    if(res?.error){alert('Could not save help request.');return;}
+    alert('Help request saved.');
+  }
+
+  document.querySelectorAll('.t-pill[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{
+    taskFilter=btn.dataset.filter||'all'; render();
+  }));
+
+  try{
+    sg=await waitForClient();
+    if(!sg||!BUSINESS_ID){list.innerHTML='<div class="task-empty">Sign in and select a location to see tasks.</div>';return;}
+    const {data}=await sg.auth.getUser();
+    currentUser=data?.user||null;
+    if(!currentUser){list.innerHTML='<div class="task-empty">Sign in to see your tasks.</div>';return;}
+    let empRes=await sg.from('salon.employees').select('id,role,full_name').eq('business_id',BUSINESS_ID).eq('user_id',currentUser.id).maybeSingle();
+    if(empRes?.error&&String(empRes.error.message||'').toLowerCase().includes('user_id')) empRes={data:null,error:null};
+    currentEmployee=empRes?.data||null;
+    if(!currentEmployee?.id){list.innerHTML='<div class="task-empty">No employee profile linked. Owners can use 📋 All Assigned to monitor the salon.</div>';return;}
+    const res=await sg.from('salon.v_task_assignments_live').select('id,assignee_id,title_snapshot,detail_snapshot,category_snapshot,priority,status,status_live,due_date,due_at,note,completed_at,assigned_at').eq('business_id',BUSINESS_ID).eq('assignee_id',currentEmployee.id).order('assigned_at',{ascending:false}).limit(100);
+    if(res?.error) throw res.error;
+    taskRows=res.data||[];
+    render();
+  }catch(err){
+    console.error('[salon-dashboard tasks]',err);
+    list.innerHTML='<div class="task-empty">Could not load tasks.</div>';
+  }
+})();
+</script>
+
+
+<script type="module">
+// ══════════════════════════════════════════════════════════════
+// DASHBOARD — LIVE KPIs + SMART GENIE PILLS
+// ══════════════════════════════════════════════════════════════
+(async () => {
+
+  async function waitForClient(ms = 5000) {
+    const start = Date.now();
+    while (Date.now() - start < ms) {
+      if (window.GSClient?.getAsync) return window.GSClient.getAsync();
+      if (typeof window.getSbClient === 'function') return window.getSbClient();
+      await new Promise(r => setTimeout(r, 150));
+    }
+    return null;
+  }
+
+  const sg = await waitForClient();
+  if (!sg) return;
+
+  const BUSINESS_ID = new URLSearchParams(location.search).get('business_id')
+    || (() => { try { return localStorage.getItem('gs.active_business_id') || localStorage.getItem('sg.active_business_id') || ''; } catch(_) { return ''; } })();
+  if (!BUSINESS_ID) return;
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+
+  function setKPI(id, value, sub) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = value ?? '—';
+      el.style.transition = 'opacity 0.3s';
+      el.style.opacity = '0';
+      requestAnimationFrame(() => { el.style.opacity = '1'; });
+    }
+    if (sub) {
+      const card = el?.closest('.kcard');
+      const subEl = card?.querySelector('.ksub');
+      if (subEl) subEl.textContent = sub;
+    }
+  }
+
+  function setKPIColor(id, color) {
+    const el = document.getElementById(id);
+    const card = el?.closest('.kcard');
+    if (card) {
+      card.classList.remove('blush', 'amber', 'teal', 'rose', 'warn', 'bad');
+      if (color) card.classList.add(color);
+      card.style.setProperty('--kpi-accent',
+        color === 'teal'  ? 'var(--teal)'  :
+        color === 'rose'  ? 'var(--rose)'  :
+        color === 'amber' ? 'var(--amber)' : 'var(--blush)'
+      );
+    }
+  }
+
+  // ── Nudge banner: show when no weekly revenue OR commission data ──
+  function sgMaybeShowNudge() {
+    // Only show if BOTH are missing (not just one)
+    if (window._sgHasRevenue !== false && window._sgHasCommission !== false) return;
+    if (window._sgHasRevenue === true || window._sgHasCommission === true) return;
+    // Respect per-session dismiss
+    try {
+      const dismissed = sessionStorage.getItem('sg.nudge.import.dismissed');
+      if (dismissed && (Date.now() - Number(dismissed)) < 3600000) return; // 1hr
+    } catch(_) {}
+    const nudge = document.getElementById('importNudge');
+    if (nudge) nudge.classList.add('show');
+  }
+
+  ['kAppt','kWalk','kNoShow','kLow','kRevenue','kCommission','kExpenses','kIncome'].forEach(id => setKPI(id, '…'));
+
+  // Helper: salon-schema fetch with correct Accept-Profile header
+  // SB_URL resolved from: URL param → localStorage → SG_CONFIG → hardcoded fallback
+  const SB_URL = (() => {
+    const p = new URLSearchParams(location.search).get('supabase_url');
+    if (p) return p;
+    try { const c = window.SG_CONFIG || window.SG_BOOKING; if (c?.supabaseUrl) return c.supabaseUrl; } catch(_) {}
+    try { const s = localStorage.getItem('sg.supabase_url') || localStorage.getItem('gs.supabase_url'); if (s) return s; } catch(_) {}
+    return 'https://pbojacnagutipfhcxltj.supabase.co';
+  })();
+
+  async function salonFetch(path, params = {}) {
+    const url = new URL(`${SB_URL}/rest/v1/${path}`);
+    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
+    const { data: { session } } = await sg.auth.getSession();
+    // sg.supabaseKey is undefined on the thin REST client — read from SG_CONFIG or fallback
+    const anonKey = (() => {
+      try { return window.SG_CONFIG?.supabaseKey || window.SG_BOOKING?.supabaseKey || ''; } catch(_) { return ''; }
+    })() || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBib2phY25hZ3V0aXBmaGN4bHRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMDkwODAsImV4cCI6MjA2MzU4NTA4MH0.ZLCcAzTYljoZycpBGwMtthP5VyAJ4schuIvt4HibGc0';
+    const res = await fetch(url.toString(), {
+      headers: {
+        'apikey': anonKey,
+        'Authorization': session ? `Bearer ${session.access_token}` : `Bearer ${anonKey}`,
+        'Accept-Profile': 'salon',
+        'Content-Type': 'application/json',
+      }
+    });
+    if (!res.ok) return null;
+    return res.json();
+  }
+
+  // ── Query 1: Appointments today ─────────────────────────────
+  try {
+    // FIX: schema uses start_time, not appointment_date
+    const appts = await salonFetch('appointments', {
+      select: 'id,status',
+      business_id: `eq.${BUSINESS_ID}`,
+      start_time: `gte.${todayStr}T00:00:00`,
+      'start_time.lte': `${todayStr}T23:59:59`,
+    });
+
+    if (appts) {
+      const total   = appts.length;
+      const noShows = appts.filter(a =>
+        ['no_show','noshow','no-show','no show'].includes(String(a.status || '').toLowerCase())
+      ).length;
+      const confirmed = appts.filter(a =>
+        ['confirmed','active','scheduled','pending'].includes(String(a.status || '').toLowerCase())
+      ).length;
+
+      setKPI('kAppt', confirmed, `${total} total today`);
+      setKPI('kNoShow', noShows, noShows === 0 ? 'none so far' : noShows === 1 ? 'needs outreach' : 'need outreach');
+
+      if (noShows === 0) {
+        setKPIColor('kNoShow', 'teal');
+        document.querySelector('#kNoShow')?.closest('.kcard')?.classList.remove('warn','bad');
+      } else if (noShows >= 3) {
+        setKPIColor('kNoShow', 'rose');
+      }
+    }
+  } catch(_) {}
+
+  // ── Query 2: Walk-ins today ──────────────────────────────────
+  try {
+    let walkCount = 0;
+
+    // First try: appointments with walk_in source flag today (start_time range)
+    const walkins = await salonFetch('appointments', {
+      select: 'id',
+      business_id: `eq.${BUSINESS_ID}`,
+      start_time: `gte.${todayStr}T00:00:00`,
+      'start_time.lte': `${todayStr}T23:59:59`,
+      source: 'in.(walk_in,walkin,walk-in)',
+    });
+    if (walkins?.length) walkCount = walkins.length;
+
+    // Fallback: tickets created today with no appointment_id (true walk-ins)
+    if (!walkCount) {
+      const walkTickets = await salonFetch('tickets', {
+        select: 'id',
+        business_id: `eq.${BUSINESS_ID}`,
+        appointment_id: 'is.null',
+        created_at: `gte.${todayStr}T00:00:00`,
+      });
+      if (walkTickets?.length) walkCount = walkTickets.length;
+    }
+
+    setKPI('kWalk', walkCount, 'so far today');
+  } catch(_) {}
+
+  // ── Query 3: Low inventory items ────────────────────────────
+  try {
+    const lowItems = await salonFetch('inventory_items', {
+      select: 'id,quantity,reorder_point',
+      business_id: `eq.${BUSINESS_ID}`,
+      'reorder_point': 'not.is.null',
+    });
+
+    if (lowItems) {
+      const lowCount = lowItems.filter(item =>
+        Number(item.quantity ?? 0) <= Number(item.reorder_point ?? 0)
+      ).length;
+      setKPI('kLow', lowCount, lowCount === 0 ? 'all stocked up' : 'below reorder');
+      if (lowCount === 0) setKPIColor('kLow', 'teal');
+      else if (lowCount >= 5) setKPIColor('kLow', 'rose');
+    }
+  } catch(_) {}
+
+
+  // ── Query 4: Week Revenue (from weekly_revenue_import) ────────
+  try {
+    // Fetch most recent week available — don't force current week (may not be imported yet)
+    const revRows = await salonFetch('weekly_revenue_import', {
+      select: 'week_start,week_end,total',
+      business_id: `eq.${BUSINESS_ID}`,
+      order: 'week_start.desc',
+      limit: '500',
+    });
+
+    if (revRows && revRows.length) {
+      const latestWeek = revRows[0].week_start;
+      const weekRows   = revRows.filter(r => r.week_start === latestWeek);
+      const weekTotal  = weekRows.reduce((s, r) => s + Number(r.total || 0), 0);
+      const weekEnd    = revRows[0].week_end;
+      const fmt = n => '$' + Math.round(n).toLocaleString();
+      const currentMonday = (() => { const d=new Date(); d.setDate(d.getDate()-d.getDay()+1); return d.toISOString().slice(0,10); })();
+      const label = latestWeek === currentMonday ? 'this week' : `wk of ${latestWeek.slice(5).replace('-','/')}`;
+      setKPI('kRevenue', fmt(weekTotal), label);
+      window._sgHasRevenue = true;
+    } else {
+      setKPI('kRevenue', '—', 'no import yet');
+      window._sgHasRevenue = false;
+      sgMaybeShowNudge();
+    }
+  } catch(_) { window._sgHasRevenue = false; sgMaybeShowNudge(); }
+
+  // ── Query 5: Week Commission (from weekly_tech_commissions) ───
+  try {
+    // Fetch most recent week available — don't force current week
+    const { data: allComm } = await sg
+      .from('weekly_tech_commissions')
+      .select('period_start,payroll_total')
+      .eq('business_id', BUSINESS_ID)
+      .order('period_start', { ascending: false })
+      .limit(100);
+
+    if (allComm && allComm.length) {
+      const latestWeek  = allComm[0].period_start;
+      const weekRows    = allComm.filter(r => r.period_start === latestWeek);
+      const totalPayout = weekRows.reduce((s, r) => s + Number(r.payroll_total || 0), 0);
+      const fmt = n => '$' + Math.round(n).toLocaleString();
+      const currentMonday = (() => { const d=new Date(); d.setDate(d.getDate()-d.getDay()+1); return d.toISOString().slice(0,10); })();
+      const label = latestWeek === currentMonday
+        ? `${weekRows.length} techs`
+        : `${weekRows.length} techs · wk of ${latestWeek.slice(5).replace('-','/')}`;
+      setKPI('kCommission', fmt(totalPayout), label);
+      window._sgHasCommission = true;
+    } else {
+      setKPI('kCommission', '—', 'no payroll yet');
+      window._sgHasCommission = false;
+      sgMaybeShowNudge();
+    }
+  } catch(_) { window._sgHasCommission = false; sgMaybeShowNudge(); }
+
+  // ── Query 6: Month Expenses (from salon.expenses) ────────────
+  try {
+    const monthStart = new Date(); monthStart.setDate(1);
+    const monthStartStr = monthStart.toISOString().slice(0, 10);
+    const expenses = await salonFetch('expenses', {
+      select: 'amount',
+      business_id: `eq.${BUSINESS_ID}`,
+      expense_date: `gte.${monthStartStr}`,
+    });
+    if (expenses && expenses.length) {
+      const total = expenses.reduce((s, r) => s + Number(r.amount || 0), 0);
+      setKPI('kExpenses', '$' + Math.round(total).toLocaleString(), `${expenses.length} entries`);
+      if (total > 5000) setKPIColor('kExpenses', 'rose');
+    } else {
+      setKPI('kExpenses', '$0', 'none logged');
+    }
+  } catch(_) { setKPI('kExpenses', '—', 'no table yet'); }
+
+  // ── Query 7: Month Income (from salon.income or tickets revenue) ──
+  try {
+    const monthStart = new Date(); monthStart.setDate(1);
+    const monthStartStr = monthStart.toISOString().slice(0, 10);
+    const income = await salonFetch('income', {
+      select: 'amount',
+      business_id: `eq.${BUSINESS_ID}`,
+      income_date: `gte.${monthStartStr}`,
+    });
+    if (income && income.length) {
+      const total = income.reduce((s, r) => s + Number(r.amount || 0), 0);
+      setKPI('kIncome', '$' + Math.round(total).toLocaleString(), `${income.length} entries`);
+      setKPIColor('kIncome', 'teal');
+    } else {
+      setKPI('kIncome', '$0', 'none logged');
+    }
+  } catch(_) { setKPI('kIncome', '—', 'no table yet'); }
+
+  // ── Query 8: Reviews — avg rating for Quick Peek card ────────
+  try {
+    const reviews = await salonFetch('reviews', {
+      select: 'stars,reply_text',
+      business_id: `eq.${BUSINESS_ID}`,
+      limit: '100',
+      order: 'review_date.desc',
+    });
+    const metricEl = document.getElementById('qpReviewMetric');
+    if (metricEl) {
+      if (reviews && reviews.length) {
+        const avg = reviews.reduce((s, r) => s + Number(r.stars || 0), 0) / reviews.length;
+        const unreplied = reviews.filter(r => !r.reply_text).length;
+        const stars = '★'.repeat(Math.round(avg)) + '☆'.repeat(5 - Math.round(avg));
+        metricEl.textContent = `${avg.toFixed(1)} ${stars} · ${unreplied} unanswered`;
+        metricEl.style.color = avg >= 4.5 ? 'var(--teal)' : avg >= 3.5 ? 'var(--amber)' : 'var(--rose)';
+      } else {
+        metricEl.textContent = 'No reviews yet';
+      }
+    }
+  } catch(_) {
+    const metricEl = document.getElementById('qpReviewMetric');
+    if (metricEl) metricEl.textContent = 'Reviews Agent';
+  }
+
+  // ── Load today's chore assignments ──────────────────────────
+  try {
+    const chores = await salonFetch('daily_chores', {
+      select: 'assignments,assigned_by,assigned_at',
+      business_id: `eq.${BUSINESS_ID}`,
+      chore_date: `eq.${todayStr}`,
+      limit: '1',
+    });
+
+    const widget = document.getElementById('choreWidget');
+    const body   = document.getElementById('choreWidgetBody');
+    const meta   = document.getElementById('choreSavedBy');
+    if (!widget || !body) throw new Error('no widget');
+
+    if (chores && chores.length) {
+      const rec  = chores[0];
+      const time = rec.assigned_at
+        ? new Date(rec.assigned_at).toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' })
+        : '';
+      if (meta) meta.textContent = 'Saved' + (rec.assigned_by ? ' by ' + rec.assigned_by : '') + (time ? ' at ' + time : '');
+
+      const ICONS = { garbage:'🗑️', sweep:'🧹', hottowels:'🔥', laundry:'👕' };
+      const ORDER = ['garbage','sweep','hottowels','laundry'];
+      const cells = [];
+      ORDER.forEach(key => {
+        (rec.assignments[key] || []).forEach(name => {
+          cells.push(`<div class="chore-assign-cell">
+            <div class="chore-assign-icon">${ICONS[key] || '◦'}</div>
+            <div class="chore-assign-info">
+              <div class="chore-assign-chore">${key === 'hottowels' ? 'Hot Towels' : key.charAt(0).toUpperCase() + key.slice(1)}</div>
+              <div class="chore-assign-name">${name}</div>
+            </div>
+          </div>`);
+        });
+      });
+
+      body.innerHTML = cells.length
+        ? `<div class="chores-grid">${cells.join('')}</div>`
+        : `<div class="chores-empty">No assignments recorded yet. <a href="daily-chores-spinner.html">Assign chores →</a></div>`;
+      widget.style.display = 'block';
+
+    } else {
+      body.innerHTML = `<div class="chores-empty">&#x1F4CB; No chores assigned yet today. <a href="daily-chores-spinner.html">Open Chores Spinner →</a></div>`;
+      widget.style.display = 'block';
+    }
+  } catch(_e) {
+    // Widget stays hidden if table doesn't exist yet
+  }
+
+})();
+</script>
+
+<!-- ══ GENIE AI CHAT ══ -->
+<script type="module">
+(async () => {
+
+  // ── Wait for Supabase client to get role ──
+  async function waitForClient(ms=4000) {
+    const start = Date.now();
+    while (Date.now()-start < ms) {
+      if (window.GSClient?.getAsync) return window.GSClient.getAsync();
+      await new Promise(r=>setTimeout(r,150));
+    }
+    return null;
+  }
+
+  // ── Role configs ──
+  const ROLES = {
+    owner: {
+      placeholder: 'Ask Genie anything about your salon…',
+      suggestions: ['How much did we make today?', 'Who called out this week?', 'Draft a Sunday promo', 'Which items are low on stock?'],
+      actions: [
+        { label: '📊 Analytics', href: 'salon-analytics-agent.html' },
+        { label: '👥 Staff Agent', href: 'salon-staff-agent.html' },
+        { label: '📅 Bookings', href: 'salon-booking-agent.html' },
+      ],
+      systemPrompt: (ctx) => `You are Genie, the AI assistant built into Salon Genie. You are talking to the OWNER of ${ctx.bizName}. They have full access to all salon data: revenue, payroll, staff, inventory, appointments, marketing, and business settings. Today is ${ctx.today}. Today's live snapshot: ${ctx.appt} appointments booked, ${ctx.walkin} walk-ins, ${ctx.noshow} no-show(s), ${ctx.lowInv} item(s) low on inventory. Available AI agents: Daily Briefing, Inventory, Booking, Reception, Marketing, Analytics, Payroll, Staff & Shifts, Reviews, Loyalty. Available tools: POS, Check-In Queue, Appointments, Front Desk, Shift Hub, Supply Inventory, Import Revenue & Pay, Reports, and more. Be concise, direct, and action-oriented. When relevant, mention which Salon Genie agent or tool to use. Keep responses under 100 words unless detail is needed. Never make up data not provided.`
+    },
+    manager: {
+      placeholder: "Ask Genie about today's operations…",
+      suggestions: ["Who's on shift today?", 'Any walk-ins waiting?', 'Check low inventory', "How's the schedule?"],
+      actions: [
+        { label: '📅 Shift Hub', href: 'staff-shift.html' },
+        { label: '📦 Inventory', href: 'inventory.html' },
+        { label: '✅ Check-In', href: 'check-in-queue.html' },
+      ],
+      systemPrompt: (ctx) => `You are Genie, the AI assistant built into Salon Genie. You are talking to the MANAGER of ${ctx.bizName}. They have access to operations, staff schedules, inventory, client data, and reports — but NOT payroll details, hiring decisions, or owner-level financials. Today is ${ctx.today}. Today's snapshot: ${ctx.appt} appointments, ${ctx.walkin} walk-ins, ${ctx.noshow} no-show(s), ${ctx.lowInv} low inventory items. Be concise and operationally focused. Keep responses under 80 words.`
+    },
+    technician: {
+      placeholder: 'Ask Genie about your schedule or earnings…',
+      suggestions: ["Who's my next client?", 'How much have I made today?', 'What services am I doing?', 'Show my appointments'],
+      actions: [
+        { label: '🗓️ My Schedule', href: 'my-shifts.html' },
+        { label: '💵 My Earnings', href: 'tech-portal.html' },
+      ],
+      systemPrompt: (ctx) => `You are Genie, the AI assistant built into Salon Genie. You are talking to a NAIL TECHNICIAN at ${ctx.bizName}. They can ONLY see their own data: their appointments, services, commission/earnings, and turn queue. They cannot see other techs' data, payroll, inventory counts, or business finances. Today is ${ctx.today}. Be personal, friendly, and focused on their shift. Keep responses under 60 words.`
+    },
+    receptionist: {
+      placeholder: 'Ask Genie about clients or bookings…',
+      suggestions: ["Who's next in queue?", 'Any unread messages?', 'How many walk-ins today?', 'Look up a client'],
+      actions: [
+        { label: '✅ Check-In Queue', href: 'check-in-queue.html' },
+        { label: '💬 Reception', href: 'salon-reception-agent.html' },
+        { label: '👥 Clients', href: 'customers.html' },
+      ],
+      systemPrompt: (ctx) => `You are Genie, the AI assistant built into Salon Genie. You are talking to the RECEPTIONIST at ${ctx.bizName}. They handle front desk only: check-ins, walk-ins, appointments, client lookup, and messages. They cannot see payroll, staff commissions, inventory levels, or business reports. Today is ${ctx.today}. Today's queue: ${ctx.walkin} walk-ins checked in. Be quick, front-desk focused. Keep responses under 60 words.`
+    },
+    staff: {
+      placeholder: 'Ask Genie a question…',
+      suggestions: ["What's on my schedule?", "Who's my manager?", 'Any announcements today?'],
+      actions: [
+        { label: '📅 Shift Hub', href: 'staff-shift.html' },
+      ],
+      systemPrompt: (ctx) => `You are Genie, the AI assistant built into Salon Genie. You are talking to a STAFF MEMBER at ${ctx.bizName}. Keep responses brief, friendly, and relevant to their shift. Today is ${ctx.today}.`
+    }
+  };
+
+  // ── Detect role ──
+  let userRole = 'owner';
+  let userName = 'there';
+  let bizName  = 'your salon';
+  let history  = [];
+  let typing   = false;
+
+  try {
+    const sg = await waitForClient();
+    if (sg) {
+      const { data: authData } = await sg.auth.getUser();
+      const user = authData?.user;
+      if (user) {
+        const meta = user.user_metadata || {};
+        userName = (meta.full_name || meta.name || user.email || '').split(' ')[0] || 'there';
+        const { data: prefs } = await sg.from('user_preferences')
+          .select('role, selected_business_id').eq('user_id', user.id).maybeSingle();
+        if (prefs?.role) userRole = String(prefs.role).toLowerCase();
+        if (prefs?.selected_business_id) {
+          const { data: biz } = await sg.from('business_profiles')
+            .select('business_name').eq('id', prefs.selected_business_id).maybeSingle();
+          if (biz?.business_name) bizName = biz.business_name;
+        }
+      }
+    }
+  } catch(_) {}
+
+  // ── Build context snapshot from live KPIs ──
+  function getCtx() {
+    return {
+      bizName,
+      today: new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}),
+      appt:   document.getElementById('kAppt')?.textContent?.trim()  || '?',
+      walkin: document.getElementById('kWalk')?.textContent?.trim()  || '?',
+      noshow: document.getElementById('kNoShow')?.textContent?.trim()|| '?',
+      lowInv: document.getElementById('kLow')?.textContent?.trim()   || '?',
+    };
+  }
+
+  const cfg = ROLES[userRole] || ROLES.owner;
+
+  // ── Init UI ──
+  const input     = document.getElementById('genieInput');
+  const sendBtn   = document.getElementById('genieSendBtn');
+  const sugEl     = document.getElementById('genieSuggestions');
+  const msgsEl    = document.getElementById('genieMessages');
+  if (!input) return;
+
+  input.placeholder = cfg.placeholder;
+
+  // Render suggestion pills
+  sugEl.innerHTML = cfg.suggestions.map(s =>
+    `<button class="genie-sug" type="button" onclick="genieUseSug(this)">${s}</button>`
+  ).join('');
+
+  // Expose suggestion handler globally
+  window.genieUseSug = (btn) => {
+    input.value = btn.textContent.trim();
+    genieSend();
+  };
+
+  // ── Detect content type from user question + reply ──
+  function detectIntent(question, reply) {
+    const q = question.toLowerCase();
+    const r = reply.toLowerCase();
+    if (/promo|promotion|offer|discount|post|caption|social|instagram|marketing|campaign|sms|email/.test(q+r)) return 'promo';
+    if (/revenue|sales|made today|earnings|income|report|analytics|money|total/.test(q+r)) return 'revenue';
+    if (/no.?show|cancel|missed|outreach|follow.?up/.test(q+r)) return 'noshow';
+    if (/inventory|stock|supply|low|reorder|ran out/.test(q+r)) return 'inventory';
+    if (/staff|shift|callout|called out|coverage|who.?work|schedule|payroll/.test(q+r)) return 'staff';
+    if (/client|customer|loyal|visit|history|profile/.test(q+r)) return 'client';
+    if (/book|appointment|slot|open|available|schedule/.test(q+r)) return 'booking';
+    return 'general';
+  }
+
+  // ── Smart follow-up actions per intent ──
+  const FOLLOW_UPS = {
+    promo: [
+      { label: '📋 Copy text',       action: 'copy' },
+      { label: '🔄 Regenerate',      action: 'regen', prompt: 'Write a different version of this promotion' },
+      { label: '✏️ Make it shorter',  action: 'regen', prompt: 'Make that promotion shorter and punchier — 2-3 lines max' },
+      { label: '📣 Send via Marketing', action: 'navigate', href: 'salon-marketing-agent.html?view=drafts&prefill=1' },
+      { label: '📱 Post to Social',   action: 'navigate', href: 'social-media.html?prefill=1' },
+    ],
+    revenue: [
+      { label: '📊 Open Analytics',  href: 'salon-analytics-agent.html' },
+      { label: '📈 Full Reports',     href: 'reports.html' },
+      { label: '🔄 This week vs last', action: 'regen', prompt: 'Compare this week\'s revenue to last week' },
+    ],
+    noshow: [
+      { label: '👥 Open Clients',     href: 'customers.html' },
+      { label: '📣 Send follow-up',   href: 'salon-marketing-agent.html' },
+      { label: '🔄 Draft outreach',   action: 'regen', prompt: 'Write a short friendly message to send to a client who missed their appointment today' },
+    ],
+    inventory: [
+      { label: '📦 Supply Inventory', href: 'inventory.html' },
+      { label: '🛒 Log supply order', href: 'supply-orders.html' },
+      { label: '✦ Inventory Agent',   href: 'salon-inventory-agent.html' },
+    ],
+    staff: [
+      { label: '👥 Staff Agent',      href: 'salon-staff-agent.html' },
+      { label: '📅 Shift Hub',        href: 'staff-shift.html' },
+      { label: '💵 Payroll',          href: 'salon-payroll-agent.html' },
+    ],
+    client: [
+      { label: '👥 Open Clients',     href: 'customers.html' },
+      { label: '🎁 Loyalty Agent',    href: 'salon-loyalty-agent.html' },
+    ],
+    booking: [
+      { label: '📅 Bookings Agent',   href: 'salon-booking-agent.html' },
+      { label: '🗓️ Appointments',     href: 'appointment.html' },
+      { label: '✅ Check-In Queue',   href: 'check-in-queue.html' },
+    ],
+    general: [
+      { label: '🔄 Ask differently',  action: 'regen', prompt: 'Can you explain that differently or give me more detail?' },
+      { label: '🌅 Daily Briefing',   href: 'salon-briefing-agent.html' },
+    ],
+  };
+
+  // ── Copy last AI reply to clipboard ──
+  // ── Smart navigation — passes Genie-generated content to destination pages ──
+  window.genieNavigate = (href, contentEl) => {
+    // Grab the last AI message text (strip action buttons)
+    const msgs = document.querySelectorAll('.genie-msg.ai .genie-msg-body');
+    if (msgs.length && contentEl) {
+      const clone = msgs[msgs.length - 1].cloneNode(true);
+      clone.querySelectorAll('.genie-msg-actions').forEach(el => el.remove());
+      const text = (clone.innerText || clone.textContent || '').trim();
+      if (text) {
+        try {
+          sessionStorage.setItem('sg.pendingPromo', JSON.stringify({
+            content: text,
+            ts: Date.now(),
+            source: 'genie-chat'
+          }));
+        } catch(_) {}
+      }
+    }
+    location.href = href;
+  };
+
+  window.genieCopy = () => {
+    const msgs = document.querySelectorAll('.genie-msg.ai .genie-msg-body');
+    if (!msgs.length) return;
+    const last = msgs[msgs.length - 1];
+    // Get plain text (strip action buttons)
+    const clone = last.cloneNode(true);
+    clone.querySelectorAll('.genie-msg-actions').forEach(el => el.remove());
+    const text = clone.innerText || clone.textContent;
+    navigator.clipboard.writeText(text.trim()).then(() => {
+      const btn = document.querySelector('[data-genie-action="copy"]');
+      if (btn) { btn.textContent = '✓ Copied!'; setTimeout(() => { btn.textContent = '📋 Copy text'; }, 2000); }
+    }).catch(() => {});
+  };
+
+  // ── Regen / follow-up prompt ──
+  window.genieRegen = (prompt) => {
+    input.value = prompt;
+    genieSend();
+  };
+
+  // ── Render AI message with smart follow-ups ──
+  function appendMsg(from, html, intent=null) {
+    msgsEl.style.display = 'block';
+    const div = document.createElement('div');
+    div.className = `genie-msg ${from}`;
+    const initials = from === 'user' ? (userName[0]||'U').toUpperCase() : '✦';
+
+    let actionsHtml = '';
+    if (from === 'ai' && intent) {
+      const actions = FOLLOW_UPS[intent] || FOLLOW_UPS.general;
+      const btns = actions.map(a => {
+        if (a.action === 'copy') {
+          return `<button class="genie-action-btn" data-genie-action="copy" onclick="genieCopy()">${a.label}</button>`;
+        }
+        if (a.action === 'regen') {
+          const escaped = a.prompt.replace(/'/g, "\\'");
+          return `<button class="genie-action-btn" onclick="genieRegen('${escaped}')">${a.label}</button>`;
+        }
+        if (a.action === 'navigate') {
+          return `<button class="genie-action-btn" onclick="genieNavigate('${a.href}', true)">${a.label}</button>`;
+        }
+        return `<a class="genie-action-btn" href="${a.href}">${a.label}</a>`;
+      }).join('');
+      actionsHtml = `<div class="genie-msg-actions">${btns}</div>`;
+    }
+
+    div.innerHTML = `<div class="genie-avatar ${from}">${initials}</div><div class="genie-msg-body">${html}${actionsHtml}</div>`;
+    msgsEl.appendChild(div);
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+    return div;
+  }
+
+  function appendTyping() {
+    msgsEl.style.display = 'block';
+    const div = document.createElement('div');
+    div.className = 'genie-msg ai';
+    div.id = 'genieTyping';
+    div.innerHTML = `<div class="genie-avatar ai">✦</div><div class="genie-msg-body"><span class="genie-typing"><span></span><span></span><span></span></span></div>`;
+    msgsEl.appendChild(div);
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+    return div;
+  }
+
+  // ── Send message ──
+  async function genieSend() {
+    const q = input.value.trim();
+    if (!q || typing) return;
+    input.value = '';
+    typing = true;
+    sendBtn.disabled = true;
+
+    appendMsg('user', q.replace(/</g,'&lt;'));
+    const typingEl = appendTyping();
+    history.push({ role: 'user', content: q });
+
+    try {
+      let reply = null;
+
+      // Primary: Supabase Edge Function (no CORS issues)
+      try {
+        const sg = await waitForClient();
+        if (sg) {
+          const { data, error } = await sg.functions.invoke('genie-chat', {
+            body: { messages: history, system: cfg.systemPrompt(getCtx()), role: userRole }
+          });
+          if (!error && data?.reply) reply = data.reply;
+        }
+      } catch(_) {}
+
+      // Fallback: Anthropic API via BYOK key (matches book.html / app-config.js pattern)
+      if (!reply) {
+        const anthropicKey = (() => {
+          try {
+            // AP_USER_KEYS loaded by app-config.js (BYOK architecture)
+            if (window.AP_USER_KEYS?.anthropic) return window.AP_USER_KEYS.anthropic;
+            // Fallback: direct localStorage read
+            const stored = localStorage.getItem('ap_user_api_keys');
+            if (stored) {
+              const parsed = JSON.parse(stored);
+              return parsed?.anthropic || parsed?.claude || '';
+            }
+            return '';
+          } catch(_) { return ''; }
+        })();
+
+        if (anthropicKey) {
+          try {
+            const res = await fetch('https://api.anthropic.com/v1/messages', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': anthropicKey,
+                'anthropic-version': '2023-06-01',
+                'anthropic-dangerous-direct-browser-access': 'true',
+              },
+              body: JSON.stringify({
+                model: 'claude-haiku-4-5-20251001',
+                max_tokens: 400,
+                system: cfg.systemPrompt(getCtx()),
+                messages: history,
+              })
+            });
+            const data = await res.json();
+            reply = data?.content?.[0]?.text || null;
+          } catch(_) {}
+        }
+      }
+
+      if (!reply) reply = '⚠️ No AI connection. <a href="settings.html" style="color:var(--blush);font-weight:600;">Add your Anthropic API key in Account Settings →</a>';
+
+      history.push({ role: 'assistant', content: reply });
+      typingEl.remove();
+
+      // Detect intent from question + reply to choose follow-ups
+      const intent = detectIntent(q, reply);
+      const formatted = reply
+        .replace(/</g,'&lt;')
+        .replace(/\n\n/g,'</p><p>')
+        .replace(/\n/g,'<br>')
+        .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+      appendMsg('ai', `<p>${formatted}</p>`, intent);
+
+    } catch(e) {
+      typingEl.remove();
+      appendMsg('ai', 'Connection error — please try again.');
+    }
+
+    typing = false;
+    sendBtn.disabled = false;
+    input.focus();
+  }
+
+  // Expose globally for onclick
+  window.genieSend = genieSend;
+
+  // Enter key already wired via onkeydown in HTML
+  // "/" shortcut already wired in inline script
+
+})();
+</script>
+
+</body>
+</html>

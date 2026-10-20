@@ -1,0 +1,4 @@
+# Send every http:// visit to https:// (add at the TOP of public_html/.htaccess)
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
