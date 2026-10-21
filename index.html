@@ -1737,6 +1737,8 @@
     .vb-card { margin: 6px 12px 8px 48px; background: #fff; border: 1px solid rgba(184,149,106,.35); border-radius: 14px; padding: 12px; font-size: .86rem; color: var(--ink, #2c2520); }
     .vb-card p { margin: 0 0 8px; line-height: 1.4; }
     .vb-note { color: var(--muted, #8a7a72); font-size: .78rem; }
+    .vb-dups { margin: 4px 0 10px; padding-left: 18px; }
+    .vb-dups li { margin: 2px 0; }
     .vb-row { display: flex; flex-wrap: wrap; gap: 6px; }
     .vb-btn { font: inherit; font-size: .8rem; border: 1px solid var(--gold, #b8956a); background: #fff; color: var(--ink, #2c2520); border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
     .vb-btn:hover, .vb-btn.on { background: var(--gold, #b8956a); color: #fff; }
@@ -2321,14 +2323,17 @@
     }
 
     // ── step 6: book ──────────────────────────────────────────────────────
-    function book(phone, first, btn) {
+    function book(phone, first, btn, extra) {
       st.phone = phone; st.first = first;
       btn.setAttribute('disabled', 'disabled'); btn.textContent = 'Booking…';
       var tokenNow = st.token; st.token = '';
-      call({ action: 'book', service_id: st.service.id, tech_id: st.tech.tech_id, date: st.day, time: st.time,
-             phone: phone, first_name: first, turnstile_token: tokenNow }).then(function (r) {
+      var body = { action: 'book', service_id: st.service.id, tech_id: st.tech.tech_id, date: st.day, time: st.time,
+                   phone: phone, first_name: first, turnstile_token: tokenNow };
+      if (extra) Object.keys(extra).forEach(function (k) { body[k] = extra[k]; });
+      call(body).then(function (r) {
         if (r.ok) return done(r);
         var e = r.error;
+        if (e === 'possible_duplicate') return dupWarn(r, phone, first);
         // Doesn't say whether that cell or name is on file
         if (e === 'no_client') return askWho('We couldn\'t book with those details. Please check the cell and first name from your last visit. First time with us? Book on our booking page or call ' + PHONE + '.');
         if (e === 'human_check_failed') return askWho('The security check didn\'t go through. Please try again.');
@@ -2340,6 +2345,48 @@
         return say('I couldn\'t confirm your booking. Please call us at ' + PHONE + ' so we can check. Sorry about that!');
       });
     }
+    // Same service within 10 days, or a time that overlaps one they have:
+    // show it, and let them book anyway (a second visit, or someone else on
+    // this cell, whose first name goes in the appointment note)
+    function dupWarn(r, phone, first) {
+      st.token = '';
+      var list = (r.existing || []).map(function (a) {
+        return el('li', null, [el('strong', { text: a.services || 'An appointment' }), (a.tech ? ' with ' + a.tech : '') + ' — ' + longDay(a.date) + ' at ' + to12(a.time)
+          + (a.overlaps ? ' (same time)' : '')]);
+      });
+      var who = el('input', { cls: 'vb-field', type: 'text', autocomplete: 'off', maxlength: '30', placeholder: 'First name (leave blank if it\'s you)', id: 'vbFor' });
+      var ts = el('div', { cls: 'vb-ts' });
+      var go = el('button', { cls: 'vb-main', type: 'button', disabled: 'disabled', text: 'Yes, book it' });
+      var keep = el('button', { cls: 'vb-link', type: 'button', text: 'No, keep my current one' });
+      function ready() { if (st.token) go.removeAttribute('disabled'); else go.setAttribute('disabled', 'disabled'); }
+      go.addEventListener('click', function () {
+        var extra = { confirm_duplicate: true };
+        if (who.value.trim()) extra.for_name = who.value.trim();
+        book(phone, first, go, extra);
+      });
+      keep.addEventListener('click', function () {
+        you('No, keep my current one'); closeCard(); st.time = null;
+        say('No problem, nothing new was booked. To move your appointment instead, tap My appointment, then Change time.');
+      });
+      setCard([
+        el('p', null, ['Heads up, ' + (r.first_name || first) + ', you already have:']),
+        el('ul', { cls: 'vb-dups' }, list),
+        el('p', null, ['Book ', el('strong', { text: st.service.name }), ' with ' + st.tech.tech + ', ' + longDay(st.day) + ' at ' + to12(st.time) + ' anyway? For example, a second visit, or for someone else using this cell.']),
+        el('label', { cls: 'vb-label', 'for': 'vbFor', text: 'Who\'s it for?' }), who,
+        ts, el('div', { cls: 'vb-row' }, [go]), keep,
+      ], true);
+      loadTurnstile(function (e) {
+        if (e || !window.turnstile) { ts.textContent = 'The security check could not load. Please refresh the page, or call ' + PHONE + '.'; return; }
+        st.tsId = window.turnstile.render(ts, {
+          sitekey: SITE_KEY, theme: 'light',
+          size: ts.clientWidth >= 300 ? 'flexible' : 'compact',
+          callback: function (t) { st.token = t; ready(); },
+          'expired-callback': function () { st.token = ''; ready(); },
+          'error-callback': function () { st.token = ''; ready(); tsTrouble(ts); },
+          'unsupported-callback': function () { st.token = ''; ready(); tsTrouble(ts); },
+        });
+      });
+    }
     function done(r) {
       closeCard();
       var b = r.booked || {};
@@ -2347,7 +2394,7 @@
       if (r.practice) {
         say('✅ Practice run passed: ' + line + '. (Practice mode is on, so nothing was booked.)');
       } else {
-        sayNodes(['You\'re booked, ' + (b.first_name || st.first) + '! 🎉 ', el('strong', { text: line }), '. You\'ll get a text from us. To change or cancel, use the link in that text or call ' + PHONE + '.']);
+        sayNodes([(b.for_name ? 'Booked for ' + b.for_name + ', ' : 'You\'re booked, ') + (b.first_name || st.first) + '! 🎉 ', el('strong', { text: line }), '. You\'ll get a text from us. To change or cancel, use the link in that text or call ' + PHONE + '.']);
       }
       st.time = null; st.tech = null;
     }
@@ -2362,7 +2409,7 @@
         return true;
       }
       if (e === 'busy') { say('We\'re getting a lot of online bookings right now. Please call us at ' + PHONE + ' and we\'ll get you in.'); return true; }
-      if (e === 'already_booked') { say('You already have an upcoming appointment booked online. To change it or add another, please call us at ' + PHONE + '.'); return true; }
+      if (e === 'already_booked') { say('You already have 3 upcoming appointments booked online. To add another, please call us at ' + PHONE + '.'); return true; }
       if (e === 'booking_off' || e === 'not_configured') { sayNodes(['Booking in the chat is closed right now. You can book on ', galaxyLink(), ' or call ' + PHONE + '.']); return true; }
       return false;
     }
