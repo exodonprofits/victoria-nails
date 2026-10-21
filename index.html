@@ -1969,6 +1969,12 @@
     function chooseService(s) { st.service = s; you(s.name); pickDay(); }
 
     function pickService() {
+      if (st.flow === 'change') {
+        closeCard();
+        say('To change the service too, the front desk can help. Tap below and tell them what you\'d like.');
+        st.handoffNote = changeNote();
+        return showOffer('handoff', true);
+      }
       var likely = likelyServices();
       if (likely.length) {
         say(likely.length === 1 ? 'Happy to book you in! Is this the service you\'d like?' : 'Happy to book you in! Which of these would you like?');
@@ -2235,11 +2241,12 @@
     // ── step 4: technician ────────────────────────────────────────────────
     function pickTech() {
       var free = (st.view || st.slots).filter(function (s) { return s.time === st.time; });
+      st.anyTech = false;
       if (free.length === 1) { st.tech = free[0]; you(free[0].tech); return askWho(); }
       say('Who would you like? These technicians are free at ' + to12(st.time) + '.');
       var row = el('div', { cls: 'vb-row' });
       var any = el('button', { cls: 'vb-btn on', type: 'button', text: '✦ Anyone available' });
-      any.addEventListener('click', function () { st.tech = free[0]; you('Anyone available'); askWho(); });
+      any.addEventListener('click', function () { st.tech = free[0]; st.anyTech = true; you('Anyone available'); askWho(); });
       row.appendChild(any);
       free.forEach(function (s) {
         var b = el('button', { cls: 'vb-btn', type: 'button', text: s.tech });
@@ -2266,6 +2273,7 @@
     }
     // Before the form: may this visitor try now? (asking doesn't count as a try)
     function askWho(errText) {
+      if (st.flow === 'change') return changeForm(errText);
       if (errText) return showForm(errText);
       setCard([el('p', { cls: 'vb-note', text: 'One moment…' })]);
       call({ action: 'check' }).then(function (r) {
@@ -2365,6 +2373,133 @@
       say('I\'m having trouble checking times right now. Please try again in a minute, or call us at ' + PHONE + '.');
     }
 
+    // ── "Change my appointment" (step 1: a request the front desk confirms) ──
+    // After "My appointment": pick a new day and time from the same open times
+    // as booking. Nothing changes in Galaxy here; the front desk moves it and
+    // texts to confirm. At least 24 hours ahead (checked again by the server).
+    function salonNowMins() {
+      var p = new Intl.DateTimeFormat('en-US', { timeZone: TZ, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date());
+      var h = 0, m = 0;
+      p.forEach(function (x) { if (x.type === 'hour') h = +x.value; if (x.type === 'minute') m = +x.value; });
+      return h * 60 + m;
+    }
+    function farEnough(a) {   // 24 hours or more away, salon time
+      var today = salonToday();
+      if (a.date > addDays(today, 1)) return true;
+      return a.date === addDays(today, 1) && mins(a.time) >= salonNowMins();
+    }
+    function whenOf(a) { return longDay(a.date) + ' at ' + to12(a.time); }
+    function changeNote() {
+      var a = st.change && st.change.from;
+      return a ? 'Please move my appointment on ' + whenOf(a) + ' to another time.' : '';
+    }
+    function changeButtons(list) {
+      var row = el('div', { cls: 'vb-row' });
+      list.forEach(function (a) {
+        var label = list.length === 1 ? '🔁 Change time' : '🔁 Change ' + dayLabel(a.date, 9) + ' ' + to12(a.time);
+        row.appendChild(el('button', { cls: 'vb-btn', type: 'button', text: label, on: { click: function () { you(label.replace('🔁 ', '')); changeStart(a); } } }));
+      });
+      setCard([row, back('No changes', function () { closeCard(); st.flow = null; say('Great, see you then! Anything else I can help with?'); })]);
+    }
+    function changeStart(a) {
+      st.flow = 'change'; st.change = { from: a };
+      if (!farEnough(a)) {
+        closeCard();
+        say('Your appointment is less than 24 hours away, so the front desk needs to handle that change. Tap below and they\'ll text you, or call us at ' + PHONE + '.');
+        st.handoffNote = changeNote();
+        return showOffer('handoff', true);
+      }
+      setCard([el('p', { cls: 'vb-note', text: 'One moment…' })]);
+      (st.services ? Promise.resolve({ ok: true, services: st.services, techs: st.techList, bookable_through: st.through })
+                   : call({ action: 'services' })).then(function (r) {
+        if (!r.ok || !r.services || !r.services.length) {
+          closeCard();
+          say('I can\'t look up open times right now. Tap below and the front desk will help you move it, or call us at ' + PHONE + '.');
+          st.handoffNote = changeNote();
+          return showOffer('handoff', true);
+        }
+        st.services = r.services;
+        if ('bookable_through' in r) st.through = r.bookable_through || '';
+        if (Array.isArray(r.techs)) st.techList = r.techs.filter(function (t) { return t && t.id && t.name; });
+        // One service we can book online: same service, new time. Anything else goes to the front desk.
+        var names = Array.isArray(a.services) ? a.services.filter(function (x) { return typeof x === 'string' && x; }) : [];
+        var svc = names.length === 1 ? st.services.filter(function (x) { return x.name.toLowerCase() === names[0].toLowerCase(); })[0] : null;
+        if (!svc) {
+          closeCard();
+          say(names.length > 1 ? 'That appointment has more than one service, so the front desk will move it for you. Tap below and they\'ll text you.'
+                               : 'The front desk will move that one for you. Tap below and they\'ll text you.');
+          st.handoffNote = changeNote();
+          return showOffer('handoff', true);
+        }
+        st.service = svc; st.day = null; st.time = null; st.tech = null; st.wantDay = null; st.wantTime = mins(a.time);
+        st.allTechs = false; st.autoAll = null; st.techFirst = null; st.techFirstDays = null; st.techFirstFor = null;
+        var who = typeof a.tech === 'string' && a.tech ? (st.techList || []).filter(function (t) { return t.name.toLowerCase() === a.tech.toLowerCase(); })[0] : null;
+        st.onlyTech = who ? who.name : null;
+        say('Sure! Let\'s find a new time for your ' + svc.name + (who ? ' with ' + who.name : '') + ' (now ' + whenOf(a) + ').');
+        if (who && (svc.tech_ids || []).indexOf(who.id) >= 0) return techDaysFor(who);
+        st.onlyTech = null;
+        pickDay();
+      });
+    }
+    function changeForm(errText) {
+      st.token = '';
+      var a = st.change.from;
+      var ts = el('div', { cls: 'vb-ts' });
+      var go = el('button', { cls: 'vb-main', type: 'button', disabled: 'disabled', text: 'Send change request' });
+      var err = el('p', { cls: 'vb-err', role: 'alert', text: errText || '' });
+      if (!errText) err.style.display = 'none';
+      function ready() { if (st.token) go.removeAttribute('disabled'); else go.setAttribute('disabled', 'disabled'); }
+      go.addEventListener('click', function () { changeSend(go); });
+      say('Here\'s the change. I\'ll send it to the front desk to confirm.');
+      setCard([
+        el('p', null, ['From ', el('strong', { text: whenOf(a) })]),
+        el('p', null, ['To ', el('strong', { text: st.service.name + ' with ' + (st.anyTech ? 'anyone available' : st.tech.tech) + ', ' + longDay(st.day) + ' at ' + to12(st.time) })]),
+        ts, el('div', { cls: 'vb-row' }, [go]), err,
+        el('p', { cls: 'vb-note', style: 'margin-top:8px', text: 'Your current appointment stays as it is until the front desk texts you to confirm the new time.' }),
+        back('Pick another time', pickTime),
+      ], true);
+      loadTurnstile(function (e) {
+        if (e || !window.turnstile) { ts.textContent = 'The security check could not load. Please refresh the page, or call ' + PHONE + '.'; return; }
+        window.turnstile.render(ts, {
+          sitekey: SITE_KEY, theme: 'light',
+          size: ts.clientWidth >= 300 ? 'flexible' : 'compact',
+          callback: function (t) { st.token = t; ready(); },
+          'expired-callback': function () { st.token = ''; ready(); },
+          'error-callback': function () { st.token = ''; ready(); tsTrouble(ts); },
+          'unsupported-callback': function () { st.token = ''; ready(); tsTrouble(ts); },
+        });
+      });
+    }
+    function changeSend(btn) {
+      var a = st.change.from;
+      btn.setAttribute('disabled', 'disabled'); btn.textContent = 'Sending…';
+      var tokenNow = st.token; st.token = '';
+      call({ action: 'change_request', phone: st.phone, first_name: st.first, from_date: a.date, from_time: a.time,
+             service_id: st.service.id, date: st.day, time: st.time, tech_id: st.anyTech ? '' : st.tech.tech_id,
+             session_id: chatId(), turnstile_token: tokenNow }).then(function (r) {
+        var e = r && r.error;
+        if (r && r.ok) {
+          closeCard(); st.flow = null;
+          var to = longDay(st.day) + ' at ' + to12(st.time);
+          if (r.open_now === false) {
+            return say('Thanks, ' + st.first + '! We\'re closed right now, so the front desk will text you at ' + prettyPhone(st.phone) +
+                       (r.next_open ? ' when we open ' + r.next_open : ' when we open') + ' to confirm ' + to + '. Your current appointment stays until then.');
+          }
+          return say('Thanks, ' + st.first + '! The front desk has your request for ' + to + ' and will text you at ' + prettyPhone(st.phone) +
+                     ' to confirm, usually within 30 minutes. Your current appointment stays until then.');
+        }
+        if (e === 'human_check_failed') return changeForm('The security check didn\'t go through. Please try again.');
+        if (e === 'slot_unavailable') { closeCard(); say('Sorry, ' + to12(st.time) + ' was just taken. Here is what\'s still open:'); return loadTimes(st.day); }
+        if (e === 'same_time') { closeCard(); say('That\'s the time you already have. Pick a different one:'); return pickDay(); }
+        closeCard(); st.flow = null;
+        if (e === 'too_close') { st.handoffNote = changeNote(); say('Your appointment is now less than 24 hours away, so the front desk needs to handle that change. Tap below, or call ' + PHONE + '.'); return showOffer('handoff', true); }
+        if (e === 'not_found') return say('I couldn\'t find that appointment anymore. It may have just changed. Please call us at ' + PHONE + '.');
+        if (e === 'too_many_tries') return say('You\'ve already sent us a few requests today, and the front desk has them. For anything urgent, please call ' + PHONE + '.');
+        if (e === 'change_off' || e === 'busy') return say('I can\'t send change requests right now. Please call us at ' + PHONE + ' and we\'ll move it for you.');
+        return say('I couldn\'t send that right now. Please call us at ' + PHONE + ' and we\'ll move it for you.');
+      });
+    }
+
     // ── "Do I have an appointment?" ───────────────────────────────────────
     // Cell + first name and the human check; the answer is only the
     // day and time. A wrong name and "nothing booked" read the same.
@@ -2394,7 +2529,7 @@
         el('label', { cls: 'vb-label', 'for': 'vbLkPhone', text: 'Cell phone' }), phone,
         el('label', { cls: 'vb-label', 'for': 'vbLkFirst', text: 'First name' }), first,
         ts, el('div', { cls: 'vb-row' }, [go]), err,
-        el('p', { cls: 'vb-note', style: 'margin-top:8px', text: 'Use the cell number and name we have on file. To change or cancel, use the link in your appointment text or call ' + PHONE + '.' }),
+        el('p', { cls: 'vb-note', style: 'margin-top:8px', text: 'Use the cell number and name we have on file. After checking, you can ask to move it to another time.' }),
       ], true);
       loadTurnstile(function (e) {
         if (e || !window.turnstile) { ts.textContent = 'The security check could not load. Please refresh the page, or call ' + PHONE + '.'; return; }
@@ -2428,8 +2563,10 @@
           var nodes = list.length === 1
             ? [name ? 'Hi ' + name + '! You\'re booked on ' : 'Yes! You\'re booked on ', el('strong', { text: when[0] })].concat(what[0] ? [' — ' + what[0] + '.'] : ['.'])
             : [(name ? 'Hi ' + name + '! ' : '') + 'You have ' + list.length + ' upcoming appointments:'].concat(when.map(function (w, i) { return el('div', null, ['• ', el('strong', { text: w })].concat(what[i] ? [' — ' + what[i]] : [])); }));
-          nodes.push(el('div', { style: 'margin-top:6px', text: 'To change or cancel, use the link in your appointment text from us, or call us at ' + PHONE + '.' }));
-          return sayNodes(nodes);
+          st.mine = list;
+          nodes.push(el('div', { style: 'margin-top:6px', text: 'Need another day or time? Tap Change time below. To cancel, use the link in your appointment text from us, or call us at ' + PHONE + '.' }));
+          sayNodes(nodes);
+          return changeButtons(list);
         }
         var e = r.error;
         if (e === 'human_check_failed') return lookupForm('The security check didn\'t go through. Please try again.');
