@@ -1,10 +1,11 @@
 /* ═══════════════════════════════════════════════════════════════════
-   Victoria chat for the inner pages (services, gallery, contact, reviews).
+   Victoria chat — the one copy, used by every page.
    One tag per page, at the end of <body>:
      <script src="victoria-chat.js"></script>
+   (the home page adds data-page="home": its floating Book Now sits where
+   the bubble would, so the bubble rides higher there).
    It loads victoria-chat.css, builds the floating bubble + panel, and runs
-   the same chat, in-chat booking and greeting code as index.html (copied
-   from there; index.html keeps its own copy, so change both together).
+   the chat, in-chat booking and greeting.
 ═══════════════════════════════════════════════════════════════════ */
 (function () {
   // The chat's booking and "My appointment" only work on https (the booking
@@ -13,15 +14,18 @@
     location.replace('https://' + location.host + location.pathname + location.search + location.hash);
     return;
   }
-  if (document.getElementById('vcpPanel')) return;   // the page has its own chat (index.html)
+  if (document.getElementById('vcpPanel')) return;   // already on the page
 
   var me = document.currentScript;
+  if (me && me.getAttribute('data-page') === 'home') document.documentElement.classList.add('vcp-home');
   var css = document.createElement('link');
   css.rel = 'stylesheet';
   css.href = me && me.src ? me.src.replace(/victoria-chat\.js(\?.*)?$/, 'victoria-chat.css') : 'victoria-chat.css';
+  // hidden until the styles arrive, so the panel never flashes unstyled
+  css.onload = css.onerror = function () { panel.style.visibility = ''; launcher.style.visibility = ''; };
   document.head.appendChild(css);
 
-  // ── Markup (same as index.html's panel + launcher) ─────────────────
+  // ── Markup: the panel + launcher ──────────────────────────────────
   function el(tag, attrs, kids) {
     var n = document.createElement(tag);
     if (attrs) Object.keys(attrs).forEach(function (k) {
@@ -77,11 +81,13 @@
   ]);
   var launcher = el('button', { cls: 'vcp-launcher', id: 'vcpLauncher', 'aria-label': 'Chat with Victoria', 'aria-expanded': 'false' },
                     ['💬', el('span', { cls: 'vcp-l-dot', 'aria-hidden': 'true' })]);
+  panel.style.visibility = 'hidden';
+  launcher.style.visibility = 'hidden';
   document.body.appendChild(panel);
   document.body.appendChild(launcher);
 
 
-/* ══ Chat (from index.html) ══ */
+/* ══ Chat ══ */
 (function(){
 
   /* ══ Victoria's opening message — animated fade in ══ */
@@ -616,7 +622,7 @@
 
   })();
 
-/* ══ Victoria books in the chat (from index.html) ══ */
+/* ══ Victoria books in the chat ══ */
 (function () {
   // Live for every visitor (2026-10-14). ?book=off turns it off for this tab
   // (testing the old chat); ?book=v2 turns it back on. The salon's own
@@ -1182,14 +1188,17 @@
   }
 
   // ── step 6: book ──────────────────────────────────────────────────────
-  function book(phone, first, btn) {
+  function book(phone, first, btn, extra) {
     st.phone = phone; st.first = first;
     btn.setAttribute('disabled', 'disabled'); btn.textContent = 'Booking…';
     var tokenNow = st.token; st.token = '';
-    call({ action: 'book', service_id: st.service.id, tech_id: st.tech.tech_id, date: st.day, time: st.time,
-           phone: phone, first_name: first, turnstile_token: tokenNow }).then(function (r) {
+    var body = { action: 'book', service_id: st.service.id, tech_id: st.tech.tech_id, date: st.day, time: st.time,
+                 phone: phone, first_name: first, turnstile_token: tokenNow };
+    if (extra) Object.keys(extra).forEach(function (k) { body[k] = extra[k]; });
+    call(body).then(function (r) {
       if (r.ok) return done(r);
       var e = r.error;
+      if (e === 'possible_duplicate') return dupWarn(r, phone, first);
       // Doesn't say whether that cell or name is on file
       if (e === 'no_client') return askWho('We couldn\'t book with those details. Please check the cell and first name from your last visit. First time with us? Book on our booking page or call ' + PHONE + '.');
       if (e === 'human_check_failed') return askWho('The security check didn\'t go through. Please try again.');
@@ -1201,6 +1210,48 @@
       return say('I couldn\'t confirm your booking. Please call us at ' + PHONE + ' so we can check. Sorry about that!');
     });
   }
+  // Same service within 10 days, or a time that overlaps one they have:
+  // show it, and let them book anyway (a second visit, or someone else on
+  // this cell, whose first name goes in the appointment note)
+  function dupWarn(r, phone, first) {
+    st.token = '';
+    var list = (r.existing || []).map(function (a) {
+      return el('li', null, [el('strong', { text: a.services || 'An appointment' }), (a.tech ? ' with ' + a.tech : '') + ' — ' + longDay(a.date) + ' at ' + to12(a.time)
+        + (a.overlaps ? ' (same time)' : '')]);
+    });
+    var who = el('input', { cls: 'vb-field', type: 'text', autocomplete: 'off', maxlength: '30', placeholder: 'First name (leave blank if it\'s you)', id: 'vbFor' });
+    var ts = el('div', { cls: 'vb-ts' });
+    var go = el('button', { cls: 'vb-main', type: 'button', disabled: 'disabled', text: 'Yes, book it' });
+    var keep = el('button', { cls: 'vb-link', type: 'button', text: 'No, keep my current one' });
+    function ready() { if (st.token) go.removeAttribute('disabled'); else go.setAttribute('disabled', 'disabled'); }
+    go.addEventListener('click', function () {
+      var extra = { confirm_duplicate: true };
+      if (who.value.trim()) extra.for_name = who.value.trim();
+      book(phone, first, go, extra);
+    });
+    keep.addEventListener('click', function () {
+      you('No, keep my current one'); closeCard(); st.time = null;
+      say('No problem, nothing new was booked. To move your appointment instead, tap My appointment, then Change time.');
+    });
+    setCard([
+      el('p', null, ['Heads up, ' + (r.first_name || first) + ', you already have:']),
+      el('ul', { cls: 'vb-dups' }, list),
+      el('p', null, ['Book ', el('strong', { text: st.service.name }), ' with ' + st.tech.tech + ', ' + longDay(st.day) + ' at ' + to12(st.time) + ' anyway? For example, a second visit, or for someone else using this cell.']),
+      el('label', { cls: 'vb-label', 'for': 'vbFor', text: 'Who\'s it for?' }), who,
+      ts, el('div', { cls: 'vb-row' }, [go]), keep,
+    ], true);
+    loadTurnstile(function (e) {
+      if (e || !window.turnstile) { ts.textContent = 'The security check could not load. Please refresh the page, or call ' + PHONE + '.'; return; }
+      st.tsId = window.turnstile.render(ts, {
+        sitekey: SITE_KEY, theme: 'light',
+        size: ts.clientWidth >= 300 ? 'flexible' : 'compact',
+        callback: function (t) { st.token = t; ready(); },
+        'expired-callback': function () { st.token = ''; ready(); },
+        'error-callback': function () { st.token = ''; ready(); tsTrouble(ts); },
+        'unsupported-callback': function () { st.token = ''; ready(); tsTrouble(ts); },
+      });
+    });
+  }
   function done(r) {
     closeCard();
     var b = r.booked || {};
@@ -1208,7 +1259,7 @@
     if (r.practice) {
       say('✅ Practice run passed: ' + line + '. (Practice mode is on, so nothing was booked.)');
     } else {
-      sayNodes(['You\'re booked, ' + (b.first_name || st.first) + '! 🎉 ', el('strong', { text: line }), '. You\'ll get a text from us. To change or cancel, use the link in that text or call ' + PHONE + '.']);
+      sayNodes([(b.for_name ? 'Booked for ' + b.for_name + ', ' : 'You\'re booked, ') + (b.first_name || st.first) + '! 🎉 ', el('strong', { text: line }), '. You\'ll get a text from us. To change or cancel, use the link in that text or call ' + PHONE + '.']);
     }
     st.time = null; st.tech = null;
   }
@@ -1223,7 +1274,7 @@
       return true;
     }
     if (e === 'busy') { say('We\'re getting a lot of online bookings right now. Please call us at ' + PHONE + ' and we\'ll get you in.'); return true; }
-    if (e === 'already_booked') { say('You already have an upcoming appointment booked online. To change it or add another, please call us at ' + PHONE + '.'); return true; }
+    if (e === 'already_booked') { say('You already have 3 upcoming appointments booked online. To add another, please call us at ' + PHONE + '.'); return true; }
     if (e === 'booking_off' || e === 'not_configured') { sayNodes(['Booking in the chat is closed right now. You can book on ', galaxyLink(), ' or call ' + PHONE + '.']); return true; }
     return false;
   }
@@ -1671,7 +1722,7 @@
   }
 })();
 
-/* ══ Victoria's greeting types itself out the first time the chat opens (from index.html) ══ */
+/* ══ Victoria's greeting types itself out the first time the chat opens ══ */
 (function () {
   var msg = document.getElementById('openingMsg');
   var panel = document.getElementById('vcpPanel');

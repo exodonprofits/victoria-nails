@@ -1,7 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════
-   Victoria chat — shared styles for the inner pages (services, gallery,
-   contact, reviews). Loaded by victoria-chat.js. Copied from index.html's
-   chat styles; index.html keeps its own copy, so change both together.
+   Victoria chat styles — loaded by victoria-chat.js on every page.
 ═══════════════════════════════════════════════════════════════════ */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
@@ -320,6 +318,8 @@
 .vb-card { margin: 6px 12px 8px 48px; background: #fff; border: 1px solid rgba(184,149,106,.35); border-radius: 14px; padding: 12px; font-size: .86rem; color: var(--ink, #2c2520); }
 .vb-card p { margin: 0 0 8px; line-height: 1.4; }
 .vb-note { color: var(--muted, #8a7a72); font-size: .78rem; }
+.vb-dups { margin: 4px 0 10px; padding-left: 18px; }
+.vb-dups li { margin: 2px 0; }
 .vb-row { display: flex; flex-wrap: wrap; gap: 6px; }
 .vb-btn { font: inherit; font-size: .8rem; border: 1px solid var(--gold, #b8956a); background: #fff; color: var(--ink, #2c2520); border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
 .vb-btn:hover, .vb-btn.on { background: var(--gold, #b8956a); color: #fff; }
@@ -338,11 +338,12 @@ textarea.vb-field { resize: vertical; min-height: 70px; line-height: 1.35; }
 .vb-card.vb-wide { margin-left: 2px; margin-right: 2px; padding: 12px 8px; }   /* the form: room for Cloudflare's 300px check */
 .vb-offer { margin: 4px 12px 8px 48px; }
 
-/* ── Inner pages: no floating Book Now on desktop, so the bubble sits in the
-   corner; at ≤860px the bottom "Book Appointment" bar shows, so it sits above it ── */
-.vcp-launcher { bottom: 24px; }
+/* ── Inner pages (not html.vcp-home): no floating Book Now on desktop, so the
+   bubble sits in the corner; at ≤860px the bottom "Book Appointment" bar shows,
+   so it sits above it. The home page keeps the positions above. ── */
+html:not(.vcp-home) .vcp-launcher { bottom: 24px; }
 @media (max-width: 860px) {
-  .vcp-launcher { bottom: 92px; right: 16px; }
-  .vcp-teaser   { bottom: 102px; }
+  html:not(.vcp-home) .vcp-launcher { bottom: 92px; right: 16px; }
+  html:not(.vcp-home) .vcp-teaser   { bottom: 102px; }
 }
-@media (min-width: 621px) { .victoria-chat-panel { bottom: 24px; } }
+@media (min-width: 621px) { html:not(.vcp-home) .victoria-chat-panel { bottom: 24px; } }
