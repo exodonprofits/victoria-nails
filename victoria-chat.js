@@ -22,7 +22,11 @@
   css.rel = 'stylesheet';
   css.href = me && me.src ? me.src.replace(/victoria-chat\.js(\?.*)?$/, 'victoria-chat.css') : 'victoria-chat.css';
   // hidden until the styles arrive, so the panel never flashes unstyled
-  css.onload = css.onerror = function () { panel.style.visibility = ''; launcher.style.visibility = ''; };
+  css.onload = css.onerror = function () {
+    panel.style.visibility = ''; launcher.style.visibility = '';
+    var m = document.getElementById('vcpMessages');   // a restored conversation opens at its latest message
+    if (m) m.scrollTop = m.scrollHeight;
+  };
   document.head.appendChild(css);
 
   // ── Markup: the panel + launcher ──────────────────────────────────
@@ -484,6 +488,85 @@
   if (snd) snd.addEventListener('click', () => { const v = inp.value.trim(); if (v) { inp.value = ''; handleSend(v); } });
   if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') { const v = inp.value.trim(); if (v) { inp.value = ''; handleSend(v); } } });
 
+  /* ── Keep the conversation across pages (this tab, this visit) ──
+     Every bubble is saved to sessionStorage and put back on the next page,
+     with chatHistory, so Victoria keeps the context. Booking cards and
+     buttons aren't kept: a booking left half-done starts over. */
+  const SAVE_KEY = 'vcp_transcript';
+  const SAVE_MAX = 60;   // bubbles kept
+  function saveTranscript() {
+    const wrap = document.getElementById('vcpMessages');
+    if (!wrap) return;
+    const rows = [];
+    Array.prototype.forEach.call(wrap.children, r => {
+      if (!r.classList.contains('msg') || r.id === 'openingMsg' || r.id === 'typingRow') return;
+      const b = r.querySelector('.msg-bubble');
+      if (b) rows.push({ who: r.classList.contains('user') ? 'user' : 'victoria', html: b.innerHTML });
+    });
+    try { sessionStorage.setItem(SAVE_KEY, JSON.stringify({ rows: rows.slice(-SAVE_MAX), history: chatHistory.slice(-20) })); } catch (e) {}
+  }
+  // Saved bubble markup goes back through a short allow-list (text, bold,
+  // line breaks, lists, https/tel links), never as raw HTML
+  function cleanNodes(html) {
+    const src = document.createElement('template');
+    src.innerHTML = html;
+    const out = document.createDocumentFragment();
+    (function copy(from, to) {
+      Array.prototype.forEach.call(from.childNodes, n => {
+        if (n.nodeType === 3) { to.appendChild(document.createTextNode(n.nodeValue)); return; }
+        if (n.nodeType !== 1) return;
+        const tag = n.tagName.toLowerCase();
+        if (tag === 'br') { to.appendChild(document.createElement('br')); return; }
+        if (['strong', 'b', 'em', 'i', 'ul', 'ol', 'li', 'span', 'a'].indexOf(tag) === -1) { copy(n, to); return; }
+        const e = document.createElement(tag);
+        if (tag === 'a') {
+          const href = n.getAttribute('href') || '';
+          if (/^https:\/\//i.test(href)) { e.setAttribute('href', href); e.setAttribute('target', '_blank'); e.setAttribute('rel', 'noopener'); }
+          else if (/^tel:/i.test(href)) e.setAttribute('href', href);
+        }
+        copy(n, e);
+        to.appendChild(e);
+      });
+    })(src.content, out);
+    return out;
+  }
+  function restoreTranscript() {
+    let saved = null;
+    try { saved = JSON.parse(sessionStorage.getItem(SAVE_KEY) || 'null'); } catch (e) {}
+    const wrap = document.getElementById('vcpMessages');
+    if (!wrap || !saved || !Array.isArray(saved.rows) || !saved.rows.length) return false;
+    saved.rows.forEach(r => {
+      const user = r && r.who === 'user';
+      const av = document.createElement('div');
+      av.className = 'msg-avatar';
+      av.textContent = user ? 'You' : '💅';
+      if (!user) av.setAttribute('aria-hidden', 'true');
+      const b = document.createElement('div');
+      b.className = 'msg-bubble';
+      b.appendChild(cleanNodes(String(r && r.html || '')));
+      const row = document.createElement('div');
+      row.className = user ? 'msg user' : 'msg';
+      row.appendChild(av);
+      row.appendChild(b);
+      wrap.appendChild(row);
+    });
+    if (Array.isArray(saved.history)) saved.history.forEach(m => {
+      if (m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string') chatHistory.push({ role: m.role, content: m.content });
+    });
+    const om = document.getElementById('openingMsg');
+    if (om) om.style.opacity = '1';
+    wrap.scrollTop = wrap.scrollHeight;
+    return true;
+  }
+  window._vcpRestored = restoreTranscript();   // the greeting skips its typing when true
+  (function () {
+    const wrap = document.getElementById('vcpMessages');
+    if (!wrap || typeof MutationObserver !== 'function') return;
+    let t = null;
+    new MutationObserver(() => { clearTimeout(t); t = setTimeout(saveTranscript, 300); }).observe(wrap, { childList: true });
+    window.addEventListener('pagehide', saveTranscript);
+  })();
+
   /* ── Floating launcher: open / close the chat panel ── */
   (function () {
     const panel    = document.getElementById('vcpPanel');
@@ -513,11 +596,14 @@
       const om = document.getElementById('openingMsg');
       if (om) om.style.opacity = '1';
       opened = true;
+      try { sessionStorage.setItem('vcp_open', '1'); } catch (e) {}
+      const w = document.getElementById('vcpMessages');
+      if (w) w.scrollTop = w.scrollHeight;
       if (auto !== true) setTimeout(() => { const i = document.getElementById('vcpInput'); if (i) i.focus(); }, 250);
     }
     function closeChat() {
       // closed by the visitor: don't open it again on the next page of this visit
-      try { sessionStorage.setItem('vcp_closed', '1'); } catch (e) {}
+      try { sessionStorage.setItem('vcp_closed', '1'); sessionStorage.setItem('vcp_open', '0'); } catch (e) {}
       panel.classList.remove('vcp-open');
       launcher.classList.remove('vcp-active');
       launcher.setAttribute('aria-expanded', 'false');
@@ -555,9 +641,16 @@
     // Open by default: the full chat on tablets and computers, the greeting
     // bubble on phones (the full panel would cover most of a phone screen).
     // Not again in this visit once the visitor has closed it.
-    let closedBefore = false;
-    try { closedBefore = sessionStorage.getItem('vcp_closed') === '1'; } catch (e) {}
-    if (!closedBefore) {
+    // Mid-conversation (restored from the last page): open again only if it
+    // was open when they left, on any screen, and skip the greeting bubble.
+    let closedBefore = false, wasOpen = false;
+    try {
+      closedBefore = sessionStorage.getItem('vcp_closed') === '1';
+      wasOpen = sessionStorage.getItem('vcp_open') === '1';
+    } catch (e) {}
+    if (window._vcpRestored) {
+      if (wasOpen) openChat(true);
+    } else if (!closedBefore) {
       setTimeout(() => {
         if (panel.classList.contains('vcp-open')) return;
         if (window.matchMedia('(max-width: 620px)').matches) showTeaser();
@@ -574,7 +667,14 @@
     if (!wrap) return;
     const div = document.createElement('div');
     div.className = 'msg user';
-    div.innerHTML = `<div class="msg-avatar">You</div><div class="msg-bubble">${text}</div>`;
+    const av = document.createElement('div');
+    av.className = 'msg-avatar';
+    av.textContent = 'You';
+    const bub = document.createElement('div');
+    bub.className = 'msg-bubble';
+    bub.textContent = text;
+    div.appendChild(av);
+    div.appendChild(bub);
     div.style.opacity = '0'; div.style.transition = 'opacity .3s';
     wrap.appendChild(div);
     requestAnimationFrame(() => { div.style.opacity = '1'; });
@@ -1728,6 +1828,7 @@
   var panel = document.getElementById('vcpPanel');
   var bubble = msg && msg.querySelector('.msg-bubble');
   if (!bubble || !panel) return;
+  if (window._vcpRestored) return;   // mid-conversation: the greeting is already there
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   // The greeting as a list of steps: open an element, or type a piece of text into it
