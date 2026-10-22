@@ -1,0 +1,56 @@
+# Uploads the site to Bluehost over FTP every time main changes.
+# Only changed files are sent: the action keeps .ftp-deploy-sync-state.json on
+# the server to know what's already there. The first run uploads everything.
+#
+# Repo secrets (Settings → Secrets and variables → Actions):
+#   FTP_SERVER     e.g. ftp.victorianails.com (or the server IP from Bluehost)
+#   FTP_USERNAME   Bluehost FTP user
+#   FTP_PASSWORD   that user's password
+#   FTP_SERVER_DIR optional, defaults to ./public_html/ (use ./ if the FTP
+#                  account already starts inside public_html)
+#   FTP_PROTOCOL   optional, defaults to ftps; set to ftp if the TLS handshake fails
+name: Deploy to Bluehost
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  # Safety net: GitHub sometimes delivers push events late or not at all
+  # (Oct 21: one merge deployed 23 min late, the next never did). An hourly
+  # run catches anything missed; when nothing changed it uploads nothing.
+  schedule:
+    - cron: '17 * * * *'
+
+concurrency:
+  group: deploy-bluehost
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Always the newest main, not the commit that triggered this run: a
+      # late-arriving run for an older commit must never put old files back
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Upload changed files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR || './public_html/' }}
+          protocol: ${{ secrets.FTP_PROTOCOL || 'ftps' }}
+          # repo-only files that don't belong on the live site
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            .claude/**
+            README.md
+            package.json
+            server.js
+            htaccess-https.txt
+            *.patch
