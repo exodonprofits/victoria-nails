@@ -776,11 +776,11 @@
   function galaxyLink(text) { return el('a', { href: GALAXY, target: '_blank', rel: 'noopener', text: text || 'our booking page' }); }
   function setCard(nodes, wide) {
     var w = msgs(); if (!w) return;
-    if (card) card.remove();
+    if (card) { dropChecks(card); card.remove(); }
     card = el('div', { cls: 'vb-card' + (wide ? ' vb-wide' : '') }, nodes);
     w.appendChild(card); scroll();
   }
-  function closeCard() { if (card) { card.remove(); card = null; } }
+  function closeCard() { if (card) { dropChecks(card); card.remove(); card = null; } }
   function call(body) {
     body.business_id = BIZ;
     return fetch(FN, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
@@ -1243,13 +1243,37 @@
     ts.parentNode.insertBefore(el('p', { cls: 'vb-err vb-ts-err', role: 'alert',
       text: 'The security check couldn\'t verify this browser. Please refresh the page or try another browser (Safari or Chrome on your phone works best), or call us at ' + PHONE + '.' }), ts.nextSibling);
   }
+  // Cloudflare's script, once per page. It can take a while on a slow
+  // connection: wait up to 30 s; a failed load is fetched again on the next try.
   function loadTurnstile(cb) {
     if (window.turnstile) return cb();
-    if (!document.getElementById('vbTsScript')) {
-      document.head.appendChild(el('script', { id: 'vbTsScript', src: 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit', async: '', defer: '' }));
+    var tag = document.getElementById('vbTsScript');
+    if (tag && tag.getAttribute('data-failed')) { tag.remove(); tag = null; }
+    if (!tag) {
+      tag = el('script', { id: 'vbTsScript', src: 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit', async: '', defer: '' });
+      tag.addEventListener('error', function () { tag.setAttribute('data-failed', '1'); });
+      document.head.appendChild(tag);
     }
     var tries = 0;
-    (function wait() { if (window.turnstile) return cb(); if (++tries > 100) return cb(new Error('no turnstile')); setTimeout(wait, 100); })();
+    (function wait() {
+      if (window.turnstile) return cb();
+      if (tag.getAttribute('data-failed')) return cb(new Error('blocked'));
+      if (++tries > 300) { tag.setAttribute('data-failed', '1'); return cb(new Error('slow')); }
+      setTimeout(wait, 100);
+    })();
+  }
+  // The check didn't arrive: say so, with a way to try again (go = that form's own loader)
+  function tsFailed(ts, go) {
+    ts.textContent = '';
+    var again = el('button', { cls: 'vb-btn', type: 'button', text: '🔄 Try the security check again' });
+    again.addEventListener('click', function () { ts.textContent = 'Loading the security check…'; loadTurnstile(go); });
+    ts.appendChild(el('p', { cls: 'vb-err', role: 'alert', text: 'The security check didn\'t load. Tap to try again, or call ' + PHONE + '.' }));
+    ts.appendChild(again);
+  }
+  // A form being replaced: let Cloudflare forget its widget (else "Cannot find widget")
+  function dropChecks(node) {
+    if (!node || !window.turnstile) return;
+    node.querySelectorAll('.vb-ts').forEach(function (x) { try { window.turnstile.remove(x); } catch (e) {} });
   }
   // Before the form: may this visitor try now? (asking doesn't count as a try)
   function askWho(errText) {
@@ -1287,8 +1311,8 @@
       el('p', { cls: 'vb-note', style: 'margin-top:8px' }, ['For returning clients. First visit? Book on ', galaxyLink(), ' or call ' + PHONE + '.']),
       back('Pick another time', pickTime),
     ], true);
-    loadTurnstile(function (e) {
-      if (e || !window.turnstile) { ts.textContent = 'The security check could not load. Please refresh the page, or call ' + PHONE + '.'; return; }
+    loadTurnstile(function tsGo(e) {
+      if (e || !window.turnstile) return tsFailed(ts, tsGo);
       st.tsId = window.turnstile.render(ts, {
         sitekey: SITE_KEY, theme: 'light',
         size: ts.clientWidth >= 300 ? 'flexible' : 'compact',   // flexible fills the card; compact on very narrow phones
@@ -1353,8 +1377,8 @@
       el('label', { cls: 'vb-label', 'for': 'vbFor', text: 'Who\'s it for?' }), who,
       ts, el('div', { cls: 'vb-row' }, [go]), keep,
     ], true);
-    loadTurnstile(function (e) {
-      if (e || !window.turnstile) { ts.textContent = 'The security check could not load. Please refresh the page, or call ' + PHONE + '.'; return; }
+    loadTurnstile(function tsGo(e) {
+      if (e || !window.turnstile) return tsFailed(ts, tsGo);
       st.tsId = window.turnstile.render(ts, {
         sitekey: SITE_KEY, theme: 'light',
         size: ts.clientWidth >= 300 ? 'flexible' : 'compact',
@@ -1483,8 +1507,8 @@
       el('p', { cls: 'vb-note', style: 'margin-top:8px', text: 'Your current appointment stays as it is until the front desk texts you to confirm the new time.' }),
       back('Pick another time', pickTime),
     ], true);
-    loadTurnstile(function (e) {
-      if (e || !window.turnstile) { ts.textContent = 'The security check could not load. Please refresh the page, or call ' + PHONE + '.'; return; }
+    loadTurnstile(function tsGo(e) {
+      if (e || !window.turnstile) return tsFailed(ts, tsGo);
       window.turnstile.render(ts, {
         sitekey: SITE_KEY, theme: 'light',
         size: ts.clientWidth >= 300 ? 'flexible' : 'compact',
@@ -1556,8 +1580,8 @@
       ts, el('div', { cls: 'vb-row' }, [go]), err,
       el('p', { cls: 'vb-note', style: 'margin-top:8px', text: 'Use the cell number and name we have on file. After checking, you can ask to move it to another time.' }),
     ], true);
-    loadTurnstile(function (e) {
-      if (e || !window.turnstile) { ts.textContent = 'The security check could not load. Please refresh the page, or call ' + PHONE + '.'; return; }
+    loadTurnstile(function tsGo(e) {
+      if (e || !window.turnstile) return tsFailed(ts, tsGo);
       window.turnstile.render(ts, {
         sitekey: SITE_KEY, theme: 'light',
         size: ts.clientWidth >= 300 ? 'flexible' : 'compact',
@@ -1674,8 +1698,8 @@
       back('Never mind', function () { closeCard(); st.flow = null; say('No problem! Anything else I can help with?'); }),
     ], true);
     ready();
-    loadTurnstile(function (e) {
-      if (e || !window.turnstile) { ts.textContent = 'The security check could not load. Please refresh the page, or call ' + PHONE + '.'; return; }
+    loadTurnstile(function tsGo(e) {
+      if (e || !window.turnstile) return tsFailed(ts, tsGo);
       window.turnstile.render(ts, {
         sitekey: SITE_KEY, theme: 'light',
         size: ts.clientWidth >= 300 ? 'flexible' : 'compact',
@@ -1830,8 +1854,8 @@
       back('Never mind', function () { closeCard(); st.flow = null; say('No problem! Anything else I can help with?'); }),
     ], true);
     paintDays(); ready();
-    loadTurnstile(function (e) {
-      if (e || !window.turnstile) { ts.textContent = 'The security check could not load. Please refresh the page, or call ' + PHONE + '.'; return; }
+    loadTurnstile(function tsGo(e) {
+      if (e || !window.turnstile) return tsFailed(ts, tsGo);
       window.turnstile.render(ts, {
         sitekey: SITE_KEY, theme: 'light',
         size: ts.clientWidth >= 300 ? 'flexible' : 'compact',
