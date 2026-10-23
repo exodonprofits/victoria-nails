@@ -459,6 +459,8 @@
   function handleSend(msg) {
     msg = (msg || '').trim();
     if (!msg || isBusy) return;
+    // Typed while the chat's own form waits for a pick (the waitlist's service): the form takes it
+    if (window.vBook && window.vBook.typed && window.vBook.typed(msg)) return;
     isBusy = true;
     addUserBubble(msg);
     showTyping();
@@ -1049,7 +1051,7 @@
     if (!days.length) {
       sayNodes([t.name + ' has no openings for ' + st.service.name + (st.through ? ' through ' + longDay(st.through) : '') +
                 '. You can pick someone else, see every technician\'s times, or call us at ' + PHONE + '.']);
-      setCard([waitlistLink(t.name), back('Pick another technician', pickTechFirst), el('br'), back('Any technician', anyTech), el('br'), back('Change service', pickService)]);
+      setCard([waitlistLink(t.name, true), back('Pick another technician', pickTechFirst), el('br'), back('Any technician', anyTech), el('br'), back('Change service', pickService)]);
       return;
     }
     say('These are the days ' + t.name + ' has openings. Which works for you?');
@@ -1181,8 +1183,11 @@
     if (!st.allTechs && !st.onlyTech) st.onlyTech = techSaid();
     st.view = st.onlyTech ? st.slots.filter(function (s) { return s.tech === st.onlyTech; }) : st.slots;
     if (st.onlyTech && !st.view.length) {
-      say(st.onlyTech + ' has no opening for ' + st.service.name + ' (' + st.service.minutes + ' min) on ' + longDay(st.day) +
-          ' that can be booked online. Here is everyone who is free. To stay with ' + st.onlyTech + ', tap Pick another day or Change service.');
+      // the waitlist only for a technician who does this service online
+      st.autoAllWait = !!st.waitlistOn && !!techNamed(st.onlyTech);
+      say(st.onlyTech + ' has no opening for ' + st.service.name + ' (' + st.service.minutes + ' min) on ' + longDay(st.day) + ' that can be booked online. ' +
+          (st.autoAllWait ? 'I can tell you when ' + st.onlyTech + ' has one, or pick someone who is free below.'
+                         : 'Here is everyone who is free. To stay with ' + st.onlyTech + ', tap Pick another day or Change service.'));
       st.autoAll = st.onlyTech;                       // only for this day: another day looks for them again
       st.onlyTech = null; st.allTechs = true; st.view = st.slots;
     }
@@ -1204,7 +1209,8 @@
       b.addEventListener('click', function () { you(to12(t)); st.time = t; pickTech(); });
       row.appendChild(b);
     });
-    setCard([row, st.autoAll ? waitlistLink(st.autoAll) : null, st.onlyTech ? back('See all technicians', function () { st.onlyTech = null; st.allTechs = true; st.autoAll = null; pickTime(); }) : null,
+    setCard([st.autoAll && st.autoAllWait ? waitlistLink(st.autoAll, true, st.day) : null, st.autoAll && st.autoAllWait ? el('p', { cls: 'vb-note', text: 'Or pick someone who is free:' }) : null,
+             row, st.onlyTech ? back('See all technicians', function () { st.onlyTech = null; st.allTechs = true; st.autoAll = null; pickTime(); }) : null,
              st.onlyTech ? el('br') : null,
              back('Pick another day', function () { if (st.autoAll) { st.allTechs = false; st.autoAll = null; } pickDay(); }),
              st.autoAll ? el('br') : null,
@@ -1714,10 +1720,10 @@
   // already fits, those times are shown instead.
   var WINDOWS = [['any', 'Any time'], ['morning', 'Morning (before 12)'], ['afternoon', 'Afternoon (12–5)'], ['evening', 'Evening (after 5)']];
   function waitLabel(tech) { return 'Tell me when ' + (tech ? tech + ' has' : 'there\'s') + ' an opening'; }
-  function waitlistLink(tech) {
+  function waitlistLink(tech, main, day) {
     if (!st.waitlistOn) return null;
-    return el('div', { style: 'margin-bottom:6px' }, [el('button', { cls: 'vb-link', type: 'button', text: '⏳ ' + waitLabel(tech), on: { click: function () {
-      you(waitLabel(tech)); st.wlTech = tech || ''; st.wlTechId = ''; st.wlDays = null; st.flow = 'waitlist'; waitlistForm();
+    return el('div', { style: 'margin-bottom:' + (main ? '10px' : '6px') }, [el('button', { cls: main ? 'vb-main' : 'vb-link', type: 'button', text: '⏳ ' + waitLabel(tech), on: { click: function () {
+      you(waitLabel(tech)); st.wlTech = tech || ''; st.wlTechId = ''; st.wlDays = day ? [day] : null; st.flow = 'waitlist'; waitlistForm();
     } } })]);
   }
   function waitlistStart() {
@@ -1986,6 +1992,25 @@
     // the chat calls this instead of its "Book online" link (n8n's own
     // booking guess): this turn's choice above wins
     offer: function () { if (st.turnKind === 'online') return false; if (!st.turnKind) showOffer(); return true; },
+    // A service typed while the waitlist asks "Which service is it for?" ("fill"):
+    // picked like a tap; several matches → those as buttons. Nothing matched: Victoria answers.
+    typed: function (text) {
+      if (st.flow !== 'waitlist' || st.service || !st.services) return false;
+      var t = String(text || '').toLowerCase().trim();
+      var exact = st.services.filter(function (x) { return String(x.name).toLowerCase() === t; });
+      st.text = ' ' + t.replace(/[^a-z0-9&+:' ]+/g, ' ') + ' ';
+      var list = exact.length ? exact : likelyServices();
+      if (!list.length) return false;
+      you(text);
+      if (list.length === 1) { st.service = list[0]; waitlistForm(); return true; }
+      say('Which one?');
+      var row = el('div', { cls: 'vb-row' });
+      list.slice().sort(byPriceThenName).slice(0, 12).forEach(function (x) {
+        row.appendChild(el('button', { cls: 'vb-btn', type: 'button', text: serviceLabel(x), on: { click: function () { chooseService(x); } } }));
+      });
+      setCard([row, back('Something else', allServices)]);
+      return true;
+    },
     start: start,
   };
 
