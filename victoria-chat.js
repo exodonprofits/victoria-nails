@@ -108,6 +108,16 @@
 
   const chatHistory = [];
   let   isBusy      = false;
+  // The booking steps below (My appointment, Book here…) talk in the same
+  // window but are their own script: what they say goes into Victoria's
+  // memory too, so "does he have openings?" after "booked … with Jimmy"
+  // means Jimmy (Nov 11 2026). Phone numbers are never sent.
+  window.vcRemember = function (role, text) {
+    const t = String(text || '').replace(/\+?\d[\d\s().-]{6,}\d/g, '[phone]').replace(/\s+/g, ' ').trim().slice(0, 600);
+    if (!t || (role !== 'user' && role !== 'assistant')) return;
+    chatHistory.push({ role, content: t });
+    if (chatHistory.length > 40) chatHistory.splice(0, chatHistory.length - 40);
+  };
 
   // Always use the live n8n webhook. Works on production AND localhost
   // (the n8n webhook allows all origins), so you can test the real chat
@@ -793,8 +803,10 @@
     var w = msgs(); if (!w) return;
     var av = el('div', { cls: 'msg-avatar', text: who === 'user' ? 'You' : '💅' });
     if (who !== 'user') av.setAttribute('aria-hidden', 'true');
-    var row = el('div', { cls: who === 'user' ? 'msg user' : 'msg' }, [av, el('div', { cls: 'msg-bubble' }, nodes)]);
+    var body = el('div', { cls: 'msg-bubble' }, nodes);
+    var row = el('div', { cls: who === 'user' ? 'msg user' : 'msg' }, [av, body]);
     w.appendChild(row); scroll();
+    if (window.vcRemember) window.vcRemember(who === 'user' ? 'user' : 'assistant', body.textContent);
   }
   function say(text) { bubble('victoria', [text]); }
   function sayNodes(nodes) { bubble('victoria', nodes); }
@@ -2003,6 +2015,9 @@
       return pickDay(), true;
     }
     if (w) { w.appendChild(card); scroll(); }          // keep the open card in view
+    // "Book here in the chat" with another card still open (e.g. Change time after
+    // My appointment): the reply points to that button, so it must be there
+    if (kind === 'book' && st.flow !== 'book') showOffer(undefined, true);
     if (kind === 'lookup' && st.flow !== 'lookup') showOffer('lookup', true);
     if (kind === 'handoff' && st.flow !== 'handoff') showOffer('handoff', true);
     if (kind === 'waitlist' && st.flow !== 'waitlist') showOffer('waitlist', true);
