@@ -356,3 +356,6 @@ html:not(.vcp-home) .vcp-launcher { bottom: 24px; }
 .vc-color-txt { display: flex; flex-direction: column; line-height: 1.15; }
 .vc-color-txt strong { font-size: 12px; font-weight: 600; color: #1a1a1a; }
 .vc-color-txt small { font-size: 10.5px; color: #8a7d74; }
+
+/* "Not you? Clear" under a form filled in from this tab (Nov 11 2026) */
+.vb-me { display: block; margin: -2px 0 8px; }
