@@ -347,3 +347,12 @@ html:not(.vcp-home) .vcp-launcher { bottom: 24px; }
   html:not(.vcp-home) .vcp-teaser   { bottom: 102px; }
 }
 @media (min-width: 621px) { html:not(.vcp-home) .victoria-chat-panel { bottom: 24px; } }
+
+/* Color dots under a color answer (Nov 11 2026) */
+.vc-colors { display: flex; flex-wrap: wrap; gap: 6px; margin: -2px 0 10px 48px; }
+.vc-color { display: inline-flex; align-items: center; gap: 7px; padding: 5px 10px 5px 5px; border: 1px solid #ecdcd3; border-radius: 999px; background: #fff; }
+.vc-color-dot { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0,0,0,.15); box-shadow: inset 0 0 0 2px rgba(255,255,255,.5); flex-shrink: 0; }
+.vc-color-dot.none { background: repeating-linear-gradient(45deg,#eee,#eee 3px,#fff 3px,#fff 6px); }
+.vc-color-txt { display: flex; flex-direction: column; line-height: 1.15; }
+.vc-color-txt strong { font-size: 12px; font-weight: 600; color: #1a1a1a; }
+.vc-color-txt small { font-size: 10.5px; color: #8a7d74; }

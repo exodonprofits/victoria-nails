@@ -245,12 +245,38 @@
     else { addVictoriaBubble("I received your message! You can also call us at (847) 931-9359 for the fastest help."); }
     // Buttons under the reply; a problem here must not turn into "having trouble"
     try {
+      if (data && Array.isArray(data.colors) && data.colors.length) renderColorDots(data.colors);
       if (window.vBook) window.vBook.afterReply(userMsg, reply, data && data.offer, data && data.handoff_note, data && data.waitlist_tech);   // ?book=v2: the button Victoria chose
       // Booking happens on the Galaxy booking page (or in the chat with ?book=v2)
       if ((data.show_tech_picker && data.techs && data.techs.length) || (data.slots && data.slots.length)) {
         renderBookingLink();
       }
     } catch (e) { console.warn('[Victoria] buttons', e && e.message); }
+  }
+
+  // ── Color dots (Nov 11 2026): the shades Victoria's answer is about ──
+  // From the salon's own color list (victoria-chat → salon.victoria_colors).
+  function renderColorDots(colors) {
+    const wrap = document.getElementById('vcpMessages');
+    if (!wrap) return;
+    const row = document.createElement('div');
+    row.className = 'vc-colors';
+    colors.slice(0, 8).forEach(c => {
+      const chip = document.createElement('div');
+      chip.className = 'vc-color';
+      const dot = document.createElement('span');
+      dot.className = 'vc-color-dot' + (/^#[0-9A-Fa-f]{6}$/.test(c.hex || '') ? '' : ' none');
+      if (/^#[0-9A-Fa-f]{6}$/.test(c.hex || '')) dot.style.background = c.hex;
+      const txt = document.createElement('span');
+      txt.className = 'vc-color-txt';
+      const nm = document.createElement('strong'); nm.textContent = String(c.name || '').slice(0, 40);
+      const ty = document.createElement('small'); ty.textContent = (Array.isArray(c.types) ? c.types : []).join(' · ');
+      txt.append(nm, ty);
+      chip.append(dot, txt);
+      row.appendChild(chip);
+    });
+    wrap.appendChild(row);
+    wrap.scrollTop = wrap.scrollHeight;
   }
 
   // ── Book-online button (Galaxy booking page) ──────────────────────
