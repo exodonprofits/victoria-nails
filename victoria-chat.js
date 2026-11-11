@@ -773,6 +773,31 @@
   var GALAXY = 'https://booking.galaxyaccess.us/victoria349';
 
   var st = { known: {}, text: '', through: undefined, services: null, service: null, day: null, slots: [], time: null, tech: null, token: '', tsId: null, wantTime: null, wantDay: null, said: [] };
+  // ── Remember me (Nov 11 2026): first name + cell for this browser tab only ──
+  // sessionStorage (gone when the tab closes, never localStorage: salon iPads and
+  // shared phones), so every form fills itself in across pages. Never sent to
+  // Victoria's AI; the security check is still asked for each lookup.
+  var ME_KEY = 'vcMe';
+  try { var me0 = JSON.parse(sessionStorage.getItem(ME_KEY) || 'null'); if (me0 && typeof me0 === 'object') { st.phone = String(me0.phone || '').slice(0, 30); st.first = String(me0.first || '').slice(0, 40); } } catch (e) {}
+  function rememberMe(phone, first) {
+    st.phone = phone; st.first = first;
+    try { sessionStorage.setItem(ME_KEY, JSON.stringify({ phone: String(phone || '').slice(0, 30), first: String(first || '').slice(0, 40) })); } catch (e) {}
+  }
+  function forgetMe() {
+    st.phone = ''; st.first = '';
+    try { sessionStorage.removeItem(ME_KEY); } catch (e) {}
+  }
+  // "Not you? Clear" under a form that was filled in from memory
+  function meLink(phone, first, ready) {
+    if (!phone.value && !first.value) return null;
+    var a = el('button', { cls: 'vb-link vb-me', type: 'button', text: 'Not you? Clear' });
+    a.addEventListener('click', function () {
+      forgetMe(); phone.value = ''; first.value = ''; a.remove();
+      if (typeof ready === 'function') ready();
+      first.focus();
+    });
+    return a;
+  }
   var card = null, offer = null;
 
   // ── small helpers ─────────────────────────────────────────────────────
@@ -1332,7 +1357,7 @@
     setCard([
       el('p', null, [el('strong', { text: st.service.name }), ' with ' + st.tech.tech + ', ' + longDay(st.day) + ' at ' + to12(st.time)]),
       el('label', { cls: 'vb-label', 'for': 'vbPhone', text: 'Cell phone' }), phone,
-      el('label', { cls: 'vb-label', 'for': 'vbFirst', text: 'First name' }), first,
+      el('label', { cls: 'vb-label', 'for': 'vbFirst', text: 'First name' }), first, meLink(phone, first, ready),
       ts, el('div', { cls: 'vb-row' }, [go]), err,
       el('p', { cls: 'vb-note', style: 'margin-top:8px' }, ['For returning clients. First visit? Book on ', galaxyLink(), ' or call ' + PHONE + '.']),
       back('Pick another time', pickTime),
@@ -1352,7 +1377,7 @@
 
   // ── step 6: book ──────────────────────────────────────────────────────
   function book(phone, first, btn, extra) {
-    st.phone = phone; st.first = first;
+    rememberMe(phone, first);
     btn.setAttribute('disabled', 'disabled'); btn.textContent = 'Booking…';
     var tokenNow = st.token; st.token = '';
     var body = { action: 'book', service_id: st.service.id, tech_id: st.tech.tech_id, date: st.day, time: st.time,
@@ -1602,7 +1627,7 @@
     go.addEventListener('click', function () { lookup(phone.value.trim(), first.value.trim(), go); });
     setCard([
       el('label', { cls: 'vb-label', 'for': 'vbLkPhone', text: 'Cell phone' }), phone,
-      el('label', { cls: 'vb-label', 'for': 'vbLkFirst', text: 'First name' }), first,
+      el('label', { cls: 'vb-label', 'for': 'vbLkFirst', text: 'First name' }), first, meLink(phone, first, ready),
       ts, el('div', { cls: 'vb-row' }, [go]), err,
       el('p', { cls: 'vb-note', style: 'margin-top:8px', text: 'Use the cell number and name we have on file. After checking, you can ask to move it to another time.' }),
     ], true);
@@ -1619,7 +1644,7 @@
     });
   }
   function lookup(phone, first, btn) {
-    st.phone = phone; st.first = first;
+    rememberMe(phone, first);
     btn.setAttribute('disabled', 'disabled'); btn.textContent = 'Checking…';
     var tokenNow = st.token; st.token = '';
     call({ action: 'lookup', phone: phone, first_name: first, turnstile_token: tokenNow }).then(function (r) {
@@ -1716,7 +1741,7 @@
     go.addEventListener('click', function () { handoffSend(first.value.trim(), phone.value.trim(), note.value.trim(), how, go); });
     setCard([
       el('label', { cls: 'vb-label', 'for': 'vbHoFirst', text: 'First name' }), first,
-      el('label', { cls: 'vb-label', 'for': 'vbHoPhone', text: 'Cell phone' }), phone, hint,
+      el('label', { cls: 'vb-label', 'for': 'vbHoPhone', text: 'Cell phone' }), phone, hint, meLink(phone, first, ready),
       el('label', { cls: 'vb-label', 'for': 'vbHoNote' }, ['What do you need? ', count]), note,
       el('div', { cls: 'vb-label', text: 'Should we call or text you?' }), hows,
       ts, el('div', { cls: 'vb-row', style: 'margin-top:8px' }, [go]), err,
@@ -1737,7 +1762,7 @@
     });
   }
   function handoffSend(first, phone, note, how, btn) {
-    st.first = first; st.phone = phone; st.hoNote = note; st.hoHow = how;
+    rememberMe(phone, first); st.hoNote = note; st.hoHow = how;
     btn.setAttribute('disabled', 'disabled'); btn.textContent = 'Sending…';
     var tokenNow = st.token; st.token = '';
     call({ action: 'handoff', phone: phone, first_name: first, note: note, contact: how,
@@ -1873,7 +1898,7 @@
       el('div', { cls: 'vb-label', text: 'Which days? Pick up to 3' + (st.through ? ' (our schedule is posted through ' + longDay(st.through) + ')' : '') }), dayRow,
       el('div', { cls: 'vb-label', text: 'What time of day?' }), winRow,
       el('label', { cls: 'vb-label', 'for': 'vbWlFirst', text: 'First name' }), first,
-      el('label', { cls: 'vb-label', 'for': 'vbWlPhone', text: 'Cell phone' }), phone, hint,
+      el('label', { cls: 'vb-label', 'for': 'vbWlPhone', text: 'Cell phone' }), phone, hint, meLink(phone, first, ready),
       el('p', { cls: 'vb-note', text: 'For returning clients: use the cell number and first name we have on file.' }),
       ts, el('div', { cls: 'vb-row', style: 'margin-top:8px' }, [go]), err,
       back('Change service', function () { st.service = null; pickService(); }), el('br'),
@@ -1897,7 +1922,7 @@
     return names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' or ' + names[names.length - 1];
   }
   function waitlistSend(first, phone, tech, win, btn) {
-    st.first = first; st.phone = phone; st.wlWindow = win; st.wlTechId = tech ? tech.id : '';
+    rememberMe(phone, first); st.wlWindow = win; st.wlTechId = tech ? tech.id : '';
     btn.setAttribute('disabled', 'disabled'); btn.textContent = 'Sending…';
     var tokenNow = st.token; st.token = '';
     call({ action: 'waitlist_join', phone: phone, first_name: first, service_id: st.service.id, tech_id: tech ? tech.id : undefined,
