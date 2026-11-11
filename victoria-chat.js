@@ -625,7 +625,7 @@
       teaser.className = 'vcp-teaser';
       teaser.setAttribute('role', 'button');
       teaser.setAttribute('tabindex', '0');
-      teaser.textContent = "\u{1F44B} Hi! I'm Victoria. Ask me about services, prices or openings.";
+      teaser.textContent = "\u{1F44B} Hi! I'm Victoria. I can book your appointment, check openings, and answer questions about services, prices and specials.";
       const x = document.createElement('button');
       x.className = 'vcp-teaser-x';
       x.setAttribute('aria-label', 'Dismiss');

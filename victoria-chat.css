@@ -289,7 +289,7 @@
 /* Phones: a small greeting next to the bubble instead of opening the full chat */
 .vcp-teaser {
   position: fixed; bottom: 30px; right: 90px; z-index: 9999;
-  max-width: min(240px, calc(100vw - 120px));
+  max-width: min(270px, calc(100vw - 120px));
   background: #fff; color: #1a1a1a; border-radius: 16px 16px 4px 16px;
   padding: 10px 30px 10px 14px; font-size: .88rem; line-height: 1.35;
   box-shadow: 0 8px 26px rgba(0,0,0,.22); cursor: pointer;
