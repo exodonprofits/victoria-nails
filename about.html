@@ -321,6 +321,16 @@
       .team-grid{grid-template-columns:1fr;}
     }
     @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+    /* Logo size and phone header (same as the other pages; about.html was missing them) */
+    .brand-logo{width:48px;height:48px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border);box-shadow:var(--shadow-gold);background:var(--ivory);}
+    @media(max-width:620px){
+      .topbar{font-size:.72rem;}
+      .topbar .inner{flex-direction:column;align-items:center;text-align:center;gap:4px;padding:8px 0;}
+      .nav{height:62px;}
+      .brand-logo{width:38px;height:38px;}
+      .brand-name{font-size:1.1rem;}
+      .brand-tagline{display:none;}
+    }
   </style>
 </head>
 
@@ -367,7 +377,7 @@
         <a href="gallery.html">Gallery <span>→</span></a>
         <a href="reviews.html">Reviews <span>→</span></a>
         <a href="contact.html">Contact <span>→</span></a>
-        <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment <span>→</span></a>
+        <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Now <span>→</span></a>
       </div>
     </div>
   </header>
@@ -381,7 +391,7 @@
           <h1>The Faces Behind Every Perfect Finish</h1>
           <p class="lead">Meet the talented team at Victoria Nails — skilled technicians who bring creativity, precision, and genuine warmth to every single visit.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book an Appointment</a>
+            <a class="btn btn-primary" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Now</a>
             <a class="btn btn-white" href="#team">Meet the Team</a>
           </div>
           <div class="hero-stats">
@@ -822,7 +832,7 @@
               <div class="contact-detail-icon">✉️</div>
               <div class="contact-detail-text">
                 <strong>Email</strong>
-                <a href="/cdn-cgi/l/email-protection#fc8a959f88938e959d929d95908fcfc8c5bc9b919d9590d29f9391"><span class="__cf_email__" data-cfemail="186e717b6c776a7179767971746b2b2c21587f75797174367b7775">[email&#160;protected]</span></a>
+                <a href="mailto:victorianails349@gmail.com">victorianails349@gmail.com</a>
               </div>
             </div>
 
@@ -875,7 +885,7 @@
                 <textarea id="contact-msg" placeholder="Type your message here..."></textarea>
               </div>
               <button class="btn btn-primary btn-block" type="button" onclick="submitForm()">Send Message</button>
-              <div class="form-success" id="formSuccess">✦ Message sent! We'll be in touch shortly.</div>
+              <div class="form-success" id="formSuccess">✦ Your email app should open with your message. Just hit send!</div>
             </div>
           </div>
         </div>
@@ -908,7 +918,7 @@
         </div>
         <div class="footer-col">
           <h4>Connect</h4>
-          <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Online</a>
+          <a href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Now</a>
           <a href="https://www.instagram.com/victorianailssouthelgin" rel="noopener" target="_blank">Instagram</a>
           <a href="https://www.facebook.com/victorianailssalon" rel="noopener" target="_blank">Facebook</a>
           <a href="about.html">Our Team</a>
@@ -929,11 +939,11 @@
   <!-- Mobile floatbar -->
   <div class="floatbar" aria-label="Quick actions">
     <div class="inner">
-      <a class="btn btn-primary btn-block" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Appointment</a>
+      <a class="btn btn-primary btn-block" href="https://booking.galaxyaccess.us/victoria349" rel="noopener" target="_blank">Book Now</a>
     </div>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     (function(){
       // Header scroll
       const hdr = document.getElementById('site-header');
@@ -979,4 +989,18 @@
 
     // Contact form
     function submitForm(){
-      const name
+      const name = document.getElementById('contact-name').value.trim();
+      const email = document.getElementById('contact-email').value.trim();
+      const subject = document.getElementById('contact-subject').value.trim();
+      const msg = document.getElementById('contact-msg').value.trim();
+      if (!name || !msg) { alert('Please add your name and a message.'); return; }
+      const body = msg + '\n\n— ' + name + (email ? ' (' + email + ')' : '');
+      location.href = 'mailto:victorianails349@gmail.com?subject=' + encodeURIComponent(subject || 'Message from the website')
+        + '&body=' + encodeURIComponent(body);
+      document.getElementById('formSuccess').style.display = 'block';
+    }
+  </script>
+  <!-- Victoria chat bubble (same chat as the home page) -->
+  <script src="victoria-chat.js"></script>
+</body>
+</html>
