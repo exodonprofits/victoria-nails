@@ -3,7 +3,9 @@
    One tag per page, at the end of <body>:
      <script src="victoria-chat.js"></script>
    (the home page adds data-page="home": its floating Book Now sits where
-   the bubble would, so the bubble rides higher there).
+   the bubble would, so the bubble rides higher there; pages with a form
+   add data-auto-open="no": the chat doesn't open over the form by itself,
+   only the greeting bubble shows).
    It loads victoria-chat.css, builds the floating bubble + panel, and runs
    the chat, in-chat booking and greeting.
 ═══════════════════════════════════════════════════════════════════ */
@@ -18,6 +20,7 @@
 
   var me = document.currentScript;
   if (me && me.getAttribute('data-page') === 'home') document.documentElement.classList.add('vcp-home');
+  var noAutoOpen = !!(me && me.getAttribute('data-auto-open') === 'no');
   var css = document.createElement('link');
   css.rel = 'stylesheet';
   css.href = me && me.src ? me.src.replace(/victoria-chat\.js(\?.*)?$/, 'victoria-chat.css') : 'victoria-chat.css';
@@ -691,7 +694,7 @@
     } else if (!closedBefore) {
       setTimeout(() => {
         if (panel.classList.contains('vcp-open')) return;
-        if (window.matchMedia('(max-width: 620px)').matches) showTeaser();
+        if (window.matchMedia('(max-width: 620px)').matches || noAutoOpen) showTeaser();
         else openChat(true);
       }, 1200);
     }
