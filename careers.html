@@ -391,6 +391,11 @@
 
         <div class="form-card reveal" id="formCard">
           <form id="careerForm" novalidate>
+            <!-- Bot trap (Nov 23 2026): hidden from people; bots fill every field. Leave empty. -->
+            <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden">
+              <label for="company_website">Company website</label>
+              <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off">
+            </div>
 
             <!-- STEP 1: Personal info -->
             <div class="form-block">
@@ -744,6 +749,43 @@
       const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBib2phY25hZ3V0aXBmaGN4bHRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMDkwODAsImV4cCI6MjA2MzU4NTA4MH0.ZLCcAzTYljoZycpBGwMtthP5VyAJ4schuIvt4HibGc0';
       const FALLBACK_EMAIL   = 'careers@victorianailssalon.com';
       const BUSINESS_ID      = '0af9e368-f488-449b-8013-7f44361be462';
+      // "Are you human" (Cloudflare Turnstile, the same check as the Salon Genie login). Invisible for
+      // almost everyone; a small box shows only when Cloudflare wants a tap. The Edge Function checks
+      // the token with Cloudflare. The site key is public.
+      const TURNSTILE_SITE_KEY = '0x4AAAAAAGJxl_-SA4DYi4jc';
+      const FORM_OPENED_AT = Date.now();
+      let turnstileApi = null;
+      function loadTurnstile() {
+        if (window.turnstile) return Promise.resolve(window.turnstile);
+        if (!turnstileApi) turnstileApi = new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+          s.async = true;
+          s.onload = () => window.turnstile ? resolve(window.turnstile) : reject(new Error('unavailable'));
+          s.onerror = () => { turnstileApi = null; reject(new Error('unavailable')); };
+          document.head.appendChild(s);
+        });
+        return turnstileApi;
+      }
+      // A fresh token, or null when the check can't run (the server decides what to do without one)
+      async function humanToken() {
+        let ts;
+        try { ts = await loadTurnstile(); } catch (_) { return null; }
+        return new Promise((resolve) => {
+          const host = document.createElement('div');
+          host.style.cssText = 'position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:10000';
+          document.body.appendChild(host);
+          let id = null, done = false;
+          const finish = (tok) => { if (done) return; done = true; clearTimeout(timer); try { if (id !== null) ts.remove(id); } catch (_) {} host.remove(); resolve(tok); };
+          const timer = setTimeout(() => finish(null), 60000);
+          try {
+            id = ts.render(host, { sitekey: TURNSTILE_SITE_KEY, appearance: 'interaction-only',
+              callback: (t) => finish(t), 'error-callback': () => { finish(null); return true; },
+              'unsupported-callback': () => finish(null), 'expired-callback': () => finish(null) });
+          } catch (_) { finish(null); }
+        });
+      }
+      loadTurnstile().catch(() => {});   // load early so the check is quick at Submit
 
       // ---------- Sticky header ----------
       const hdr = document.getElementById('site-header');
@@ -961,6 +1003,10 @@
         submitBtn.disabled = true;
 
         const payload = collectPayload();
+        // bot checks (the Edge Function reads these and doesn't keep them)
+        payload.company_website = (document.getElementById('company_website') || {}).value || '';
+        payload.form_ms = Date.now() - FORM_OPENED_AT;
+        if (CAREERS_ENDPOINT) payload.captcha_token = await humanToken();
 
         try {
           if (CAREERS_ENDPOINT) {
@@ -973,6 +1019,11 @@
               },
               body: JSON.stringify(payload)
             });
+            if (res.status === 403) {
+              submitBtn.classList.remove('sending'); submitBtn.textContent = 'Try Again'; submitBtn.disabled = false;
+              alert('The \u201care you human\u201d check didn\u2019t pass. Please tap Try Again. If it keeps happening, call (847) 931-9359 or email ' + FALLBACK_EMAIL + '.');
+              return;
+            }
             if (!res.ok) throw new Error('Endpoint returned ' + res.status);
           } else {
             // No endpoint configured — open mailto fallback
