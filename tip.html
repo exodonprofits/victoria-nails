@@ -351,16 +351,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   // ══════════════════════════════════════════════════════════
   const params = new URLSearchParams(location.search);
 
-  const SB_URL = (() => {
-    const p = params.get('supabase_url');
-    if (p) return p;
-    try { if (window.SG_CONFIG?.supabaseUrl) return window.SG_CONFIG.supabaseUrl; } catch(_){}
-    try {
-      const s = localStorage.getItem('sg.supabase_url') || localStorage.getItem('gs.supabase_url');
-      if (s) return s;
-    } catch(_){}
-    return 'https://pbojacnagutipfhcxltj.supabase.co';
-  })();
+  // Fixed backend: a link can't point this page at another server (no ?supabase_url=)
+  const SB_URL = 'https://pbojacnagutipfhcxltj.supabase.co';
 
   const SB_KEY = (() => {
     try { if (window.SG_CONFIG?.supabaseKey) return window.SG_CONFIG.supabaseKey; } catch(_){}
