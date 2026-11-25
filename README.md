@@ -30,7 +30,9 @@ To preview locally, run a static file server from the repository root, for examp
 
 - `index.html` — homepage
 - `services.html`, `about.html`, `gallery.html`, `contact.html`, `reviews.html` — core pages
-- `booking.html`, `booking-widget.js`, `sg-widget.js` — booking components
+- `tip.html` — staff tip page (the tip QR code); reads Salon Genie
+- `careers.html`, `site-contact.js`, `victoria-chat.js` — job applications, the contact form and the website chat (Salon Genie edge functions)
+- My Account links to Salon Genie's client portal (salongenie.ai/client-portal.html)
 - `styles.css`, `scripts.js`, `images/` — styling and assets
 - `server.js` — optional AI receptionist backend
 
