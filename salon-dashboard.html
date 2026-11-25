@@ -2064,14 +2064,8 @@ import { requireAuth } from "/shared/js/core/auth.js";
   ['kAppt','kWalk','kNoShow','kLow','kRevenue','kCommission','kExpenses','kIncome'].forEach(id => setKPI(id, '…'));
 
   // Helper: salon-schema fetch with correct Accept-Profile header
-  // SB_URL resolved from: URL param → localStorage → SG_CONFIG → hardcoded fallback
-  const SB_URL = (() => {
-    const p = new URLSearchParams(location.search).get('supabase_url');
-    if (p) return p;
-    try { const c = window.SG_CONFIG || window.SG_BOOKING; if (c?.supabaseUrl) return c.supabaseUrl; } catch(_) {}
-    try { const s = localStorage.getItem('sg.supabase_url') || localStorage.getItem('gs.supabase_url'); if (s) return s; } catch(_) {}
-    return 'https://pbojacnagutipfhcxltj.supabase.co';
-  })();
+  // Fixed backend: a link can't point this page (and the signed-in session it sends) at another server
+  const SB_URL = 'https://pbojacnagutipfhcxltj.supabase.co';
 
   async function salonFetch(path, params = {}) {
     const url = new URL(`${SB_URL}/rest/v1/${path}`);
