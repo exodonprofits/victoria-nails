@@ -392,6 +392,20 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     if (!res.ok) return null;
     return res.json();
   }
+  async function salonRpc(fn, args) {
+    const res = await fetch(`${SB_URL}/rest/v1/rpc/${fn}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Profile': 'salon',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(args || {}),
+    });
+    if (!res.ok) return null;
+    return res.json();
+  }
   async function publicGet(path, qs = {}) {
     const url = new URL(`${SB_URL}/rest/v1/${path}`);
     Object.entries(qs).forEach(([k, v]) => url.searchParams.set(k, v));
@@ -524,12 +538,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     return;
   }
 
-  // 3. Payment handles for this business
-  const handleRows = await salonGet('employee_payment_handles', {
-    select: '*',
-    business_id: `eq.${BUSINESS_ID}`,
-    is_active: 'eq.true',
-  });
+  // 3. Payment handles for this business: only this salon's, only the apps its tip page turns on
+  //    (salon.public_tip_handles; the table itself isn't readable without a login since Nov 24 2026)
+  const handleRows = await salonRpc('public_tip_handles', { p_business: BUSINESS_ID });
 
   if (!handleRows || handleRows.length === 0) {
     showError();
